@@ -22,7 +22,7 @@ public class Payment {
 
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "orderId", referencedColumnName = "orderId")
-    private Order orderId;
+    private Orders orderId;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "paymentMethodId", referencedColumnName = "paymentMethodId")
@@ -34,7 +34,7 @@ public class Payment {
 
     private Date completeTime;
 
-    public Payment(Order orderId, PaymentMethod paymentMethodId, boolean paymentStatus, Date createTime, Date completeTime) {
+    public Payment(Orders orderId, PaymentMethod paymentMethodId, boolean paymentStatus, Date createTime, Date completeTime) {
         this.orderId = orderId;
         this.paymentMethodId = paymentMethodId;
         this.paymentStatus = paymentStatus;

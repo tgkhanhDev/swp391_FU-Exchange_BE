@@ -25,10 +25,6 @@ public class ReportProductType {
 
     private String description;
 
-    @OneToMany(mappedBy = "reportProductId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JsonBackReference
-    private List<ReportProduct> reportProductId;
-
     public ReportProductType(String reportProductTypeName, String description) {
         this.reportProductTypeName = reportProductTypeName;
         this.description = description;

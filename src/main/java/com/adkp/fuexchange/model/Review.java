@@ -24,13 +24,13 @@ public class Review {
 
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "orderId", referencedColumnName = "orderId")
-    private Order orderId;
+    private Orders orderId;
 
     private int ratingNumber;
 
     private String description;
 
-    public Review(PostProduct postProductId, Order orderId, int ratingNumber, String description) {
+    public Review(PostProduct postProductId, Orders orderId, int ratingNumber, String description) {
         this.postProductId = postProductId;
         this.orderId = orderId;
         this.ratingNumber = ratingNumber;
