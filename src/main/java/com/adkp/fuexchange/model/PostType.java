@@ -20,13 +20,9 @@ public class PostType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int postTypeId;
 
-    private String postName;
+    private String postTypeName;
 
-    @OneToMany(mappedBy = "postProductId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JsonBackReference
-    private List<PostProduct> postProductId;
-
-    public PostType(String postName) {
-        this.postName = postName;
+    public PostType(String postTypeName) {
+        this.postTypeName = postTypeName;
     }
 }

@@ -1,6 +1,5 @@
 package com.adkp.fuexchange.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -28,10 +27,6 @@ public class Seller {
     private String bankingNumber;
 
     private String bankingName;
-
-    @OneToMany(mappedBy = "productId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JsonBackReference
-    private List<Product> productId;
 
     public Seller(RegisteredStudent registeredStudentId, String bankingNumber, String bankingName) {
         this.registeredStudentId = registeredStudentId;

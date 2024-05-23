@@ -1,7 +1,7 @@
 package com.adkp.fuexchange.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,10 +22,6 @@ public class TransactionsStatus {
     private int transactionsStatusId;
 
     private String transactionsStatusName;
-
-    @OneToMany(mappedBy = "transactionsId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JsonBackReference
-    private List<Transactions> transactionsId;
 
     public TransactionsStatus(String transactionsStatusName) {
         this.transactionsStatusName = transactionsStatusName;

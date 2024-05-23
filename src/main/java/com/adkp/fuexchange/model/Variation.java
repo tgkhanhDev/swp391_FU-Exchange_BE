@@ -1,13 +1,10 @@
 package com.adkp.fuexchange.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import java.util.List;
 
 @Data
 @ToString
@@ -24,12 +21,13 @@ public class Variation {
 
     private String description;
 
-    @OneToMany(mappedBy = "productId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JsonBackReference
-    private List<Product> productId;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "productId", referencedColumnName = "productId")
+    private Product productId;
 
-    public Variation(String variationName, String description) {
+    public Variation(String variationName, String description, Product productId) {
         this.variationName = variationName;
         this.description = description;
+        this.productId = productId;
     }
 }
