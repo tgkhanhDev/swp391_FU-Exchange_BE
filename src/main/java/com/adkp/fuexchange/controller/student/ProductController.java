@@ -1,12 +1,13 @@
 package com.adkp.fuexchange.controller.student;
 
 import com.adkp.fuexchange.dto.ProductDTO;
-import com.adkp.fuexchange.mapper.ProductMapper;
-import com.adkp.fuexchange.model.Product;
-import com.adkp.fuexchange.repository.ProductRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.adkp.fuexchange.response.MetaPostProduct;
+import com.adkp.fuexchange.response.PostProductResponse;
+import com.adkp.fuexchange.response.ResponseObject;
+import com.adkp.fuexchange.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -14,4 +15,21 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
 
+//    private final ProductService productService;
+//
+//    @Autowired
+//    public ProductController(ProductService productService) {
+//        this.productService = productService;
+//    }
+//
+//    @GetMapping("/{current}")
+//    public PostProductResponse postProductResponse(@PathVariable("current") String current){
+//        List<ProductDTO> productDTO = productService.viewMoreProduct(Integer.parseInt(current));
+//        return PostProductResponse
+//                .builder()
+//                .responseObject(new ResponseObject(HttpStatusCode.valueOf(200).value(), "Success"))
+//                .meta(new MetaPostProduct(productService.countTotalPostProduct(), Integer.parseInt(current)))
+//                .data(productDTO)
+//                .build();
+//    }
 }
