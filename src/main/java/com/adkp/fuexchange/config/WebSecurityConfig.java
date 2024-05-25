@@ -49,17 +49,6 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http.authorizeHttpRequests(configurer ->
-//                configurer
-//                        .requestMatchers("/login").permitAll()
-//                        .anyRequest()
-//                        .authenticated()
-//        )
-//        ;
-//        return http.build();
-//    }
 }
 
 
