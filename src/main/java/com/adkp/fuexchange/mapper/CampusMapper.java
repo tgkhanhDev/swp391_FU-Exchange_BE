@@ -7,6 +7,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface CampusMapper {
 
@@ -16,4 +18,8 @@ public interface CampusMapper {
 
     @InheritInverseConfiguration(name = "toCampusDTO")
     Campus toCampus(CampusDTO campusDTO);
+
+    List<CampusDTO> toCampusDTOList(List<Campus> campusList);
+
+    List<Campus> toCampusList(List<CampusDTO> campusDTOList);
 }
