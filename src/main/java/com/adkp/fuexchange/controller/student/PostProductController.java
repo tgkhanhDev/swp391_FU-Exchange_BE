@@ -10,10 +10,7 @@ import com.adkp.fuexchange.service.ProductService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,23 +26,19 @@ public class PostProductController {
     }
 
     @GetMapping("/{current}")
-    public PostProductResponse viewMorePostProduct(@PathVariable("current") String current){
-        List<PostProductDTO> productDTO = postProductService.viewMorePostProduct(Integer.parseInt(current));
-        return PostProductResponse
-                .builder()
-                .responseObject(new ResponseObject(HttpStatusCode.valueOf(200).value(), "Success"))
-                .meta(new MetaPostProduct(postProductService.countTotalPostProduct(), Integer.parseInt(current)))
-                .data(productDTO)
-                .build();
-    }
+    public PostProductResponse viewMorePostProduct(
+            @PathVariable("current") int current,
+            @RequestParam(value = "campusId", required = false) Integer campusId,
+            @RequestParam(value = "postTypeId", required = false) Integer postTypeId,
+            @RequestParam(value = "name", required = false) String name)
+    {
 
-    @GetMapping("/filter/{campusId}")
-    public PostProductResponse postProductByCampus(@PathVariable("campusId") String current){
-        List<PostProductDTO> productDTO = postProductService.viewPostProductByCampus(Integer.parseInt(current));
+        List<PostProductDTO> productDTO = postProductService.viewMorePostProduct(current, campusId, postTypeId, name);
+
         return PostProductResponse
                 .builder()
                 .responseObject(new ResponseObject(HttpStatusCode.valueOf(200).value(), "Success"))
-                .meta(new MetaPostProduct(postProductService.countTotalPostProduct(), Integer.parseInt(current)))
+                .meta(new MetaPostProduct(postProductService.countTotalPostProduct(), current))
                 .data(productDTO)
                 .build();
     }
