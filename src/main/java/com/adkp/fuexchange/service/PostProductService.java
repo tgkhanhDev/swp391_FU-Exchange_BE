@@ -6,9 +6,7 @@ import java.awt.print.Pageable;
 import java.util.List;
 
 public interface PostProductService {
-    List<PostProductDTO> viewMorePostProduct(int current);
-
-    List<PostProductDTO> viewPostProductByCampus(int campusId);
+    List<PostProductDTO> viewMorePostProduct(int current, Integer campusId, Integer postTypeId, String name);
 
     long countTotalPostProduct();
 }
