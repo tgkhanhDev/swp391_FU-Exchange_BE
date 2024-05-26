@@ -1,7 +1,7 @@
 package com.adkp.fuexchange.mapper;
 
 import com.adkp.fuexchange.dto.VariationDTO;
-import com.adkp.fuexchange.model.Variation;
+import com.adkp.fuexchange.pojo.Variation;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

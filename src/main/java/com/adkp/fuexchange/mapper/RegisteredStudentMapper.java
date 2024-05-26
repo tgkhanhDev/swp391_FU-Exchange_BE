@@ -1,10 +1,7 @@
 package com.adkp.fuexchange.mapper;
 
 import com.adkp.fuexchange.dto.RegisteredStudentDTO;
-import com.adkp.fuexchange.dto.StudentDTO;
-import com.adkp.fuexchange.model.RegisteredStudent;
-import com.adkp.fuexchange.model.Student;
-import jakarta.persistence.Id;
+import com.adkp.fuexchange.pojo.RegisteredStudent;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

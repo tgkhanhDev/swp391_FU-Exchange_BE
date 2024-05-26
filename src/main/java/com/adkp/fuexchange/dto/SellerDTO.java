@@ -1,7 +1,7 @@
 package com.adkp.fuexchange.dto;
 
-import com.adkp.fuexchange.model.RegisteredStudent;
-import com.adkp.fuexchange.model.Student;
+import com.adkp.fuexchange.pojo.RegisteredStudent;
+import com.adkp.fuexchange.pojo.Student;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 

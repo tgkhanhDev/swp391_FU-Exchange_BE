@@ -1,12 +1,9 @@
 package com.adkp.fuexchange.mapper;
 
 import com.adkp.fuexchange.dto.ProductDTO;
-import com.adkp.fuexchange.dto.StudentDTO;
-import com.adkp.fuexchange.dto.VariationDTO;
-import com.adkp.fuexchange.model.*;
+import com.adkp.fuexchange.pojo.*;
 import org.mapstruct.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {ProductDetailMapper.class, ProductImageMapper.class, VariationMapper.class})

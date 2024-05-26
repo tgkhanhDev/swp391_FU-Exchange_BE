@@ -1,6 +1,6 @@
 package com.adkp.fuexchange.repository;
 
-import com.adkp.fuexchange.model.PostType;
+import com.adkp.fuexchange.pojo.PostType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
