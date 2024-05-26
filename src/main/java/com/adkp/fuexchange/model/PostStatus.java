@@ -22,10 +22,7 @@ public class PostStatus {
     private int postStatusId;
 
     private String postStatusName;
-
-    @OneToMany(mappedBy = "postProductId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JsonBackReference
-    private List<PostProduct> postProductId;
+    
     public PostStatus(String postStatusName) {
         this.postStatusName = postStatusName;
     }

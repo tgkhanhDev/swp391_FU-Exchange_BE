@@ -23,9 +23,6 @@ public class Campus {
 
     private String campusName;
 
-    @OneToMany(mappedBy = "postProductId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JsonBackReference
-    private List<PostProduct> postProductId;
     public Campus(String campusName) {
         this.campusName = campusName;
     }

@@ -16,6 +16,7 @@ import java.util.List;
 @Entity
 @Table(name = "RegisteredStudent")
 public class RegisteredStudent {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int registeredStudentId;
@@ -26,24 +27,18 @@ public class RegisteredStudent {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "roleId", referencedColumnName = "roleId")
-    private Role roleId;
+    private Roles roleId;
 
     @Column(nullable = false)
     private String password;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    private Seller sellerId;
+    @Column(name = "isActive")
+    private boolean isActive;
 
-    @OneToMany(mappedBy = "chatMessageId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JsonBackReference
-    private List<ChatMessage> chatMessageId;
-
-    @OneToMany(mappedBy = "orderId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JsonBackReference
-    private List<Order> orderId;
-    public RegisteredStudent(Student studentId, Role roleId, String password) {
+    public RegisteredStudent(Student studentId, Roles roleId, String password, boolean isActive) {
         this.studentId = studentId;
         this.roleId = roleId;
         this.password = password;
+        this.isActive = isActive;
     }
 }
