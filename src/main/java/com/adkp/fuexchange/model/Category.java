@@ -22,6 +22,10 @@ public class Category {
 
     private String categoryName;
 
+    @OneToMany(mappedBy = "productId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JsonBackReference
+    private List<Product> productId;
+
     public Category(String categoryName) {
         this.categoryName = categoryName;
     }

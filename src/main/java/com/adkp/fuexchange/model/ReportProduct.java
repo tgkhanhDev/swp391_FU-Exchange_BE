@@ -21,12 +21,12 @@ public class ReportProduct {
     private int reportProductId;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "buyerId", referencedColumnName = "registeredStudentId")
-    private RegisteredStudent buyerId;
+    @JoinColumn(name = "registeredStudentId", referencedColumnName = "registeredStudentId")
+    private RegisteredStudent registeredStudentId;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "productId", referencedColumnName = "productId")
-    private Product productId;
+    @JoinColumn(name = "sellerId", referencedColumnName = "sellerId")
+    private Seller sellerId;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "reportProductTypeId", referencedColumnName = "reportProductTypeId")
@@ -36,17 +36,17 @@ public class ReportProduct {
     @JoinColumn(name = "reportStatusId", referencedColumnName = "reportStatusId")
     private ReportStatus reportStatusId;
 
-    private Date createTime;
+    private Date createDate;
 
     @Column(nullable = true)
     private String content;
 
-    public ReportProduct(RegisteredStudent buyerId, Product productId, ReportProductType reportProductTypeId, ReportStatus reportStatusId, Date createTime, String content) {
-        this.buyerId = buyerId;
-        this.productId = productId;
+    public ReportProduct(RegisteredStudent registeredStudentId, Seller sellerId, ReportProductType reportProductTypeId, ReportStatus reportStatusId, Date createDate, String content) {
+        this.registeredStudentId = registeredStudentId;
+        this.sellerId = sellerId;
         this.reportProductTypeId = reportProductTypeId;
         this.reportStatusId = reportStatusId;
-        this.createTime = createTime;
+        this.createDate = createDate;
         this.content = content;
     }
 }

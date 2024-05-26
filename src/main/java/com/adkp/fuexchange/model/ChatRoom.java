@@ -23,6 +23,10 @@ public class ChatRoom {
 
     private int isActive;
 
+    @OneToMany(mappedBy = "chatMessageId", fetch = FetchType.LAZY,cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JsonBackReference
+    private List<ChatMessage> chatMessagesId;
+
     public ChatRoom(int isActive) {
         this.isActive = isActive;
     }

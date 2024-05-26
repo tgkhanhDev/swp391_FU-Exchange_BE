@@ -20,8 +20,8 @@ public class ReportSeller {
     private int reportSellerId;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "buyerId", referencedColumnName = "registeredStudentId")
-    private RegisteredStudent buyerId;
+    @JoinColumn(name = "registeredStudentId", referencedColumnName = "registeredStudentId")
+    private RegisteredStudent registeredStudentId;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "sellerId", referencedColumnName = "sellerId")
@@ -35,17 +35,17 @@ public class ReportSeller {
     @JoinColumn(name = "reportStatusId", referencedColumnName = "reportStatusId")
     private ReportStatus reportStatusId;
 
-    private Date createTime;
+    private Date createDate;
 
     @Column(nullable = true)
     private String content;
 
-    public ReportSeller(RegisteredStudent buyerId, Seller sellerId, ReportSellerType reportSellerTypeId, ReportStatus reportStatusId, Date createTime, String content) {
-        this.buyerId = buyerId;
+    public ReportSeller(RegisteredStudent registeredStudentId, Seller sellerId, ReportSellerType reportSellerTypeId, ReportStatus reportStatusId, Date createDate, String content) {
+        this.registeredStudentId = registeredStudentId;
         this.sellerId = sellerId;
         this.reportSellerTypeId = reportSellerTypeId;
         this.reportStatusId = reportStatusId;
-        this.createTime = createTime;
+        this.createDate = createDate;
         this.content = content;
     }
 }

@@ -21,12 +21,16 @@ public class ReportSellerType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int reportSellerTypeId;
 
-    private String reportTypeName;
+    private String reportSellerTypeName;
 
     private String description;
 
-    public ReportSellerType(String reportTypeName, String description) {
-        this.reportTypeName = reportTypeName;
+    @OneToMany(mappedBy = "reportSellerId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JsonBackReference
+    private List<ReportSeller> reportSellerId;
+
+    public ReportSellerType(String reportSellerTypeName, String description) {
+        this.reportSellerTypeName = reportSellerTypeName;
         this.description = description;
     }
 }

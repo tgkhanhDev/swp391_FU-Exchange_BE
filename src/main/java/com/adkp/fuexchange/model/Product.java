@@ -1,6 +1,5 @@
 package com.adkp.fuexchange.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -30,18 +29,26 @@ public class Product {
     private Seller sellerId;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "variationId", referencedColumnName = "variationId")
+    private Variation variationId;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "categoryId", referencedColumnName = "categoryId")
     private Category categoryId;
 
     private double price;
 
-    @OneToMany(mappedBy = "productId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JsonBackReference
-    private List<Variation> variationId;
-
-    public Product(ProductDetail productDetailId, Seller sellerId, Category categoryId, double price) {
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(
+            name = "CartProduct",
+            joinColumns = { @JoinColumn(name = "productId") },
+            inverseJoinColumns = { @JoinColumn(name = "cartId") }
+    )
+    private List<Cart> cartId;
+    public Product(ProductDetail productDetailId, Seller sellerId, Variation variationId, Category categoryId, double price) {
         this.productDetailId = productDetailId;
         this.sellerId = sellerId;
+        this.variationId = variationId;
         this.categoryId = categoryId;
         this.price = price;
     }

@@ -23,6 +23,10 @@ public class PaymentMethod {
 
     private String paymentMethodName;
 
+    @OneToMany(mappedBy = "paymentId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JsonBackReference
+    private List<Payment> paymentId;
+
     public PaymentMethod(String paymentMethodName) {
         this.paymentMethodName = paymentMethodName;
     }

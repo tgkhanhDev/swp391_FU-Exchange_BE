@@ -12,21 +12,17 @@ import java.util.List;
 @ToString
 @NoArgsConstructor(force = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Entity
-@Table(name = "PostType")
-public class PostType {
+@Table(name = "CartProduct")
+public class CartProduct {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int postTypeId;
-
-    private String postName;
-
-    @OneToMany(mappedBy = "postProductId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @MapsId("cartId")
     @JsonBackReference
-    private List<PostProduct> postProductId;
+    private List<Cart> cartId;
 
-    public PostType(String postName) {
-        this.postName = postName;
-    }
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @MapsId("cartId")
+    @JsonBackReference
+    private List<Product> productId;
+
 }

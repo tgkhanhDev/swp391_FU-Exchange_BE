@@ -1,5 +1,6 @@
 package com.adkp.fuexchange.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -43,6 +44,9 @@ public class PostProduct {
 
     private String content;
 
+    @OneToMany(mappedBy = "reviewId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JsonBackReference
+    private List<Review> reviewId;
     public PostProduct(Product productId, PostType postTypeId, Campus campusId, PostStatus postStatusId, int quantity, Date createDate) {
         this.productId = productId;
         this.postTypeId = postTypeId;

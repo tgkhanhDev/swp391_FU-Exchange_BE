@@ -21,6 +21,14 @@ public class ReportStatus {
     private int reportStatusId;
 
     private String reportStatusName;
+
+    @OneToMany(mappedBy = "reportProductId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JsonBackReference
+    private List<ReportProduct> reportProductId;
+
+    @OneToMany(mappedBy = "reportSellerId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JsonBackReference
+    private List<ReportSeller> reportSellerId;
     public ReportStatus(String reportStatusName) {
         this.reportStatusName = reportStatusName;
     }
