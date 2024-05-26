@@ -28,9 +28,13 @@ public class Seller {
 
     private String bankingName;
 
-    public Seller(RegisteredStudent registeredStudentId, String bankingNumber, String bankingName) {
+    @Column(name = "isActive")
+    private boolean active;
+
+    public Seller(RegisteredStudent registeredStudentId, String bankingNumber, String bankingName, boolean active) {
         this.registeredStudentId = registeredStudentId;
         this.bankingNumber = bankingNumber;
         this.bankingName = bankingName;
+        this.active = active;
     }
 }

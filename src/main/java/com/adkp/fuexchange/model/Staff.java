@@ -42,7 +42,9 @@ public class Staff {
     @Column(nullable = false)
     private String password;
 
-    public Staff(Roles roleId, String firstName, String lastName, String gender, String identityCard, String address, String phoneNumber, Date dob, String password) {
+    private boolean isActive;
+
+    public Staff(Roles roleId, String firstName, String lastName, String gender, String identityCard, String address, String phoneNumber, Date dob, String password, boolean isActive) {
         this.roleId = roleId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -52,5 +54,6 @@ public class Staff {
         this.phoneNumber = phoneNumber;
         this.dob = dob;
         this.password = password;
+        this.isActive = isActive;
     }
 }

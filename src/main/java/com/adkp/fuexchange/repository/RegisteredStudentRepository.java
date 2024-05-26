@@ -11,7 +11,8 @@ public interface RegisteredStudentRepository extends JpaRepository<RegisteredStu
     @Query("Select rgtstd From RegisteredStudent rgtstd")
     List<RegisteredStudent> findAllRegisteredStudent();
 
-    @Query("Select rgtstd From RegisteredStudent rgtstd Join Fetch rgtstd.roleId Where rgtstd.studentId.studentId = :studentId")
+    @Query("Select rgtstd From RegisteredStudent rgtstd Join Fetch rgtstd.roleId " +
+            "Where rgtstd.studentId.studentId = :studentId")
     RegisteredStudent findRegisteredStudentByStudentId(@Param("studentId") String studentId);
 
 }

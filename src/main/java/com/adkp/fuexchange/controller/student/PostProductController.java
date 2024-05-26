@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/post-product")
-@Tag(name="Post of Product")
+@Tag(name = "Post of Product")
 public class PostProductController {
     private final PostProductService postProductService;
 
@@ -30,15 +30,13 @@ public class PostProductController {
             @PathVariable("current") int current,
             @RequestParam(value = "campusId", required = false) Integer campusId,
             @RequestParam(value = "postTypeId", required = false) Integer postTypeId,
-            @RequestParam(value = "name", required = false) String name)
-    {
-
+            @RequestParam(value = "name", required = false) String name) {
         List<PostProductDTO> productDTO = postProductService.viewMorePostProduct(current, campusId, postTypeId, name);
 
         return PostProductResponse
                 .builder()
                 .responseObject(new ResponseObject(HttpStatusCode.valueOf(200).value(), "Success"))
-                .meta(new MetaPostProduct(postProductService.countTotalPostProduct(), current))
+                .meta(new MetaPostProduct(productDTO.size(), current))
                 .data(productDTO)
                 .build();
     }

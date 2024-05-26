@@ -18,4 +18,6 @@ public class SellerDTO {
     private String bankingName;
 
     private String bankingNumber;
+
+    private boolean active;
 }
