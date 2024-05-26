@@ -8,5 +8,4 @@ import java.util.List;
 public interface PostProductService {
     List<PostProductDTO> viewMorePostProduct(int current, Integer campusId, Integer postTypeId, String name);
 
-    long countTotalPostProduct();
 }

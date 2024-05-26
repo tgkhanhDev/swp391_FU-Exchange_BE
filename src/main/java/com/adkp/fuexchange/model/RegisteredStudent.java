@@ -32,9 +32,13 @@ public class RegisteredStudent {
     @Column(nullable = false)
     private String password;
 
-    public RegisteredStudent(Student studentId, Roles roleId, String password) {
+    @Column(name = "isActive")
+    private boolean isActive;
+
+    public RegisteredStudent(Student studentId, Roles roleId, String password, boolean isActive) {
         this.studentId = studentId;
         this.roleId = roleId;
         this.password = password;
+        this.isActive = isActive;
     }
 }

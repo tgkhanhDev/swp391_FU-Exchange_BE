@@ -61,8 +61,4 @@ public class PostProductServiceImpl implements PostProductService {
         }
     }
 
-    @Override
-    public long countTotalPostProduct() {
-        return postProductRepository.count();
-    }
 }

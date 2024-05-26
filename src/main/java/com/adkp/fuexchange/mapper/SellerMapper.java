@@ -16,6 +16,7 @@ public interface SellerMapper {
     @Mapping(source = "registeredStudentId.studentId", target = "student")
     @Mapping(source = "bankingName", target = "bankingName")
     @Mapping(source = "bankingNumber", target = "bankingNumber")
+    @Mapping(source = "active", target = "active")
     @Mapping(source = "registeredStudentId", target = "registeredStudentId", ignore = true)
     SellerDTO toSellerDTO(Seller seller);
 

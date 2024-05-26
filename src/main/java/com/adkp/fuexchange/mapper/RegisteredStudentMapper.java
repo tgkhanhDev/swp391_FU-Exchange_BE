@@ -18,6 +18,7 @@ public interface RegisteredStudentMapper {
     @Mapping(source = "registeredStudentId", target = "registeredStudentId")
     @Mapping(source = "studentId", target = "student")
     @Mapping(source = "roleId", target = "role")
+    @Mapping(source = "active", target = "active")
     @Mapping(source = "password", target = "password", ignore = true)
     RegisteredStudentDTO toRegisteredStudentDTO(RegisteredStudent registeredStudent);
 
