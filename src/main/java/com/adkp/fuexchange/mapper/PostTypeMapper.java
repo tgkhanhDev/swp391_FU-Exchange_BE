@@ -7,6 +7,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PostTypeMapper {
 
@@ -16,4 +18,8 @@ public interface PostTypeMapper {
 
     @InheritInverseConfiguration(name = "toPostTypeDTO")
     PostType toPostType(PostTypeDTO postTypeDTO);
+
+    List<PostTypeDTO> toPostTypeDTOList(List<PostType> postTypeList);
+
+    List<PostType> toPostTypeList(List<PostTypeDTO> postTypeDTOList);
 }
