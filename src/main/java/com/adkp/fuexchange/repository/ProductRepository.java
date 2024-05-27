@@ -10,4 +10,8 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("Select prd from Product prd")
     List<Product> topProduct(Pageable pageable);
+
+
+
+
 }
