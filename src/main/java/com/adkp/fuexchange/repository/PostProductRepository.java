@@ -74,5 +74,5 @@ public interface PostProductRepository extends JpaRepository<PostProduct, Intege
             Pageable pageable, @Param("postTypeId") Integer postTypeId
     );
 
-    List<PostProduct> getProductByPostId(@Param("productId") Integer productId);
+   // List<PostProduct> getProductByPostId(@Param("productId") Integer productId);
 }
