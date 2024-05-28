@@ -24,7 +24,6 @@ public class CampusController {
         this.campusService = campusService;
     }
 
-    @GetMapping("")
     @Operation(summary = "Get all campus for rendering")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",description = "Fetch all Campus",

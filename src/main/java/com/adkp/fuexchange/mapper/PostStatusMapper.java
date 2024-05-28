@@ -1,7 +1,7 @@
 package com.adkp.fuexchange.mapper;
 
 import com.adkp.fuexchange.dto.PostStatusDTO;
-import com.adkp.fuexchange.model.PostStatus;
+import com.adkp.fuexchange.pojo.PostStatus;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

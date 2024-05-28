@@ -1,7 +1,7 @@
 package com.adkp.fuexchange.mapper;
 
 import com.adkp.fuexchange.dto.SellerDTO;
-import com.adkp.fuexchange.model.Seller;
+import com.adkp.fuexchange.pojo.Seller;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -9,7 +9,10 @@ import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(
+        componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
+        uses = {StudentMapper.class}
+)
 public interface SellerMapper {
 
     @Mapping(source = "sellerId", target = "sellerId")

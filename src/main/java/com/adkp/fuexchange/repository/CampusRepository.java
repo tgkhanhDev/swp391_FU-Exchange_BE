@@ -1,6 +1,6 @@
 package com.adkp.fuexchange.repository;
 
-import com.adkp.fuexchange.model.Campus;
+import com.adkp.fuexchange.pojo.Campus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

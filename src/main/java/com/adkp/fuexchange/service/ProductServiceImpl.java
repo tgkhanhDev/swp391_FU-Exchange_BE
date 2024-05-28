@@ -16,11 +16,11 @@ public class ProductServiceImpl implements ProductService{
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
 
-    @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
-        this.productRepository = productRepository;
-        this.productMapper = productMapper;
-    }
+        @Autowired
+        public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
+            this.productRepository = productRepository;
+            this.productMapper = productMapper;
+        }
 
     @Override
     public List<ProductDTO> viewMoreProduct(int current) {
