@@ -1,6 +1,6 @@
 package com.adkp.fuexchange.security;
 
-import com.adkp.fuexchange.model.RegisteredStudent;
+import com.adkp.fuexchange.pojo.RegisteredStudent;
 import com.adkp.fuexchange.repository.RegisteredStudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

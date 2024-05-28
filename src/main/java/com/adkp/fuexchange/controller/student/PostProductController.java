@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/post-product")
@@ -31,13 +32,23 @@ public class PostProductController {
             @RequestParam(value = "campusId", required = false) Integer campusId,
             @RequestParam(value = "postTypeId", required = false) Integer postTypeId,
             @RequestParam(value = "name", required = false) String name) {
-        List<PostProductDTO> productDTO = postProductService.viewMorePostProduct(current, campusId, postTypeId, name);
+
+        String campus = Optional.ofNullable(campusId).map(String::valueOf).orElse("");
+        String postType = Optional.ofNullable(postTypeId).map(String::valueOf).orElse("");
+        String nameProduct = Optional.ofNullable(name).map(String::valueOf).orElse("");
+
+        List<PostProductDTO> postProductDTO = postProductService.viewMorePostProduct(current, campus, postType, nameProduct);
 
         return PostProductResponse
                 .builder()
                 .responseObject(new ResponseObject(HttpStatusCode.valueOf(200).value(), "Success"))
-                .meta(new MetaPostProduct(productDTO.size(), current))
-                .data(productDTO)
+                .meta(new MetaPostProduct(postProductService.countPostProduct(campus, postType, name, postProductDTO), current))
+                .data(postProductDTO)
                 .build();
     }
+    @GetMapping("detail/{postProductId}")
+    public PostProductDTO getPostProductByPostId(@PathVariable("postProductId") int postProductId){
+        return postProductService.getPostProductById(postProductId);
+    }
+
 }

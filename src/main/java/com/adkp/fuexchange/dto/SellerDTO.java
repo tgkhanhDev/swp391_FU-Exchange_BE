@@ -1,7 +1,6 @@
 package com.adkp.fuexchange.dto;
 
-import com.adkp.fuexchange.model.RegisteredStudent;
-import com.adkp.fuexchange.model.Student;
+import com.adkp.fuexchange.pojo.RegisteredStudent;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
@@ -10,14 +9,14 @@ public class SellerDTO {
 
     private int sellerId;
 
-    @JsonIgnore
-    private RegisteredStudent registeredStudentId;
-
-    private Student student;
+    private StudentDTO student;
 
     private String bankingName;
 
     private String bankingNumber;
 
     private boolean active;
+
+    @JsonIgnore
+    private RegisteredStudent registeredStudentId;
 }

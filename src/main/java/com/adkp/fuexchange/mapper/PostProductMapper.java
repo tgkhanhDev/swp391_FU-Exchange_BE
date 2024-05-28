@@ -1,7 +1,7 @@
 package com.adkp.fuexchange.mapper;
 
 import com.adkp.fuexchange.dto.PostProductDTO;
-import com.adkp.fuexchange.model.PostProduct;
+import com.adkp.fuexchange.pojo.PostProduct;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -1,6 +1,7 @@
 package com.adkp.fuexchange.repository;
 
-import com.adkp.fuexchange.model.PostProduct;
+import com.adkp.fuexchange.pojo.PostProduct;
+import com.adkp.fuexchange.pojo.Product;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,65 +15,19 @@ public interface PostProductRepository extends JpaRepository<PostProduct, Intege
 
     @Query(
             "SELECT pprd FROM PostProduct pprd " +
-                    "WHERE pprd.postTypeId.postTypeId = :postTypeId AND " +
-                    "pprd.productId.productDetailId.productName LIKE CONCAT('%', :name, '%')"
+                    "WHERE pprd.postProductId =  :postProductId"
     )
-    List<PostProduct> filterPostProductByPostTypeAndName(
-            Pageable pageable, @Param("postTypeId") Integer postTypeId, @Param("name") String name
-    );
+    PostProduct getPostProductByPostId(@Param("postProductId") Integer postProductId);
 
     @Query(
-            "SELECT pprd FROM PostProduct pprd " +
-                    "WHERE pprd.campusId.campusId = :campusId " +
-                    "AND pprd.productId.productDetailId.productName LIKE CONCAT('%', :name, '%')"
+            value = "SELECT * FROM PostProduct pprd " +
+                    "WHERE pprd.postProductId LIKE CONCAT('%', :campus, '%') " +
+                    "AND pprd.postStatusId LIKE CONCAT('%', :postType, '%') " +
+                    "AND pprd.postTypeId LIKE CONCAT('%', :nameProduct, '%')",
+            nativeQuery = true
     )
-    List<PostProduct> filterPostProductByCampusAndName(
-            Pageable pageable, @Param("campusId") Integer campusId, @Param("name") String name
+    List<PostProduct> filterPostProduct(
+            Pageable pageable, @Param("campus") String campus, @Param("postType") String postType,
+            @Param("nameProduct") String nameProduct
     );
-
-    @Query(
-            "Select pprd from PostProduct pprd " +
-                    "Where pprd.campusId.campusId = :campusId " +
-                    "AND pprd.postTypeId.postTypeId = :postTypeId"
-    )
-    List<PostProduct> filterPostProductByCampusAndPostType(
-            Pageable pageable, @Param("campusId") Integer campusId, @Param("postTypeId") Integer postTypeId
-    );
-
-    @Query(
-            "SELECT pprd FROM PostProduct pprd " +
-                    "WHERE pprd.campusId.campusId = :campusId " +
-                    "AND pprd.postTypeId.postTypeId = :postTypeId " +
-                    "AND pprd.productId.productDetailId.productName LIKE CONCAT('%', :name, '%')"
-    )
-    List<PostProduct> filterPostProductByAll(
-            Pageable pageable, @Param("campusId") Integer campusId,
-            @Param("postTypeId") Integer postTypeId, @Param("name") String name
-    );
-
-    @Query(
-            "SELECT pprd FROM PostProduct pprd " +
-                    "WHERE pprd.campusId.campusId = :campusId"
-    )
-    List<PostProduct> filterPostProductByCampus(
-            Pageable pageable, @Param("campusId") Integer campusId
-    );
-
-    @Query(
-            "SELECT pprd FROM PostProduct pprd " +
-                    "WHERE pprd.productId.productDetailId.productName LIKE CONCAT('%', :name, '%')"
-    )
-    List<PostProduct> filterPostProductByName(
-            Pageable pageable, @Param("name") String name
-    );
-
-    @Query(
-            "SELECT pprd FROM PostProduct pprd " +
-                    "WHERE pprd.postTypeId.postTypeId = :postTypeId "
-    )
-    List<PostProduct> filterPostProductByPostType(
-            Pageable pageable, @Param("postTypeId") Integer postTypeId
-    );
-
-   // List<PostProduct> getProductByPostId(@Param("productId") Integer productId);
 }

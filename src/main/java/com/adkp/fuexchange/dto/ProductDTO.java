@@ -1,17 +1,19 @@
 package com.adkp.fuexchange.dto;
 
-import com.adkp.fuexchange.model.ProductDetail;
-import com.adkp.fuexchange.model.Seller;
+import com.adkp.fuexchange.pojo.ProductDetail;
+import com.adkp.fuexchange.pojo.Seller;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-@JsonIgnoreProperties({"productDetailId", "sellerId"})
+@JsonIgnoreProperties({"productDetailId"})
 public class ProductDTO {
 
     private int productId;
+
+    private SellerDTO seller;
 
     private ProductDetailDTO detail;
 
@@ -25,5 +27,4 @@ public class ProductDTO {
 
     private ProductDetail productDetailId;
 
-    private Seller sellerId;
 }
