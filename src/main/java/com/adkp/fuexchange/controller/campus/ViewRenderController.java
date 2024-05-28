@@ -2,6 +2,7 @@ package com.adkp.fuexchange.controller.campus;
 
 import com.adkp.fuexchange.dto.CampusDTO;
 import com.adkp.fuexchange.dto.PostProductDTO;
+import com.adkp.fuexchange.dto.CategoryDTO;
 import com.adkp.fuexchange.dto.PostTypeDTO;
 import com.adkp.fuexchange.service.ViewRenderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,4 +50,20 @@ public class ViewRenderController {
     })
     public List<PostTypeDTO> viewAllPostType(){return viewRenderService.viewAllPostType();}
 
+    @GetMapping("/category-type")
+    @Operation(summary = "Get all category product type for rendering")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",description = "Fetch all Category Type",
+                    content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "404",
+                    description = "Not Available",
+                    content = @Content)
+    })
+    public List<CategoryDTO> viewAllCategoryType(){return viewRenderService.viewAllCategoryType();}
+
+
 }
+
+
+
+

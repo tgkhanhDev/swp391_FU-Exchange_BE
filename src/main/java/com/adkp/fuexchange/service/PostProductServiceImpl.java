@@ -2,6 +2,7 @@ package com.adkp.fuexchange.service;
 
 import com.adkp.fuexchange.dto.PostProductDTO;
 import com.adkp.fuexchange.mapper.PostProductMapper;
+import com.adkp.fuexchange.pojo.PostProduct;
 import com.adkp.fuexchange.repository.PostProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PostProductServiceImpl implements PostProductService {
@@ -26,44 +28,28 @@ public class PostProductServiceImpl implements PostProductService {
     @Override
     public List<PostProductDTO> viewMorePostProduct(int current, Integer campusId, Integer postTypeId, String name) {
         Pageable currentProduct = PageRequest.of(0, current);
-        if (campusId != null && postTypeId != null && name != null) {
-            return postProductMapper.toPostProductDTOList(
-                    postProductRepository.filterPostProductByAll(currentProduct, campusId, postTypeId, name)
-            );
-        } else if (campusId == null && postTypeId == null && name == null) {
-            return postProductMapper.toPostProductDTOList(
-                    postProductRepository.viewMorePostProduct(currentProduct)
-            );
-        } else if (campusId != null && name != null) {
-            return postProductMapper.toPostProductDTOList(
-                    postProductRepository.filterPostProductByCampusAndName(currentProduct, campusId, name)
-            );
-        } else if (campusId != null && postTypeId != null) {
-            return postProductMapper.toPostProductDTOList(
-                    postProductRepository.filterPostProductByCampusAndPostType(currentProduct, campusId, postTypeId)
-            );
-        } else if (name != null && postTypeId != null) {
-            return postProductMapper.toPostProductDTOList(
-                    postProductRepository.filterPostProductByPostTypeAndName(currentProduct, postTypeId, name)
-            );
-        } else if (campusId != null) {
-            return postProductMapper.toPostProductDTOList(
-                    postProductRepository.filterPostProductByCampus(currentProduct, campusId)
-            );
-        } else if (name != null) {
-            return postProductMapper.toPostProductDTOList(
-                    postProductRepository.filterPostProductByName(currentProduct, name)
-            );
-        } else {
-            return postProductMapper.toPostProductDTOList(
-                    postProductRepository.filterPostProductByPostType(currentProduct, postTypeId)
-            );
-        }
+
+        String campus = Optional.ofNullable(campusId).map(String::valueOf).orElse("");
+        String postType = Optional.ofNullable(postTypeId).map(String::valueOf).orElse("");
+        String nameProduct = Optional.ofNullable(name).map(String::valueOf).orElse("");
+
+        return postProductMapper.toPostProductDTOList(
+            postProductRepository.test(currentProduct, campus, postType, nameProduct)
+        );
     }
 
     @Override
     public PostProductDTO getPostProductById(int postProductId) {
         return postProductMapper.toPostProductDTO(postProductRepository.getPostProductByPostId(postProductId));
+    }
+
+    @Override
+        public long countPostProduct(Integer campusId, Integer postTypeId, String name, List<PostProductDTO> productDTOList) {
+        if  (campusId != null || postTypeId != null || name != null){
+            return productDTOList.size();
+        }
+
+        return postProductRepository.count();
     }
 
 

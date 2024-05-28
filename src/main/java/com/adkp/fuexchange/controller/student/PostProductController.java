@@ -31,13 +31,13 @@ public class PostProductController {
             @RequestParam(value = "campusId", required = false) Integer campusId,
             @RequestParam(value = "postTypeId", required = false) Integer postTypeId,
             @RequestParam(value = "name", required = false) String name) {
-        List<PostProductDTO> productDTO = postProductService.viewMorePostProduct(current, campusId, postTypeId, name);
+        List<PostProductDTO> postProductDTO = postProductService.viewMorePostProduct(current, campusId, postTypeId, name);
 
         return PostProductResponse
                 .builder()
                 .responseObject(new ResponseObject(HttpStatusCode.valueOf(200).value(), "Success"))
-                .meta(new MetaPostProduct(productDTO.size(), current))
-                .data(productDTO)
+                .meta(new MetaPostProduct(postProductService.countPostProduct(campusId, postTypeId, name, postProductDTO), current))
+                .data(postProductDTO)
                 .build();
     }
     @GetMapping("detail/{postProductId}")
