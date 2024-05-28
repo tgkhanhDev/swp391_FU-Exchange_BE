@@ -1,7 +1,6 @@
 package com.adkp.fuexchange.response;
 
 import com.adkp.fuexchange.dto.PostProductDTO;
-import com.adkp.fuexchange.dto.ProductDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +16,7 @@ public class PostProductResponse {
 
     private ResponseObject responseObject;
 
-    private MetaPostProduct meta;
+    private MetaResponse meta;
 
     private List<PostProductDTO> data;
 }

@@ -23,7 +23,7 @@ public class ProductDTO {
 
     private List<VariationDTO> variation;
 
-    private double price;
+    private String price;
 
     private ProductDetail productDetailId;
 

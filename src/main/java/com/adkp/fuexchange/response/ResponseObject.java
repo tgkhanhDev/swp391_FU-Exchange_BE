@@ -17,4 +17,6 @@ public class ResponseObject {
 
     private String message;
 
+    private String content;
+
 }

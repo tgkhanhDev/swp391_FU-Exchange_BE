@@ -1,19 +1,16 @@
 package com.adkp.fuexchange.controller.student;
 
 import com.adkp.fuexchange.dto.PostProductDTO;
-import com.adkp.fuexchange.dto.ProductDTO;
-import com.adkp.fuexchange.response.MetaPostProduct;
+import com.adkp.fuexchange.response.MetaResponse;
 import com.adkp.fuexchange.response.PostProductResponse;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.PostProductService;
-import com.adkp.fuexchange.service.ProductService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/post-product")
@@ -37,8 +34,8 @@ public class PostProductController {
 
         return PostProductResponse
                 .builder()
-                .responseObject(new ResponseObject(HttpStatusCode.valueOf(200).value(), "Success"))
-                .meta(new MetaPostProduct(postProductService.countPostProduct(campusId, postTypeId, name, postProductDTO), current))
+                .responseObject(new ResponseObject(HttpStatusCode.valueOf(200).value(), "Success", "Xem thêm thành công"))
+                .meta(new MetaResponse(postProductService.countPostProduct(campusId, postTypeId, name, postProductDTO), current))
                 .data(postProductDTO)
                 .build();
     }

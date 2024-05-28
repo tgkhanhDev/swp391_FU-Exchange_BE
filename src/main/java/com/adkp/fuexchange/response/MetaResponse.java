@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MetaPostProduct {
+public class MetaResponse {
 
     private long total;
 
