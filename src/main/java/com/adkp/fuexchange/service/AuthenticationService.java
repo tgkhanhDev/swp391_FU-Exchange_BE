@@ -70,4 +70,22 @@ public class AuthenticationService {
                         .accessToken("123")
                         .build());
     }
+
+    public LoginResponse isRegistered(String studentId) {
+        UserDetails registeredStudent = registeredStudentDetailService.loadUserByUsername(studentId);
+
+        if (registeredStudent == null) {
+            return LoginResponse.builder()
+                    .statusCode(HttpStatus.NOT_FOUND.value())
+                    .message(HttpStatus.NOT_FOUND.name().toLowerCase())
+                    .content("Tài khoản chưa tồn tại")
+                    .build();
+        }else{
+            return LoginResponse.builder()
+                    .statusCode(HttpStatus.ACCEPTED.value())
+                    .message(HttpStatus.ACCEPTED.name().toLowerCase())
+                    .content("OK")
+                    .build();
+        }
+    }
 }

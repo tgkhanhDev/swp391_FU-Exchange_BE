@@ -21,4 +21,9 @@ public class AuthenticateController {
     public LoginResponse loginStudent(@RequestBody LoginRequest loginRequest) {
         return authenticationService.loginResponse(loginRequest);
     }
+
+    @GetMapping("/isRegistered/{studentId}")
+    public LoginResponse IsRegistered(@PathVariable String studentId){
+        return authenticationService.isRegistered(studentId);
+    }
 }
