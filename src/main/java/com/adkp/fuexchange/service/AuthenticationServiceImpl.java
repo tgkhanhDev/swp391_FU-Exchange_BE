@@ -50,7 +50,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         if (registeredStudent == null || !passwordEncoder.matches(loginRequest.getPassword(), registeredStudent.getPassword())) {
             return LoginResponse.builder().statusCode(HttpStatus.UNAUTHORIZED.value()).message(HttpStatus.UNAUTHORIZED.name().toLowerCase()).content("Sai tài khoản hoặc mật khẩu").build();
-        } else if (registeredStudent.isAccountNonLocked()) {
+        } else if (!registeredStudent.isAccountNonLocked()) {
             return new LoginResponse(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.name().toLowerCase(), "Tài khoản bị vô hiệu hóa", InforLoginResponse.builder().username(registeredStudent.getUsername()).role(registeredStudent.getAuthorities().toString()).accessToken("123").build());
         }
 
