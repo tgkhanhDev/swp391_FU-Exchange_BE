@@ -15,67 +15,6 @@ public interface PostProductRepository extends JpaRepository<PostProduct, Intege
 
     @Query(
             "SELECT pprd FROM PostProduct pprd " +
-                    "WHERE pprd.postTypeId.postTypeId = :postTypeId AND " +
-                    "pprd.productId.productDetailId.productName LIKE CONCAT('%', :name, '%')"
-    )
-    List<PostProduct> filterPostProductByPostTypeAndName(
-            Pageable pageable, @Param("postTypeId") Integer postTypeId, @Param("name") String name
-    );
-
-    @Query(
-            "SELECT pprd FROM PostProduct pprd " +
-                    "WHERE pprd.campusId.campusId = :campusId " +
-                    "AND pprd.productId.productDetailId.productName LIKE CONCAT('%', :name, '%')"
-    )
-    List<PostProduct> filterPostProductByCampusAndName(
-            Pageable pageable, @Param("campusId") Integer campusId, @Param("name") String name
-    );
-
-    @Query(
-            "Select pprd from PostProduct pprd " +
-                    "Where pprd.campusId.campusId = :campusId " +
-                    "AND pprd.postTypeId.postTypeId = :postTypeId"
-    )
-    List<PostProduct> filterPostProductByCampusAndPostType(
-            Pageable pageable, @Param("campusId") Integer campusId, @Param("postTypeId") Integer postTypeId
-    );
-
-    @Query(
-            "SELECT pprd FROM PostProduct pprd " +
-                    "WHERE pprd.campusId.campusId = :campusId " +
-                    "AND pprd.postTypeId.postTypeId = :postTypeId " +
-                    "AND pprd.productId.productDetailId.productName LIKE CONCAT('%', :name, '%')"
-    )
-    List<PostProduct> filterPostProductByAll(
-            Pageable pageable, @Param("campusId") Integer campusId,
-            @Param("postTypeId") Integer postTypeId, @Param("name") String name
-    );
-
-    @Query(
-            "SELECT pprd FROM PostProduct pprd " +
-                    "WHERE pprd.campusId.campusId = :campusId"
-    )
-    List<PostProduct> filterPostProductByCampus(
-            Pageable pageable, @Param("campusId") Integer campusId
-    );
-
-    @Query(
-            "SELECT pprd FROM PostProduct pprd " +
-                    "WHERE pprd.productId.productDetailId.productName LIKE CONCAT('%', :name, '%')"
-    )
-    List<PostProduct> filterPostProductByName(
-            Pageable pageable, @Param("name") String name
-    );
-
-    @Query(
-            "SELECT pprd FROM PostProduct pprd " +
-                    "WHERE pprd.postTypeId.postTypeId = :postTypeId "
-    )
-    List<PostProduct> filterPostProductByPostType(
-            Pageable pageable, @Param("postTypeId") Integer postTypeId
-    );
-    @Query(
-            "SELECT pprd FROM PostProduct pprd " +
                     "WHERE pprd.postProductId =  :postProductId"
     )
     PostProduct getPostProductByPostId(@Param("postProductId") Integer postProductId);
@@ -87,7 +26,7 @@ public interface PostProductRepository extends JpaRepository<PostProduct, Intege
                     "AND pprd.postTypeId LIKE CONCAT('%', :nameProduct, '%')",
             nativeQuery = true
     )
-    List<PostProduct> test(
+    List<PostProduct> filterPostProduct(
             Pageable pageable, @Param("campus") String campus, @Param("postType") String postType,
             @Param("nameProduct") String nameProduct
     );
