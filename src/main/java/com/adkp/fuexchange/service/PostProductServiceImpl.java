@@ -61,4 +61,10 @@ public class PostProductServiceImpl implements PostProductService {
         }
     }
 
+    @Override
+    public PostProductDTO getPostProductById(int postProductId) {
+        return postProductMapper.toPostProductDTO(postProductRepository.getPostProductByPostId(postProductId));
+    }
+
+
 }

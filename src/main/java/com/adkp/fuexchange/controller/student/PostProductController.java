@@ -40,4 +40,9 @@ public class PostProductController {
                 .data(productDTO)
                 .build();
     }
+    @GetMapping("detail/{postProductId}")
+    public PostProductDTO getPostProductByPostId(@PathVariable("postProductId") int postProductId){
+        return postProductService.getPostProductById(postProductId);
+    }
+
 }

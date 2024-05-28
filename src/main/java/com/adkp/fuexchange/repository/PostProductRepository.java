@@ -1,6 +1,7 @@
 package com.adkp.fuexchange.repository;
 
 import com.adkp.fuexchange.pojo.PostProduct;
+import com.adkp.fuexchange.pojo.Product;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -73,5 +74,10 @@ public interface PostProductRepository extends JpaRepository<PostProduct, Intege
     List<PostProduct> filterPostProductByPostType(
             Pageable pageable, @Param("postTypeId") Integer postTypeId
     );
+    @Query(
+            "SELECT pprd FROM PostProduct pprd " +
+                    "WHERE pprd.postProductId =  :postProductId"
+    )
+    PostProduct getPostProductByPostId(@Param("postProductId") Integer postProductId);
 
 }
