@@ -33,16 +33,16 @@ public class PostProductController {
             @RequestParam(value = "postTypeId", required = false) Integer postTypeId,
             @RequestParam(value = "name", required = false) String name) {
 
-        String campus = Optional.ofNullable(campusId).map(String::valueOf).orElse("");
-        String postType = Optional.ofNullable(postTypeId).map(String::valueOf).orElse("");
-        String nameProduct = Optional.ofNullable(name).map(String::valueOf).orElse("");
+        System.out.println(campusId);
+        System.out.println(postTypeId);
+        System.out.println(name);
 
-        List<PostProductDTO> postProductDTO = postProductService.viewMorePostProduct(current, campus, postType, nameProduct);
+        List<PostProductDTO> postProductDTO = postProductService.viewMorePostProduct(current, campusId, postTypeId, name);
 
         return PostProductResponse
                 .builder()
                 .responseObject(new ResponseObject(HttpStatusCode.valueOf(200).value(), "Success"))
-                .meta(new MetaPostProduct(postProductService.countPostProduct(campus, postType, name, postProductDTO), current))
+                .meta(new MetaPostProduct(postProductService.countPostProduct(campusId, postTypeId, name, postProductDTO), current))
                 .data(postProductDTO)
                 .build();
     }

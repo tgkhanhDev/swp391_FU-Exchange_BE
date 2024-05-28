@@ -26,7 +26,7 @@ public class PostProductServiceImpl implements PostProductService {
     }
 
     @Override
-    public List<PostProductDTO> viewMorePostProduct(int current, String campusId, String postTypeId, String name) {
+    public List<PostProductDTO> viewMorePostProduct(int current, Integer campusId, Integer postTypeId, String name) {
         Pageable currentProduct = PageRequest.of(0, current);
 
         String campus = Optional.ofNullable(campusId).map(String::valueOf).orElse("");
@@ -44,12 +44,12 @@ public class PostProductServiceImpl implements PostProductService {
     }
 
     @Override
-        public long countPostProduct(String campusId, String postTypeId, String name, List<PostProductDTO> productDTOList) {
-        if  (!campusId.isEmpty() || !postTypeId.isEmpty() || !name.isEmpty()){
-            return productDTOList.size();
+        public long countPostProduct(Integer campusId, Integer postTypeId, String name, List<PostProductDTO> productDTOList) {
+        if (campusId == null && postTypeId == null && (name == null || name.isEmpty())) {
+            return postProductRepository.count();
         }
+        return productDTOList.size();
 
-        return postProductRepository.count();
     }
 
 
