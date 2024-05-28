@@ -33,10 +33,6 @@ public class PostProductController {
             @RequestParam(value = "postTypeId", required = false) Integer postTypeId,
             @RequestParam(value = "name", required = false) String name) {
 
-        System.out.println(campusId);
-        System.out.println(postTypeId);
-        System.out.println(name);
-
         List<PostProductDTO> postProductDTO = postProductService.viewMorePostProduct(current, campusId, postTypeId, name);
 
         return PostProductResponse
