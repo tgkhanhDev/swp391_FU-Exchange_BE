@@ -9,7 +9,8 @@ import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {StudentMapper.class, RoleMapper.class})
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
+        uses = {StudentMapper.class, RoleMapper.class})
 public interface RegisteredStudentMapper {
 
     @Mapping(source = "registeredStudentId", target = "registeredStudentId")

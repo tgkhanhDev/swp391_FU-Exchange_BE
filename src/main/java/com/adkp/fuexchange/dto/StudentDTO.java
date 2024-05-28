@@ -24,5 +24,5 @@ public class StudentDTO {
 
     private String gender;
 
-    private Date dob;
+    private String dob;
 }

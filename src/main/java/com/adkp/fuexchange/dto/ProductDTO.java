@@ -8,10 +8,12 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@JsonIgnoreProperties({"productDetailId", "sellerId"})
+@JsonIgnoreProperties({"productDetailId"})
 public class ProductDTO {
 
     private int productId;
+
+    private SellerDTO seller;
 
     private ProductDetailDTO detail;
 
@@ -25,5 +27,4 @@ public class ProductDTO {
 
     private ProductDetail productDetailId;
 
-    private Seller sellerId;
 }
