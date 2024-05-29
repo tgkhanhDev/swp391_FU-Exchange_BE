@@ -44,12 +44,11 @@ public class PostProductServiceImpl implements PostProductService {
     }
 
     @Override
-        public long countPostProduct(Integer campusId, Integer postTypeId, String name, List<PostProductDTO> productDTOList) {
+        public long countPostProduct(Integer campusId, Integer postTypeId, String name, List<PostProductDTO> postProductDTOList) {
         if (campusId == null && postTypeId == null && (name == null || name.isEmpty())) {
             return postProductRepository.count();
         }
-        return productDTOList.size();
-
+        return postProductDTOList.size();
     }
 
 

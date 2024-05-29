@@ -37,7 +37,7 @@ public class RegisteredStudentDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return !registeredStudent.isActive();
+        return registeredStudent.isActive();
     }
 
     @Override
