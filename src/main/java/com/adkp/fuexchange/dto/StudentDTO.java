@@ -2,6 +2,8 @@ package com.adkp.fuexchange.dto;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class StudentDTO {
 
@@ -19,5 +21,5 @@ public class StudentDTO {
 
     private String gender;
 
-    private String dob;
+    private Date dob;
 }

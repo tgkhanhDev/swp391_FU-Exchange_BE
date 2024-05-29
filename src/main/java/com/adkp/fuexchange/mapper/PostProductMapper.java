@@ -20,7 +20,7 @@ public interface PostProductMapper {
     @Mapping(source = "campusId", target = "campus")
     @Mapping(source = "postStatusId", target = "postStatus")
     @Mapping(source = "quantity", target = "quantity")
-    @Mapping(source = "createDate", target = "createDate", dateFormat = "dd/MM/yyyy")
+    @Mapping(source = "createDate", target = "createDate")
     @Mapping(source = "content", target = "content")
     PostProductDTO toPostProductDTO(PostProduct postProduct);
 

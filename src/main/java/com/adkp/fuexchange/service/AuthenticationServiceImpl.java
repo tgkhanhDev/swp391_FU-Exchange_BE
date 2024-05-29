@@ -56,16 +56,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         .content("Sai tài khoản hoặc mật khẩu")
                         .build();
             } else if (!registeredStudent.isAccountNonLocked()) {
-                return new LoginResponse(
-                        HttpStatus.UNAUTHORIZED.value(),
-                        HttpStatus.UNAUTHORIZED.name().toLowerCase(),
-                        "Tài khoản bị vô hiệu hóa",
-                        InforLoginResponse.builder()
-                                .username(registeredStudent
-                                        .getUsername())
-                                .role(registeredStudent.getAuthorities().stream().findFirst().toString())
-                                .accessToken("123")
-                                .build());
+                return LoginResponse.builder()
+                        .statusCode(HttpStatus.UNAUTHORIZED.value())
+                        .message(HttpStatus.UNAUTHORIZED.name().toLowerCase())
+                        .content("Tài khoản bị vô hiệu hóa")
+                        .build();
             }
             Authentication authentication = authenticationManager
                     .authenticate(

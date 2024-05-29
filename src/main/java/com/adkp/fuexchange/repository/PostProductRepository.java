@@ -24,11 +24,12 @@ public interface PostProductRepository extends JpaRepository<PostProduct, Intege
                     "JOIN ProductDetail pd ON p.productDetailId = pd.productDetailId " +
                     "WHERE pprd.campusId LIKE CONCAT('%', :campus, '%') " +
                     "AND pprd.postTypeId LIKE CONCAT('%', :postType, '%') " +
-                    "AND pd.productName LIKE CONCAT('%', :name, '%')",
+                    "AND pd.productName LIKE CONCAT('%', :name, '%')" +
+                    "AND p.categoryId LIKE CONCAT('%', :category, '%')",
             nativeQuery = true
     )
     List<PostProduct> filterPostProduct(
             Pageable pageable, @Param("campus") String campus, @Param("postType") String postType,
-            @Param("name") String nameProduct
+            @Param("name") String nameProduct, @Param("category") String categoryId
     );
 }
