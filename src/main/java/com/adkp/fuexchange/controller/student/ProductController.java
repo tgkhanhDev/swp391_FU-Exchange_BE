@@ -1,15 +1,6 @@
 package com.adkp.fuexchange.controller.student;
 
-import com.adkp.fuexchange.dto.ProductDTO;
-import com.adkp.fuexchange.response.MetaPostProduct;
-import com.adkp.fuexchange.response.PostProductResponse;
-import com.adkp.fuexchange.response.ResponseObject;
-import com.adkp.fuexchange.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/product")

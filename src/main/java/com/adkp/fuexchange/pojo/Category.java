@@ -20,7 +20,9 @@ public class Category {
 
     private String categoryName;
 
-    public Category(String categoryName) {
+    private String imageUrl;
+    public Category(String categoryName, String imageUrl) {
         this.categoryName = categoryName;
+        this.imageUrl = imageUrl;
     }
 }
