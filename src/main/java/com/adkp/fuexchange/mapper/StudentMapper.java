@@ -19,7 +19,7 @@ public interface StudentMapper {
     @Mapping(source = "address", target = "address")
     @Mapping(source = "phoneNumber", target = "phoneNumber")
     @Mapping(source = "gender", target = "gender")
-    @Mapping(source = "dob", target = "dob", dateFormat = "dd-MM-yyyy")
+    @Mapping(source = "dob", target = "dob")
     StudentDTO toStudentDTO(Student student);
 
     @InheritInverseConfiguration(name = "toStudentDTO")
