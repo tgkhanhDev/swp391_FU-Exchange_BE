@@ -2,8 +2,6 @@ package com.adkp.fuexchange.dto;
 
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 public class PostProductDTO {
 

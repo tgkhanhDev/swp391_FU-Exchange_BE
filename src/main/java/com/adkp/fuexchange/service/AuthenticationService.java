@@ -1,6 +1,5 @@
 package com.adkp.fuexchange.service;
 
-import com.adkp.fuexchange.request.CheckInformationRequest;
 import com.adkp.fuexchange.request.LoginRequest;
 import com.adkp.fuexchange.request.RegisterRequest;
 import com.adkp.fuexchange.response.LoginResponse;
@@ -12,5 +11,5 @@ public interface AuthenticationService {
 
     ResponseObject register(RegisterRequest registerRequest);
 
-    ResponseObject checkInformationRegister(CheckInformationRequest checkInformationRequest);
+    ResponseObject checkInformationRegister(String studentId,String identity);
 }

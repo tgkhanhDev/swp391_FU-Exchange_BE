@@ -1,7 +1,5 @@
 package com.adkp.fuexchange.dto;
 
-import com.adkp.fuexchange.dto.ProductImageDTO;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 

@@ -1,13 +1,11 @@
 package com.adkp.fuexchange.mapper;
 
 import com.adkp.fuexchange.dto.ProductDTO;
-import com.adkp.fuexchange.pojo.*;
+import com.adkp.fuexchange.pojo.Product;
 import org.mapstruct.*;
 
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.List;
-import java.util.Locale;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
         uses = {ProductDetailMapper.class, ProductImageMapper.class, VariationMapper.class, SellerMapper.class})

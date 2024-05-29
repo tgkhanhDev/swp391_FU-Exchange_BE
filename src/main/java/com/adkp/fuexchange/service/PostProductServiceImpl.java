@@ -2,7 +2,6 @@ package com.adkp.fuexchange.service;
 
 import com.adkp.fuexchange.dto.PostProductDTO;
 import com.adkp.fuexchange.mapper.PostProductMapper;
-import com.adkp.fuexchange.pojo.PostProduct;
 import com.adkp.fuexchange.repository.PostProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;

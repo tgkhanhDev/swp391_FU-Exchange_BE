@@ -1,6 +1,5 @@
 package com.adkp.fuexchange.controller;
 
-import com.adkp.fuexchange.request.CheckInformationRequest;
 import com.adkp.fuexchange.request.LoginRequest;
 import com.adkp.fuexchange.request.RegisterRequest;
 import com.adkp.fuexchange.response.LoginResponse;
@@ -32,8 +31,11 @@ public class AuthenticateController {
         return authenticationServiceImpl.register(registerRequest);
     }
 
-    @PostMapping("/check-information")
-    public ResponseObject checkInformationRegister(@RequestBody CheckInformationRequest checkInformationRequest){
-        return authenticationServiceImpl.checkInformationRegister(checkInformationRequest);
+    @GetMapping("/check-information")
+    public ResponseObject checkInformationRegister(
+            @RequestParam("studentId") String studentId,
+            @RequestParam("identity") String identity
+    ){
+        return authenticationServiceImpl.checkInformationRegister(studentId, identity);
     }
 }
