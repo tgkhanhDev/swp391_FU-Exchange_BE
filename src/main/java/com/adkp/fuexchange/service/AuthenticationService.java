@@ -12,4 +12,6 @@ public interface AuthenticationService {
     ResponseObject register(RegisterRequest registerRequest);
 
     ResponseObject checkInformationRegister(String studentId,String identity);
+  
+    ResponseObject checkInformationRegister(CheckInformationRequest checkInformationRequest);
 }

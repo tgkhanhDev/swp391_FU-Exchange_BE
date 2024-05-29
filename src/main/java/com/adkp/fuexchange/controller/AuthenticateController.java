@@ -38,4 +38,9 @@ public class AuthenticateController {
     ){
         return authenticationServiceImpl.checkInformationRegister(studentId, identity);
     }
+
+    @GetMapping("/isRegistered/{studentId}")
+    public LoginResponse IsRegistered(@PathVariable String studentId){
+        return authenticationServiceImpl.isRegistered(studentId);
+    }
 }
