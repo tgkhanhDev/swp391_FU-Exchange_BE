@@ -115,7 +115,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public ResponseObject checkInformationRegister(CheckInformationRequest checkInformationRequest) {
+
         boolean checkExist = studentRepository.existsById(checkInformationRequest.getStudentId());
+
         if (checkExist) {
             Student studentInfor = studentRepository.getReferenceById(checkInformationRequest.getStudentId());
             if (
