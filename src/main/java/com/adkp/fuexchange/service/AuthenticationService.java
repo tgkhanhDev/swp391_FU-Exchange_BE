@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -72,20 +73,28 @@ public class AuthenticationService {
     }
 
     public LoginResponse isRegistered(String studentId) {
-        UserDetails registeredStudent = registeredStudentDetailService.loadUserByUsername(studentId);
-
-        if (registeredStudent == null) {
+        try {
+            UserDetails registeredStudent = registeredStudentDetailService.loadUserByUsername(studentId);
+            if (registeredStudent == null) {
+                return LoginResponse.builder()
+                        .statusCode(HttpStatus.NON_AUTHORITATIVE_INFORMATION.value())
+                        .message(HttpStatus.NON_AUTHORITATIVE_INFORMATION.name().toLowerCase())
+                        .content("Tài khoản chưa tồn tại")
+                        .build();
+            } else {
+                return LoginResponse.builder()
+                        .statusCode(HttpStatus.ACCEPTED.value())
+                        .message(HttpStatus.ACCEPTED.name().toLowerCase())
+                        .content("OK")
+                        .build();
+            }
+        } catch (UsernameNotFoundException usernameNotFoundException) {
             return LoginResponse.builder()
-                    .statusCode(HttpStatus.NOT_FOUND.value())
-                    .message(HttpStatus.NOT_FOUND.name().toLowerCase())
+                    .statusCode(HttpStatus.NON_AUTHORITATIVE_INFORMATION.value())
+                    .message(HttpStatus.NON_AUTHORITATIVE_INFORMATION.name().toLowerCase())
                     .content("Tài khoản chưa tồn tại")
                     .build();
-        }else{
-            return LoginResponse.builder()
-                    .statusCode(HttpStatus.ACCEPTED.value())
-                    .message(HttpStatus.ACCEPTED.name().toLowerCase())
-                    .content("OK")
-                    .build();
         }
+
     }
 }
