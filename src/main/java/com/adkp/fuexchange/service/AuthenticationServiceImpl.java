@@ -5,7 +5,6 @@ import com.adkp.fuexchange.pojo.Student;
 import com.adkp.fuexchange.repository.RegisteredStudentRepository;
 import com.adkp.fuexchange.repository.RoleRepository;
 import com.adkp.fuexchange.repository.StudentRepository;
-import com.adkp.fuexchange.request.CheckInformationRequest;
 import com.adkp.fuexchange.request.LoginRequest;
 import com.adkp.fuexchange.request.RegisterRequest;
 import com.adkp.fuexchange.response.InforLoginResponse;
@@ -30,7 +29,6 @@ import org.springframework.stereotype.Service;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final RegisteredStudentDetailService registeredStudentDetailService;
-
     private final RegisteredStudentRepository registeredStudentRepository;
     private final AuthenticationManager authenticationManager;
     private final StudentRepository studentRepository;
@@ -52,11 +50,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             UserDetails registeredStudent = registeredStudentDetailService.loadUserByUsername(loginRequest.getUsername());
 
             if (!passwordEncoder.matches(loginRequest.getPassword(), registeredStudent.getPassword())) {
-                return LoginResponse.builder().statusCode(HttpStatus.UNAUTHORIZED.value()).message(HttpStatus.UNAUTHORIZED.name().toLowerCase()).content("Sai tài khoản hoặc mật khẩu").build();
+                return LoginResponse.builder()
+                        .statusCode(HttpStatus.UNAUTHORIZED.value())
+                        .message(HttpStatus.UNAUTHORIZED.name().toLowerCase())
+                        .content("Sai tài khoản hoặc mật khẩu")
+                        .build();
             } else if (!registeredStudent.isAccountNonLocked()) {
-                return new LoginResponse(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.name().toLowerCase(), "Tài khoản bị vô hiệu hóa", InforLoginResponse.builder().username(registeredStudent.getUsername()).role(registeredStudent.getAuthorities().toString()).accessToken("123").build());
+                return LoginResponse.builder()
+                        .statusCode(HttpStatus.UNAUTHORIZED.value())
+                        .message(HttpStatus.UNAUTHORIZED.name().toLowerCase())
+                        .content("Tài khoản bị vô hiệu hóa")
+                        .build();
             }
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+            Authentication authentication = authenticationManager
+                    .authenticate(
+                            new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+                                    loginRequest.getPassword())
+                    );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             return new LoginResponse(
                     HttpStatus.OK.value(),
@@ -83,7 +93,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public ResponseObject register(RegisterRequest registerRequest) {
         try {
             if (!registerRequest.getPassword().equals(registerRequest.getConfirmPassword())) {
-                return new ResponseObject(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.name(), "Mật khẩu xác nhận không trùng khớp!");
+                return new ResponseObject(
+                        HttpStatus.BAD_REQUEST.value(),
+                        HttpStatus.BAD_REQUEST.name(),
+                        "Mật khẩu xác nhận không trùng khớp!"
+                );
             }
             registeredStudentRepository.save(
                     RegisteredStudent.builder()
@@ -114,27 +128,27 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public ResponseObject checkInformationRegister(CheckInformationRequest checkInformationRequest) {
+    public ResponseObject checkInformationRegister(String studentId, String identity) {
 
-        boolean checkExist = studentRepository.existsById(checkInformationRequest.getStudentId());
+        boolean checkExist = studentRepository.existsById(studentId);
 
         if (checkExist) {
-            Student studentInfor = studentRepository.getReferenceById(checkInformationRequest.getStudentId());
+            Student studentInfor = studentRepository.getReferenceById(studentId);
             if (
-                    studentInfor.getStudentId().equals(checkInformationRequest.getStudentId())
-                            && studentInfor.getIdentityCard().equals(checkInformationRequest.getIdentity())
+                    studentInfor.getStudentId().equals(studentId)
+                            && studentInfor.getIdentityCard().equals(identity)
             ) {
                 return ResponseObject.builder()
                         .status(HttpStatus.OK.value())
                         .message(HttpStatus.OK.name())
-                        .content("Thông tin chính xác")
+                        .content("Thông tin chính xác!")
                         .build();
             }
         }
         return ResponseObject.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message(HttpStatus.BAD_REQUEST.name())
-                .content("Thông tin sinh viên không tồn tại")
+                .content("Thông tin sinh viên không tồn tại!")
                 .build();
     }
 

@@ -28,14 +28,16 @@ public class PostProductController {
             @PathVariable("current") int current,
             @RequestParam(value = "campusId", required = false) Integer campusId,
             @RequestParam(value = "postTypeId", required = false) Integer postTypeId,
-            @RequestParam(value = "name", required = false) String name) {
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "categoryId", required = false) Integer categoryId
+    ) {
 
-        List<PostProductDTO> postProductDTO = postProductService.viewMorePostProduct(current, campusId, postTypeId, name);
+        List<PostProductDTO> postProductDTO = postProductService.viewMorePostProduct(current, campusId, postTypeId, name, categoryId);
 
         return PostProductResponse
                 .builder()
                 .responseObject(new ResponseObject(HttpStatusCode.valueOf(200).value(), "Success", "Xem thêm thành công"))
-                .meta(new MetaResponse(postProductService.countPostProduct(campusId, postTypeId, name, postProductDTO), current))
+                .meta(new MetaResponse(postProductService.countPostProduct(campusId, postTypeId, name, categoryId, postProductDTO), current))
                 .data(postProductDTO)
                 .build();
     }

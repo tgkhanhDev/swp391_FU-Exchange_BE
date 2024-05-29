@@ -2,9 +2,7 @@ package com.adkp.fuexchange.service;
 
 import com.adkp.fuexchange.dto.CampusDTO;
 import com.adkp.fuexchange.mapper.CampusMapper;
-import com.adkp.fuexchange.mapper.PostProductMapper;
 import com.adkp.fuexchange.repository.CampusRepository;
-import com.adkp.fuexchange.repository.PostProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

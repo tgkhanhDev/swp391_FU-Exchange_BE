@@ -2,7 +2,6 @@ package com.adkp.fuexchange.service;
 
 import com.adkp.fuexchange.dto.PostProductDTO;
 import com.adkp.fuexchange.mapper.PostProductMapper;
-import com.adkp.fuexchange.pojo.PostProduct;
 import com.adkp.fuexchange.repository.PostProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -26,15 +25,15 @@ public class PostProductServiceImpl implements PostProductService {
     }
 
     @Override
-    public List<PostProductDTO> viewMorePostProduct(int current, Integer campusId, Integer postTypeId, String name) {
+    public List<PostProductDTO> viewMorePostProduct(int current, Integer campusId, Integer postTypeId, String name, Integer categoryId) {
         Pageable currentProduct = PageRequest.of(0, current);
 
         String campus = Optional.ofNullable(campusId).map(String::valueOf).orElse("");
         String postType = Optional.ofNullable(postTypeId).map(String::valueOf).orElse("");
         String nameProduct = Optional.ofNullable(name).map(String::valueOf).orElse("");
-
+        String category = Optional.ofNullable(name).map(String::valueOf).orElse("");
         return postProductMapper.toPostProductDTOList(
-            postProductRepository.filterPostProduct(currentProduct, campus, postType, nameProduct)
+            postProductRepository.filterPostProduct(currentProduct, campus, postType, nameProduct, category)
         );
     }
 
@@ -44,7 +43,7 @@ public class PostProductServiceImpl implements PostProductService {
     }
 
     @Override
-        public long countPostProduct(Integer campusId, Integer postTypeId, String name, List<PostProductDTO> postProductDTOList) {
+        public long countPostProduct(Integer campusId, Integer postTypeId, String name, Integer categoryId, List<PostProductDTO> postProductDTOList) {
         if (campusId == null && postTypeId == null && (name == null || name.isEmpty())) {
             return postProductRepository.count();
         }

@@ -5,10 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor(force = true)
+@NoArgsConstructor
 @AllArgsConstructor
-public class CheckInformationRequest {
-    private String studentId;
+public class UpdatePasswordRequest {
 
-    private String identity;
+    private int idWantUpdate;
+
+    private String password;
+
+    private String confirmPassword;
 }
