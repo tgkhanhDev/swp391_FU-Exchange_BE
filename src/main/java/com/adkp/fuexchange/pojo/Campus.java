@@ -20,7 +20,10 @@ public class Campus {
 
     private String campusName;
 
-    public Campus(String campusName) {
+    private String imageUrl;
+
+    public Campus(String campusName, String imageUrl) {
         this.campusName = campusName;
+        this.imageUrl = imageUrl;
     }
 }

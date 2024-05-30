@@ -53,8 +53,8 @@ public class RegisteredStudentServiceImpl implements RegisteredStudentService{
                             .build();
                 }
                 return ResponseObject.builder()
-                        .status(HttpStatus.OK.value())
-                        .message(HttpStatus.OK.name())
+                        .status(HttpStatus.BAD_REQUEST.value())
+                        .message(HttpStatus.BAD_REQUEST.name())
                         .content("Mật khẩu không trùng khớp")
                         .build();
             }
