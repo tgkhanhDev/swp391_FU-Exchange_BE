@@ -3,6 +3,7 @@ package com.adkp.fuexchange.service;
 import com.adkp.fuexchange.dto.SellerDTO;
 import com.adkp.fuexchange.mapper.SellerMapper;
 import com.adkp.fuexchange.pojo.RegisteredStudent;
+import com.adkp.fuexchange.pojo.Roles;
 import com.adkp.fuexchange.pojo.Seller;
 import com.adkp.fuexchange.repository.RegisteredStudentRepository;
 import com.adkp.fuexchange.repository.SellerRepository;
@@ -45,13 +46,15 @@ public class SellerServiceImpl implements SellerService {
     @Override
     @Transactional
     public ResponseObject registerToSeller(RegisterToSellerRequest registerToSellerRequest) {
-        if (sellerRepository.existsById(registerToSellerRequest.getRegisteredStudentId())) {
+        if (registeredStudentRepository.existsById(registerToSellerRequest.getRegisteredStudentId())) {
             RegisteredStudent registeredStudent = registeredStudentRepository.getReferenceById(registerToSellerRequest.getRegisteredStudentId());
             if (passwordEncoder.matches(
-                    passwordEncoder.encode(registerToSellerRequest.getPassword()),
+                    registerToSellerRequest.getPassword(),
                     registeredStudent.getPassword()
             )) {
                 try {
+                    registeredStudent.setRoleId(new Roles("Seller"));
+                    registeredStudentRepository.save(registeredStudent);
                     sellerRepository.save(new Seller(
                             registeredStudent,
                             registerToSellerRequest.getBankingNumber(),
