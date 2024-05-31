@@ -49,13 +49,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), registeredStudent.getPassword())) {
             return LoginResponse.builder()
-                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .status(HttpStatus.UNAUTHORIZED.value())
                     .message(HttpStatus.UNAUTHORIZED.name().toLowerCase())
                     .content("Sai tài khoản hoặc mật khẩu")
                     .build();
         } else if (!registeredStudent.isAccountNonLocked()) {
             return LoginResponse.builder()
-                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .status(HttpStatus.UNAUTHORIZED.value())
                     .message(HttpStatus.UNAUTHORIZED.name().toLowerCase())
                     .content("Tài khoản bị vô hiệu hóa")
                     .build();
@@ -141,7 +141,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         if (registeredStudent == null || !passwordEncoder.matches(loginRequest.getPassword(), registeredStudent.getPassword())) {
             return LoginResponse.builder()
-                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .status(HttpStatus.BAD_REQUEST.value())
                     .message(HttpStatus.BAD_REQUEST.name().toLowerCase())
                     .content("Sai tài khoản hoặc mật khẩu")
                     .build();
@@ -179,7 +179,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public LoginResponse isRegistered(String studentId) {
         UserDetails registeredStudent = registeredStudentDetailService.loadUserByUsername(studentId);
         return LoginResponse.builder()
-                .statusCode(HttpStatus.OK.value())
+                .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name().toLowerCase())
                 .content("OK")
                 .build();
