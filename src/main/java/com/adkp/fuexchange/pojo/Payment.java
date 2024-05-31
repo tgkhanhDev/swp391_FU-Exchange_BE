@@ -32,13 +32,10 @@ public class Payment {
 
     private Date createTime;
 
-    private Date completeTime;
-
-    public Payment(Orders orderId, PaymentMethod paymentMethodId, boolean paymentStatus, Date createTime, Date completeTime) {
+    public Payment(Orders orderId, PaymentMethod paymentMethodId, boolean paymentStatus, Date createTime) {
         this.orderId = orderId;
         this.paymentMethodId = paymentMethodId;
         this.paymentStatus = paymentStatus;
         this.createTime = createTime;
-        this.completeTime = completeTime;
     }
 }
