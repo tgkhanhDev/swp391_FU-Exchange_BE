@@ -13,14 +13,12 @@ import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.security.RegisteredStudentDetailService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -45,81 +43,60 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.roleRepository = roleRepository;
     }
 
+    @Override
     public LoginResponse login(LoginRequest loginRequest) {
-        try {
-            UserDetails registeredStudent = registeredStudentDetailService.loadUserByUsername(loginRequest.getUsername());
+        UserDetails registeredStudent = registeredStudentDetailService.loadUserByUsername(loginRequest.getUsername());
 
-            if (!passwordEncoder.matches(loginRequest.getPassword(), registeredStudent.getPassword())) {
-                return LoginResponse.builder()
-                        .statusCode(HttpStatus.UNAUTHORIZED.value())
-                        .message(HttpStatus.UNAUTHORIZED.name().toLowerCase())
-                        .content("Sai tài khoản hoặc mật khẩu")
-                        .build();
-            } else if (!registeredStudent.isAccountNonLocked()) {
-                return LoginResponse.builder()
-                        .statusCode(HttpStatus.UNAUTHORIZED.value())
-                        .message(HttpStatus.UNAUTHORIZED.name().toLowerCase())
-                        .content("Tài khoản bị vô hiệu hóa")
-                        .build();
-            }
-            Authentication authentication = authenticationManager
-                    .authenticate(
-                            new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
-                                    loginRequest.getPassword())
-                    );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            return new LoginResponse(
-                    HttpStatus.OK.value(),
-                    HttpStatus.OK.name().toLowerCase(),
-                    "Đăng nhập thành công",
-                    InforLoginResponse
-                            .builder()
-                            .username(registeredStudent.getUsername())
-                            .role(registeredStudent.getAuthorities().toString())
-                            .accessToken("123")
-                            .build()
-            );
-        } catch (UsernameNotFoundException exception) {
-            return new LoginResponse(
-                    HttpStatus.OK.value(),
-                    HttpStatus.OK.name().toLowerCase(),
-                    ("Mã số sinh viên không tồn tại"),
-                    null);
+        if (!passwordEncoder.matches(loginRequest.getPassword(), registeredStudent.getPassword())) {
+            return LoginResponse.builder()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .message(HttpStatus.UNAUTHORIZED.name().toLowerCase())
+                    .content("Sai tài khoản hoặc mật khẩu")
+                    .build();
+        } else if (!registeredStudent.isAccountNonLocked()) {
+            return LoginResponse.builder()
+                    .statusCode(HttpStatus.UNAUTHORIZED.value())
+                    .message(HttpStatus.UNAUTHORIZED.name().toLowerCase())
+                    .content("Tài khoản bị vô hiệu hóa")
+                    .build();
         }
+        Authentication authentication = authenticationManager
+                .authenticate(
+                        new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+                                loginRequest.getPassword())
+                );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return new LoginResponse(
+                HttpStatus.OK.value(),
+                HttpStatus.OK.name().toLowerCase(),
+                "Đăng nhập thành công",
+                InforLoginResponse
+                        .builder()
+                        .username(registeredStudent.getUsername())
+                        .role(registeredStudent.getAuthorities().toString())
+                        .accessToken("123")
+                        .build()
+        );
     }
 
     @Override
     @Transactional
     public ResponseObject register(RegisterRequest registerRequest) {
-        try {
-            if (!registerRequest.getPassword().equals(registerRequest.getConfirmPassword())) {
-                return new ResponseObject(
-                        HttpStatus.BAD_REQUEST.value(),
-                        HttpStatus.BAD_REQUEST.name(),
-                        "Mật khẩu xác nhận không trùng khớp!"
-                );
-            }
-            registeredStudentRepository.save(
-                    RegisteredStudent.builder()
-                            .studentId(studentRepository.getReferenceById(registerRequest.getStudentId()))
-                            .password(passwordEncoder.encode(registerRequest.getPassword()))
-                            .roleId(roleRepository.getReferenceById(1))
-                            .isActive(true)
-                            .build()
+        if (!registerRequest.getPassword().equals(registerRequest.getConfirmPassword())) {
+            return new ResponseObject(
+                    HttpStatus.BAD_REQUEST.value(),
+                    HttpStatus.BAD_REQUEST.name(),
+                    "Mật khẩu xác nhận không trùng khớp!"
             );
-        } catch (DataAccessException dataAccessException) {
-            return ResponseObject.builder()
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                    .message(dataAccessException.getMessage())
-                    .content("Lỗi khi lưu dữ liệu xuống cơ sở dữ liệu.")
-                    .build();
-        } catch (Exception exception) {
-            return ResponseObject.builder()
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                    .message(exception.getMessage())
-                    .content("Đã xảy ra lỗi không xác định.")
-                    .build();
         }
+        registeredStudentRepository.save(
+                RegisteredStudent.builder()
+                        .studentId(studentRepository.getReferenceById(registerRequest.getStudentId()))
+                        .password(passwordEncoder.encode(registerRequest.getPassword()))
+                        .roleId(roleRepository.getReferenceById(1))
+                        .isActive(true)
+                        .build()
+        );
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
@@ -152,14 +129,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
     }
 
+    @Override
     public LoginResponse loginResponse(LoginRequest loginRequest) {
 
         UserDetails registeredStudent = registeredStudentDetailService.loadUserByUsername(loginRequest.getUsername());
 
         if (registeredStudent == null || !passwordEncoder.matches(loginRequest.getPassword(), registeredStudent.getPassword())) {
             return LoginResponse.builder()
-                    .statusCode(HttpStatus.UNAUTHORIZED.value())
-                    .message(HttpStatus.UNAUTHORIZED.name().toLowerCase())
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .message(HttpStatus.BAD_REQUEST.name().toLowerCase())
                     .content("Sai tài khoản hoặc mật khẩu")
                     .build();
         } else if (!registeredStudent.isAccountNonLocked()) {
@@ -192,30 +170,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         .build());
     }
 
+    @Override
     public LoginResponse isRegistered(String studentId) {
-        try {
-            UserDetails registeredStudent = registeredStudentDetailService.loadUserByUsername(studentId);
-            if (registeredStudent == null) {
-                return LoginResponse.builder()
-                        .statusCode(HttpStatus.NON_AUTHORITATIVE_INFORMATION.value())
-                        .message(HttpStatus.NON_AUTHORITATIVE_INFORMATION.name().toLowerCase())
-                        .content("Tài khoản chưa tồn tại")
-                        .build();
-            } else {
-                return LoginResponse.builder()
-                        .statusCode(HttpStatus.ACCEPTED.value())
-                        .message(HttpStatus.ACCEPTED.name().toLowerCase())
-                        .content("OK")
-                        .build();
-            }
-        } catch (UsernameNotFoundException usernameNotFoundException) {
-            return LoginResponse.builder()
-                    .statusCode(HttpStatus.NON_AUTHORITATIVE_INFORMATION.value())
-                    .message(HttpStatus.NON_AUTHORITATIVE_INFORMATION.name().toLowerCase())
-                    .content("Tài khoản chưa tồn tại")
-                    .build();
-        }
-
+        UserDetails registeredStudent = registeredStudentDetailService.loadUserByUsername(studentId);
+        return LoginResponse.builder()
+                .statusCode(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name().toLowerCase())
+                .content("OK")
+                .build();
     }
-
 }

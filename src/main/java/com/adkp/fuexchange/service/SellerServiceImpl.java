@@ -13,7 +13,6 @@ import com.adkp.fuexchange.request.UpdateStatusRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -52,33 +51,19 @@ public class SellerServiceImpl implements SellerService {
                     registerToSellerRequest.getPassword(),
                     registeredStudent.getPassword()
             )) {
-                try {
-                    registeredStudent.setRoleId(new Roles("Seller"));
-                    registeredStudentRepository.save(registeredStudent);
-                    sellerRepository.save(new Seller(
-                            registeredStudent,
-                            registerToSellerRequest.getBankingNumber(),
-                            registerToSellerRequest.getBankingName(),
-                            false
-                    ));
-                    return ResponseObject.builder()
-                            .status(HttpStatus.ACCEPTED.value())
-                            .message(HttpStatus.ACCEPTED.name())
-                            .content("Đăng ký thành công! Xin chờ xác nhận.")
-                            .build();
-                } catch (DataAccessException dataAccessException) {
-                    return ResponseObject.builder()
-                            .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                            .message(HttpStatus.INTERNAL_SERVER_ERROR.name())
-                            .content("Lỗi trong quá trình lưu trữ dữ liệu!")
-                            .build();
-                } catch (Exception exception) {
-                    return ResponseObject.builder()
-                            .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                            .message(HttpStatus.INTERNAL_SERVER_ERROR.name())
-                            .content("Lỗi không xác định!")
-                            .build();
-                }
+                registeredStudent.setRoleId(new Roles("Seller"));
+                registeredStudentRepository.save(registeredStudent);
+                sellerRepository.save(new Seller(
+                        registeredStudent,
+                        registerToSellerRequest.getBankingNumber(),
+                        registerToSellerRequest.getBankingName(),
+                        false
+                ));
+                return ResponseObject.builder()
+                        .status(HttpStatus.ACCEPTED.value())
+                        .message(HttpStatus.ACCEPTED.name())
+                        .content("Đăng ký thành công! Xin chờ xác nhận.")
+                        .build();
             }
         }
         return ResponseObject.builder()
@@ -92,29 +77,15 @@ public class SellerServiceImpl implements SellerService {
     @Transactional
     public ResponseObject updateInformationSeller(UpdateInformationSellerRequest updateInformationSellerRequest) {
         if (sellerRepository.existsById(updateInformationSellerRequest.getSellerId())) {
-            try {
-                Seller seller = sellerRepository.getReferenceById(updateInformationSellerRequest.getSellerId());
-                seller.setBankingNumber(updateInformationSellerRequest.getBankingNumber());
-                seller.setBankingName(updateInformationSellerRequest.getBankingName());
-                sellerRepository.save(seller);
-                return ResponseObject.builder()
-                        .status(HttpStatus.OK.value())
-                        .message(HttpStatus.OK.name())
-                        .content("Cập nhật thông tin thành công!")
-                        .build();
-            } catch (DataAccessException dataAccessException) {
-                return ResponseObject.builder()
-                        .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                        .message(HttpStatus.INTERNAL_SERVER_ERROR.name())
-                        .content("Lỗi trong quá trình lưu trữ dữ liệu!")
-                        .build();
-            } catch (Exception exception) {
-                return ResponseObject.builder()
-                        .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                        .message(HttpStatus.INTERNAL_SERVER_ERROR.name())
-                        .content("Lỗi không xác định!")
-                        .build();
-            }
+            Seller seller = sellerRepository.getReferenceById(updateInformationSellerRequest.getSellerId());
+            seller.setBankingNumber(updateInformationSellerRequest.getBankingNumber());
+            seller.setBankingName(updateInformationSellerRequest.getBankingName());
+            sellerRepository.save(seller);
+            return ResponseObject.builder()
+                    .status(HttpStatus.OK.value())
+                    .message(HttpStatus.OK.name())
+                    .content("Cập nhật thông tin thành công!")
+                    .build();
         }
         return ResponseObject.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
@@ -127,28 +98,14 @@ public class SellerServiceImpl implements SellerService {
     @Transactional
     public ResponseObject updateStatusSeller(UpdateStatusRequest updateStatusRequest) {
         if (sellerRepository.existsById(updateStatusRequest.getSellerId())) {
-            try {
-                Seller seller = sellerRepository.getReferenceById(updateStatusRequest.getSellerId());
-                seller.setActive(updateStatusRequest.getIsActive());
-                sellerRepository.save(seller);
-                return ResponseObject.builder()
-                        .status(HttpStatus.OK.value())
-                        .message(HttpStatus.OK.name())
-                        .content("Cập nhật thông tin thành công!")
-                        .build();
-            } catch (DataAccessException dataAccessException) {
-                return ResponseObject.builder()
-                        .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                        .message(HttpStatus.INTERNAL_SERVER_ERROR.name())
-                        .content("Lỗi trong quá trình lưu trữ dữ liệu!")
-                        .build();
-            } catch (Exception exception) {
-                return ResponseObject.builder()
-                        .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                        .message(HttpStatus.INTERNAL_SERVER_ERROR.name())
-                        .content("Lỗi không xác định!")
-                        .build();
-            }
+            Seller seller = sellerRepository.getReferenceById(updateStatusRequest.getSellerId());
+            seller.setActive(updateStatusRequest.getIsActive());
+            sellerRepository.save(seller);
+            return ResponseObject.builder()
+                    .status(HttpStatus.OK.value())
+                    .message(HttpStatus.OK.name())
+                    .content("Cập nhật thông tin thành công!")
+                    .build();
         }
         return ResponseObject.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
