@@ -13,7 +13,7 @@ public interface AuthenticationService {
 
     ResponseObject checkInformationRegister(String studentId,String identity);
 
-    LoginResponse loginResponse(LoginRequest loginRequest);
+//    LoginResponse loginResponse(LoginRequest loginRequest);
 
     LoginResponse isRegistered(String studentId);
 }

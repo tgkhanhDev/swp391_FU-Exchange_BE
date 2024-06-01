@@ -31,7 +31,7 @@ public class AuthenticateController {
             return authenticationServiceImpl.login(loginRequest);
         }
         return LoginResponse.builder()
-                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .status(HttpStatus.BAD_REQUEST.value())
                 .message(HttpStatus.BAD_REQUEST.name())
                 .content("Vui lòng nhập đầy đủ thông tin")
                 .build();
