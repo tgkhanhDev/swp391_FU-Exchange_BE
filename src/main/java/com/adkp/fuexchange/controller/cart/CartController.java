@@ -1,5 +1,6 @@
 package com.adkp.fuexchange.controller.cart;
 
+import com.adkp.fuexchange.dto.CartPostDTO;
 import com.adkp.fuexchange.pojo.CartPost;
 import com.adkp.fuexchange.service.CartPostService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,7 +22,7 @@ public class CartController {
     }
 
     @GetMapping("/cart/{studentId}")
-    public List<CartPost> viewCartPostByStudentId(@PathVariable String studentId){
+    public List<CartPostDTO> viewCartPostByStudentId(@PathVariable String studentId){
         return cartPostService.viewCartPostItemByStudentId(studentId);
     }
 

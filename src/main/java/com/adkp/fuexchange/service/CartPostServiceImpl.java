@@ -1,7 +1,7 @@
 package com.adkp.fuexchange.service;
 
-import com.adkp.fuexchange.pojo.CartPost;
-import com.adkp.fuexchange.repository.CartPostMapper;
+import com.adkp.fuexchange.dto.CartPostDTO;
+import com.adkp.fuexchange.mapper.CartPostMapper;
 import com.adkp.fuexchange.repository.CartPostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,8 @@ public class CartPostServiceImpl implements CartPostService{
     }
 
     @Override
-    public List<CartPost> viewCartPostItemByStudentId(String studentId) {
-        return cartPostRepository.getCartPostByStudentId(studentId);
+    public List<CartPostDTO> viewCartPostItemByStudentId(String studentId) {
+        return cartPostMapper.toCartPostDTOList(cartPostRepository.getCartPostByStudentId(studentId));
     }
+
 }
