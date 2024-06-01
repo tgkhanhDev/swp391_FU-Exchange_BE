@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
-
     private final RegisteredStudentDetailService registeredStudentDetailService;
     private final RegisteredStudentRepository registeredStudentRepository;
     private final AuthenticationManager authenticationManager;
@@ -134,46 +133,46 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
     }
 
-    @Override
-    public LoginResponse loginResponse(LoginRequest loginRequest) {
-
-        UserDetails registeredStudent = registeredStudentDetailService.loadUserByUsername(loginRequest.getUsername());
-
-        if (registeredStudent == null || !passwordEncoder.matches(loginRequest.getPassword(), registeredStudent.getPassword())) {
-            return LoginResponse.builder()
-                    .status(HttpStatus.BAD_REQUEST.value())
-                    .message(HttpStatus.BAD_REQUEST.name().toLowerCase())
-                    .content("Sai tài khoản hoặc mật khẩu")
-                    .build();
-        } else if (!registeredStudent.isAccountNonLocked()) {
-            return new LoginResponse(
-                    HttpStatus.UNAUTHORIZED.value(),
-                    HttpStatus.UNAUTHORIZED.name().toLowerCase(),
-                    "Tài khoản bị vô hiệu hóa",
-                    InforLoginResponse.builder()
-                            .username(registeredStudent.getUsername())
-                            .role(registeredStudent.getAuthorities().toString())
-                            .accessToken("123")
-                            .build());
-        }
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsername(),
-                        loginRequest.getPassword()
-                )
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        return new LoginResponse(HttpStatus.OK.value(),
-                HttpStatus.OK.name().toLowerCase(),
-                "Đăng nhập thành công",
-                InforLoginResponse.builder()
-                        .username(registeredStudent.getUsername())
-                        .role(registeredStudent.getAuthorities().toString())
-                        .accessToken("123")
-                        .build());
-    }
+//    @Override
+//    public LoginResponse loginResponse(LoginRequest loginRequest) {
+//
+//        UserDetails registeredStudent = registeredStudentDetailService.loadUserByUsername(loginRequest.getUsername());
+//
+//        if (registeredStudent == null || !passwordEncoder.matches(loginRequest.getPassword(), registeredStudent.getPassword())) {
+//            return LoginResponse.builder()
+//                    .status(HttpStatus.BAD_REQUEST.value())
+//                    .message(HttpStatus.BAD_REQUEST.name().toLowerCase())
+//                    .content("Sai tài khoản hoặc mật khẩu")
+//                    .build();
+//        } else if (!registeredStudent.isAccountNonLocked()) {
+//            return new LoginResponse(
+//                    HttpStatus.UNAUTHORIZED.value(),
+//                    HttpStatus.UNAUTHORIZED.name().toLowerCase(),
+//                    "Tài khoản bị vô hiệu hóa",
+//                    InforLoginResponse.builder()
+//                            .username(registeredStudent.getUsername())
+//                            .role(registeredStudent.getAuthorities().toString())
+//                            .accessToken("123")
+//                            .build());
+//        }
+//
+//        Authentication authentication = authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(
+//                        loginRequest.getUsername(),
+//                        loginRequest.getPassword()
+//                )
+//        );
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//
+//        return new LoginResponse(HttpStatus.OK.value(),
+//                HttpStatus.OK.name().toLowerCase(),
+//                "Đăng nhập thành công",
+//                InforLoginResponse.builder()
+//                        .username(registeredStudent.getUsername())
+//                        .role(registeredStudent.getAuthorities().toString())
+//                        .accessToken("123")
+//                        .build());
+//    }
 
     @Override
     public LoginResponse isRegistered(String studentId) {
