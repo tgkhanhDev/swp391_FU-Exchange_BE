@@ -7,7 +7,4 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface ReportSellerRepository extends JpaRepository<ReportSeller, Integer> {
-
-    @Query("Select rps From ReportSeller rps")
-    List<ReportSeller> findAllReportSeller();
 }

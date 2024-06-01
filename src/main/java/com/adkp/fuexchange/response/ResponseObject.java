@@ -17,4 +17,5 @@ public class ResponseObject {
 
     private String content;
 
+    private InforLoginResponse data;
 }

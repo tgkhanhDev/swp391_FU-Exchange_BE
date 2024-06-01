@@ -1,13 +1,7 @@
 package com.adkp.fuexchange.repository;
 
-import com.adkp.fuexchange.pojo.OrderProduct;
+import com.adkp.fuexchange.pojo.OrderPostProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
-
-public interface OrderProductRepository extends JpaRepository<OrderProduct, Integer> {
-
-    @Query("Select odp From OrderProduct odp")
-    List<OrderProduct> findAllOrderProduct();
+public interface OrderProductRepository extends JpaRepository<OrderPostProduct, Integer> {
 }

@@ -7,6 +7,4 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface TransactionsRepository extends JpaRepository<Transactions, Integer> {
-    @Query("Select t From Transactions t")
-    List<Transactions> getAllTransactions();
 }

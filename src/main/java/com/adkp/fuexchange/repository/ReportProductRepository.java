@@ -7,7 +7,4 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface ReportProductRepository extends JpaRepository<ReportProduct, Integer> {
-
-    @Query("Select rpp From ReportProduct rpp")
-    List<ReportProduct> findAllReportProduct();
 }

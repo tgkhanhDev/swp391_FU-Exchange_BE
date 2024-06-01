@@ -7,6 +7,4 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface PaymentRepository extends JpaRepository<Payment, Integer> {
-    @Query("Select pm From Payment pm")
-    List<Payment> findAllPayment();
 }
