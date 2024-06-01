@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
-@Table(name = "OrderProduct")
+@Table(name = "OrderPostProduct")
 public class OrderPostProduct {
 
     @EmbeddedId

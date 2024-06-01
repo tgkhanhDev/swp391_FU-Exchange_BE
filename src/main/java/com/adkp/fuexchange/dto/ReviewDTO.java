@@ -7,9 +7,13 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ReviewDTO {
-    int reviewId;
-    PostProductDTO postProductId;
-    OrdersDTO orderId;
-    int ratingNumber;
+    int review;
+
+    int postProductId;
+
+    int orderId;
+
+    int rating;
+
     String description;
 }

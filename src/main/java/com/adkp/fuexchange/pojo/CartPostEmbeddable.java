@@ -12,6 +12,6 @@ import java.io.Serializable;
 @Embeddable
 @NoArgsConstructor
 public class CartPostEmbeddable implements Serializable {
-    private int orderId;
-    private int productId;
+    private int cartId;
+    private int postProductId;
 }
