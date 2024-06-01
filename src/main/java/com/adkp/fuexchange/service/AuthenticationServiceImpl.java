@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
-
     private final RegisteredStudentDetailService registeredStudentDetailService;
     private final RegisteredStudentRepository registeredStudentRepository;
     private final AuthenticationManager authenticationManager;
@@ -105,10 +104,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public ResponseObject checkInformationRegister(String studentId, String identity) {
-
+        RegisteredStudent isRegister = registeredStudentRepository.findRegisteredStudentByStudentId(studentId);
         boolean checkExist = studentRepository.existsById(studentId);
-
-        if (checkExist) {
+        if (isRegister != null) {
+            return ResponseObject.builder()
+                    .status(HttpStatus.IM_USED.value())
+                    .message(HttpStatus.IM_USED.name())
+                    .content("Tài khoản đã được sử dụng!")
+                    .build();
+        } else if (checkExist) {
             Student studentInfor = studentRepository.getReferenceById(studentId);
             if (
                     studentInfor.getStudentId().equals(studentId)

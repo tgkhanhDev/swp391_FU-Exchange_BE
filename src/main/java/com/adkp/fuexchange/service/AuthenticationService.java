@@ -13,4 +13,5 @@ public interface AuthenticationService {
     ResponseObject checkInformationRegister(String studentId,String identity);
 
     ResponseObject isRegistered(String studentId);
+
 }

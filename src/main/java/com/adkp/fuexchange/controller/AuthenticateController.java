@@ -30,6 +30,7 @@ public class AuthenticateController {
             return authenticationService.login(loginRequest);
         }
         return ResponseObject.builder()
+
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message(HttpStatus.BAD_REQUEST.name())
                 .content("Vui lòng nhập đầy đủ thông tin")
