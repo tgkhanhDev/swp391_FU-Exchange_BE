@@ -3,11 +3,10 @@ package com.adkp.fuexchange.pojo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
-
+import lombok.NoArgsConstructor;
 import java.util.Date;
 
 @Data
-@ToString
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
 @Builder

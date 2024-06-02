@@ -7,7 +7,7 @@ import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.PostProductService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,13 +36,19 @@ public class PostProductController {
 
         return PostProductResponse
                 .builder()
-                .responseObject(new ResponseObject(HttpStatusCode.valueOf(200).value(), "Success", "Xem thêm thành công"))
+                .responseObject(
+                        ResponseObject.builder().status(HttpStatus.OK.value())
+                                .message("Success")
+                                .content("Xem thêm thành công")
+                                .build()
+                )
                 .meta(new MetaResponse(postProductService.countPostProduct(campusId, postTypeId, name, categoryId, postProductDTO), current))
                 .data(postProductDTO)
                 .build();
     }
+
     @GetMapping("detail/{postProductId}")
-    public PostProductDTO getPostProductByPostId(@PathVariable("postProductId") int postProductId){
+    public PostProductDTO getPostProductByPostId(@PathVariable("postProductId") int postProductId) {
         return postProductService.getPostProductById(postProductId);
     }
 
