@@ -1,6 +1,5 @@
 package com.adkp.fuexchange.controller.student;
 
-import com.adkp.fuexchange.dto.RegisteredStudentDTO;
 import com.adkp.fuexchange.request.UpdatePasswordRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.RegisteredStudentService;
@@ -22,12 +21,12 @@ public class RegisteredStudentController {
     }
 
     @GetMapping("/{registeredStudentId}")
-    public RegisteredStudentDTO viewProfile(@PathVariable("registeredStudentId") Integer registeredStudentId) {
+    public ResponseObject<Object> viewProfile(@PathVariable("registeredStudentId") Integer registeredStudentId) {
         return registeredStudentService.viewProfile(registeredStudentId);
     }
 
     @PutMapping("/update-password")
-    public ResponseObject updatePassword(@RequestBody UpdatePasswordRequest updatePasswordRequest) {
+    public ResponseObject<Object> updatePassword(@RequestBody UpdatePasswordRequest updatePasswordRequest) {
         if (
                 updatePasswordRequest.getPassword() != null
                         && updatePasswordRequest.getConfirmPassword() != null

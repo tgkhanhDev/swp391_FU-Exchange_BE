@@ -1,6 +1,5 @@
 package com.adkp.fuexchange.service;
 
-import com.adkp.fuexchange.dto.SellerDTO;
 import com.adkp.fuexchange.mapper.SellerMapper;
 import com.adkp.fuexchange.pojo.RegisteredStudent;
 import com.adkp.fuexchange.pojo.Roles;
@@ -36,15 +35,20 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public SellerDTO viewInformationSellerById(int sellerId) {
-        return sellerMapper.toSellerDTO(
-                sellerRepository.getReferenceById(sellerId)
-        );
+    public ResponseObject<Object> viewInformationSellerById(int sellerId) {
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Xem thông tin thành công!")
+                .data(sellerMapper.toSellerDTO(
+                        sellerRepository.getReferenceById(sellerId)
+                ))
+                .build();
     }
 
     @Override
     @Transactional
-    public ResponseObject registerToSeller(RegisterToSellerRequest registerToSellerRequest) {
+    public ResponseObject<Object> registerToSeller(RegisterToSellerRequest registerToSellerRequest) {
         if (registeredStudentRepository.existsById(registerToSellerRequest.getRegisteredStudentId())) {
             RegisteredStudent registeredStudent = registeredStudentRepository.getReferenceById(registerToSellerRequest.getRegisteredStudentId());
             if (passwordEncoder.matches(
@@ -75,7 +79,7 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     @Transactional
-    public ResponseObject updateInformationSeller(UpdateInformationSellerRequest updateInformationSellerRequest) {
+    public ResponseObject<Object> updateInformationSeller(UpdateInformationSellerRequest updateInformationSellerRequest) {
         if (sellerRepository.existsById(updateInformationSellerRequest.getSellerId())) {
             Seller seller = sellerRepository.getReferenceById(updateInformationSellerRequest.getSellerId());
             seller.setBankingNumber(updateInformationSellerRequest.getBankingNumber());
@@ -96,7 +100,7 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     @Transactional
-    public ResponseObject updateStatusSeller(UpdateStatusRequest updateStatusRequest) {
+    public ResponseObject<Object> updateStatusSeller(UpdateStatusRequest updateStatusRequest) {
         if (sellerRepository.existsById(updateStatusRequest.getSellerId())) {
             Seller seller = sellerRepository.getReferenceById(updateStatusRequest.getSellerId());
             seller.setActive(updateStatusRequest.getIsActive());

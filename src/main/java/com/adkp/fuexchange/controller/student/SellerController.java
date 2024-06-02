@@ -1,6 +1,5 @@
 package com.adkp.fuexchange.controller.student;
 
-import com.adkp.fuexchange.dto.SellerDTO;
 import com.adkp.fuexchange.request.RegisterToSellerRequest;
 import com.adkp.fuexchange.request.UpdateInformationSellerRequest;
 import com.adkp.fuexchange.request.UpdateStatusRequest;
@@ -24,14 +23,14 @@ public class SellerController {
     }
 
     @GetMapping("/{sellerId}")
-    public SellerDTO viewInformationSellerById(
+    public ResponseObject<Object> viewInformationSellerById(
             @PathVariable int sellerId
     ) {
         return sellerService.viewInformationSellerById(sellerId);
     }
 
     @PostMapping("/register-to-seller")
-    public ResponseObject registerToSeller(@RequestBody RegisterToSellerRequest registerToSellerRequest) {
+    public ResponseObject<Object> registerToSeller(@RequestBody RegisterToSellerRequest registerToSellerRequest) {
         if (
                 registerToSellerRequest.getRegisteredStudentId() != null
                         && registerToSellerRequest.getBankingNumber() != null
@@ -48,7 +47,7 @@ public class SellerController {
     }
 
     @PutMapping("/update-information")
-    public ResponseObject updateInformationSeller(@RequestBody UpdateInformationSellerRequest updateInformationSellerRequest) {
+    public ResponseObject<Object> updateInformationSeller(@RequestBody UpdateInformationSellerRequest updateInformationSellerRequest) {
 
         if (
                 updateInformationSellerRequest.getBankingName() != null
@@ -65,7 +64,7 @@ public class SellerController {
     }
 
     @PutMapping("/update-status")
-    public ResponseObject updateStatusSeller(@RequestBody UpdateStatusRequest updateStatusRequest) {
+    public ResponseObject<Object> updateStatusSeller(@RequestBody UpdateStatusRequest updateStatusRequest) {
 
         if (
                 updateStatusRequest.getIsActive() != null && updateStatusRequest.getSellerId() != null

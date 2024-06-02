@@ -1,9 +1,7 @@
 package com.adkp.fuexchange.service;
 
-import com.adkp.fuexchange.dto.OrdersDTO;
-
-import java.util.List;
+import com.adkp.fuexchange.response.ResponseObject;
 
 public interface OrderService {
-    List<OrdersDTO> getOrderByRegisterId(Integer registeredStudentId);
+    ResponseObject<Object> getOrderByRegisterId(Integer registeredStudentId);
 }

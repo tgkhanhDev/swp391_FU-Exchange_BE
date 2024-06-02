@@ -20,7 +20,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +45,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public ResponseObject login(LoginRequest loginRequest) {
+    public ResponseObject<Object> login(LoginRequest loginRequest) {
         UserDetails registeredStudent = registeredStudentDetailService.loadUserByUsername(loginRequest.getUsername());
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), registeredStudent.getPassword())) {
@@ -83,7 +82,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     @Transactional
-    public ResponseObject register(RegisterRequest registerRequest) {
+    public ResponseObject<Object> register(RegisterRequest registerRequest) {
         if (!registerRequest.getPassword().equals(registerRequest.getConfirmPassword())) {
             return ResponseObject.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
@@ -114,7 +113,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public ResponseObject checkInformationRegister(String studentId, String identity) {
+    public ResponseObject<Object> checkInformationRegister(String studentId, String identity) {
         RegisteredStudent isRegister = registeredStudentRepository.findRegisteredStudentByStudentId(studentId);
         boolean checkExist = studentRepository.existsById(studentId);
         if (isRegister != null) {
@@ -144,12 +143,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public ResponseObject isRegistered(String studentId) {
+    public ResponseObject<Object> isRegistered(String studentId) {
         UserDetails registeredStudent = registeredStudentDetailService.loadUserByUsername(studentId);
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name().toLowerCase())
-                .content("OK")
+                .content("Tài khoản đã được đăng ký")
                 .build();
     }
 }

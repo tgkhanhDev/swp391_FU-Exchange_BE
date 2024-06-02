@@ -1,11 +1,12 @@
 package com.adkp.fuexchange.controller.student;
 
-import com.adkp.fuexchange.dto.ReviewDTO;
+import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.ReviewService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/review")
@@ -19,7 +20,7 @@ public class ReviewController {
     }
 
     @GetMapping("/{orderId}")
-    public List<ReviewDTO> getReviewByOrder(@PathVariable("orderId") Integer orderId){
-       return reviewService.getReviewByOrderId(orderId);
+    public ResponseObject<Object> getReviewByOrder(@PathVariable("orderId") Integer orderId) {
+        return reviewService.getReviewByOrderId(orderId);
     }
 }

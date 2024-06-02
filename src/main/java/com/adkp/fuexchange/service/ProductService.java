@@ -1,12 +1,10 @@
 package com.adkp.fuexchange.service;
 
-import com.adkp.fuexchange.dto.ProductDTO;
-
-import java.util.List;
+import com.adkp.fuexchange.response.ResponseObject;
 
 public interface ProductService {
 
-    List<ProductDTO> viewMoreProduct(int current);
+    ResponseObject<Object> viewMoreProduct(int current);
 
     long countTotalPostProduct();
 
