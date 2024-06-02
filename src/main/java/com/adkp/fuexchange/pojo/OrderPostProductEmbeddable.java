@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @Embeddable
 @NoArgsConstructor
-public class OrderProductEmbeddable {
+public class OrderPostProductEmbeddable {
     private int orderId;
 
-    private int productId;
+    private int postProductId;
 }

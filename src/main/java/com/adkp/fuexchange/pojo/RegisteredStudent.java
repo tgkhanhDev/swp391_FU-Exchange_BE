@@ -2,10 +2,12 @@ package com.adkp.fuexchange.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@ToString
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
 @Builder

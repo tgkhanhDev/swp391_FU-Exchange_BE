@@ -1,14 +1,15 @@
 package com.adkp.fuexchange.service;
 
+import com.adkp.fuexchange.pojo.Cart;
 import com.adkp.fuexchange.pojo.RegisteredStudent;
 import com.adkp.fuexchange.pojo.Student;
+import com.adkp.fuexchange.repository.CartRepository;
 import com.adkp.fuexchange.repository.RegisteredStudentRepository;
 import com.adkp.fuexchange.repository.RoleRepository;
 import com.adkp.fuexchange.repository.StudentRepository;
 import com.adkp.fuexchange.request.LoginRequest;
 import com.adkp.fuexchange.request.RegisterRequest;
 import com.adkp.fuexchange.response.InforLoginResponse;
-import com.adkp.fuexchange.response.LoginResponse;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.security.RegisteredStudentDetailService;
 import jakarta.transaction.Transactional;
@@ -31,29 +32,31 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final StudentRepository studentRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final CartRepository cartRepository;
 
     @Autowired
-    public AuthenticationServiceImpl(AuthenticationManager authenticationManager, RegisteredStudentDetailService registeredStudentDetailService, RegisteredStudentRepository registeredStudentRepository, StudentRepository studentRepository, BCryptPasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+    public AuthenticationServiceImpl(RegisteredStudentDetailService registeredStudentDetailService, RegisteredStudentRepository registeredStudentRepository, AuthenticationManager authenticationManager, StudentRepository studentRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, CartRepository cartRepository) {
         this.registeredStudentDetailService = registeredStudentDetailService;
-        this.authenticationManager = authenticationManager;
         this.registeredStudentRepository = registeredStudentRepository;
+        this.authenticationManager = authenticationManager;
         this.studentRepository = studentRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
+        this.cartRepository = cartRepository;
     }
 
     @Override
-    public LoginResponse login(LoginRequest loginRequest) {
+    public ResponseObject login(LoginRequest loginRequest) {
         UserDetails registeredStudent = registeredStudentDetailService.loadUserByUsername(loginRequest.getUsername());
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), registeredStudent.getPassword())) {
-            return LoginResponse.builder()
+            return ResponseObject.builder()
                     .status(HttpStatus.UNAUTHORIZED.value())
                     .message(HttpStatus.UNAUTHORIZED.name().toLowerCase())
                     .content("Sai tài khoản hoặc mật khẩu")
                     .build();
         } else if (!registeredStudent.isAccountNonLocked()) {
-            return LoginResponse.builder()
+            return ResponseObject.builder()
                     .status(HttpStatus.UNAUTHORIZED.value())
                     .message(HttpStatus.UNAUTHORIZED.name().toLowerCase())
                     .content("Tài khoản bị vô hiệu hóa")
@@ -65,7 +68,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                                 loginRequest.getPassword())
                 );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new LoginResponse(
+        return new ResponseObject(
                 HttpStatus.OK.value(),
                 HttpStatus.OK.name().toLowerCase(),
                 "Đăng nhập thành công",
@@ -82,13 +85,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Transactional
     public ResponseObject register(RegisterRequest registerRequest) {
         if (!registerRequest.getPassword().equals(registerRequest.getConfirmPassword())) {
-            return new ResponseObject(
-                    HttpStatus.BAD_REQUEST.value(),
-                    HttpStatus.BAD_REQUEST.name(),
-                    "Mật khẩu xác nhận không trùng khớp!"
-            );
+            return ResponseObject.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .message(HttpStatus.BAD_REQUEST.name().toLowerCase())
+                    .content("Mật khẩu xác nhận không trùng khớp!")
+                    .build();
         }
-        registeredStudentRepository.save(
+        RegisteredStudent rs = registeredStudentRepository.save(
                 RegisteredStudent.builder()
                         .studentId(studentRepository.getReferenceById(registerRequest.getStudentId()))
                         .password(passwordEncoder.encode(registerRequest.getPassword()))
@@ -96,6 +99,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         .isActive(true)
                         .build()
         );
+        //Đăng ký tk mới xong là phải thêm record vào giỏ hàng
+        cartRepository.save(
+                Cart.builder()
+                        .registeredStudentId(rs)
+                        .build()
+        );
+
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
@@ -107,13 +117,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public ResponseObject checkInformationRegister(String studentId, String identity) {
         RegisteredStudent isRegister = registeredStudentRepository.findRegisteredStudentByStudentId(studentId);
         boolean checkExist = studentRepository.existsById(studentId);
-        if(isRegister != null){
+        if (isRegister != null) {
             return ResponseObject.builder()
                     .status(HttpStatus.IM_USED.value())
                     .message(HttpStatus.IM_USED.name())
                     .content("Tài khoản đã được sử dụng!")
                     .build();
-        }else if (checkExist) {
+        } else if (checkExist) {
             Student studentInfor = studentRepository.getReferenceById(studentId);
             if (
                     studentInfor.getStudentId().equals(studentId)
@@ -133,51 +143,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
     }
 
-//    @Override
-//    public LoginResponse loginResponse(LoginRequest loginRequest) {
-//
-//        UserDetails registeredStudent = registeredStudentDetailService.loadUserByUsername(loginRequest.getUsername());
-//
-//        if (registeredStudent == null || !passwordEncoder.matches(loginRequest.getPassword(), registeredStudent.getPassword())) {
-//            return LoginResponse.builder()
-//                    .status(HttpStatus.BAD_REQUEST.value())
-//                    .message(HttpStatus.BAD_REQUEST.name().toLowerCase())
-//                    .content("Sai tài khoản hoặc mật khẩu")
-//                    .build();
-//        } else if (!registeredStudent.isAccountNonLocked()) {
-//            return new LoginResponse(
-//                    HttpStatus.UNAUTHORIZED.value(),
-//                    HttpStatus.UNAUTHORIZED.name().toLowerCase(),
-//                    "Tài khoản bị vô hiệu hóa",
-//                    InforLoginResponse.builder()
-//                            .username(registeredStudent.getUsername())
-//                            .role(registeredStudent.getAuthorities().toString())
-//                            .accessToken("123")
-//                            .build());
-//        }
-//
-//        Authentication authentication = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(
-//                        loginRequest.getUsername(),
-//                        loginRequest.getPassword()
-//                )
-//        );
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//
-//        return new LoginResponse(HttpStatus.OK.value(),
-//                HttpStatus.OK.name().toLowerCase(),
-//                "Đăng nhập thành công",
-//                InforLoginResponse.builder()
-//                        .username(registeredStudent.getUsername())
-//                        .role(registeredStudent.getAuthorities().toString())
-//                        .accessToken("123")
-//                        .build());
-//    }
-
     @Override
-    public LoginResponse isRegistered(String studentId) {
+    public ResponseObject isRegistered(String studentId) {
         UserDetails registeredStudent = registeredStudentDetailService.loadUserByUsername(studentId);
-        return LoginResponse.builder()
+        return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name().toLowerCase())
                 .content("OK")

@@ -2,19 +2,15 @@ package com.adkp.fuexchange.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
-@ToString
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
-@Table(name = "OrderProduct")
-public class OrderProduct {
+@Table(name = "OrderPostProduct")
+public class OrderPostProduct {
 
     @EmbeddedId
     private CartPostEmbeddable orderProductId;
@@ -25,9 +21,9 @@ public class OrderProduct {
     private Orders orderId;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @MapsId("productId")
-    @JoinColumn(name = "productId", referencedColumnName = "productId")
-    private Product productId;
+    @MapsId("postProductId")
+    @JoinColumn(name = "postProductId", referencedColumnName = "postProductId")
+    private PostProduct postProductId;
 
     private int quantity;
 
