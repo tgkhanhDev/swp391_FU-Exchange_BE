@@ -13,4 +13,6 @@ public interface RegisteredStudentRepository extends JpaRepository<RegisteredStu
             "Where rgtstd.studentId.studentId = :studentId")
     RegisteredStudent findRegisteredStudentByStudentId(@Param("studentId") String studentId);
 
+//    @Query("SELECT rgtstd.registeredStudentId FROM RegisteredStudent rgtstd WHERE rgtstd.studentId.studentId = :")
+//    int getIdByStudentId()
 }
