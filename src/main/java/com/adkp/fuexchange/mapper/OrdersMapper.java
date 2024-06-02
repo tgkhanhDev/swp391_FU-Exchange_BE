@@ -7,17 +7,25 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+import java.util.List;
+
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
+        uses ={RegisteredStudentMapper.class, OrderStatusMapper.class, PaymentMapper.class}
+)
 public interface OrdersMapper {
     @Mapping(source = "orderId", target = "orderId")
-    @Mapping(source = "registeredStudentId", target = "registeredStudentId")
-    @Mapping(source = "orderStatusId", target = "orderStatusId")
-    @Mapping(source = "createDate", target = "createDate")
-    @Mapping(source = "completeDate", target = "completeDate")
+    @Mapping(source = "registeredStudentId.registeredStudentId", target = "registeredStudent")
+    @Mapping(source = "orderStatusId", target = "orderStatus")
+    @Mapping(source = "paymentId.paymentId", target = "paymentId")
+    @Mapping(source = "createDate", target = "createDate", dateFormat = "dd-MM-yyyy")
+    @Mapping(source = "completeDate", target = "completeDate", dateFormat = "dd-MM-yyyy")
     @Mapping(source = "description", target = "description")
     OrdersDTO toOrdersDTO(Orders orders);
 
     @InheritInverseConfiguration(name = "toOrdersDTO")
     Orders toOrders(OrdersDTO ordersDTO);
 
+    List<OrdersDTO> toOrdersDTOList(List<Orders> orders);
+
+    List<Orders> toOrdersList(List<OrdersDTO> ordersDTO);
 }

@@ -1,5 +1,6 @@
 package com.adkp.fuexchange.service;
 
+import com.adkp.fuexchange.pojo.CartPost;
 import com.adkp.fuexchange.dto.CartDTO;
 import com.adkp.fuexchange.dto.CartPostDTO;
 import com.adkp.fuexchange.dto.PostProductDTO;
@@ -12,6 +13,5 @@ import java.util.List;
 
 public interface CartPostService {
     List<PostProductDTO> viewCartPostProductByStudentId(String studentId);
-
     ResponseObject addToCart(CartRequest cartRequest);
 }

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class OrderPostProduct {
 
     @EmbeddedId
-    private CartPostEmbeddable orderProductId;
+    private CartPostEmbeddable orderPostProductId;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @MapsId("orderId")

@@ -1,16 +1,12 @@
 package com.adkp.fuexchange.controller;
 
-import com.adkp.fuexchange.service.thirdparty.vnpay.VnPayResponse;
-import com.adkp.fuexchange.service.thirdparty.vnpay.VnPayService;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import com.adkp.fuexchange.response.ResponseObject;
+import com.adkp.fuexchange.service.OrderService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -18,36 +14,19 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Order")
 public class OrdersController {
 
-    private final VnPayService vnPayService;
+    private final OrderService orderService;
 
-    @Autowired
-    public OrdersController(VnPayService vnPayService) {
-        this.vnPayService = vnPayService;
+    public OrdersController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
-    @ApiResponses(value = {
-            @ApiResponse(description = """
-                    Thành công: 9704198526191432198 |\s
-                    Thẻ không đủ số dư: 9704195798459170488 |\s
-                    Thẻ chưa kích hoạt: 9704192181368742 |\s
-                    Thẻ bị khóa: 9704193370791314 |\s
-                    Thẻ bị hết hạn: 9704194841945513 |\s
-                    Name: NGUYEN VAN A |\s
-                    Date: 07/15 |\s
-                    Link dashboard: https://sandbox.vnpayment.vn/merchantv2/Home/Dashboard.htm |\s
-                    gmail: nguyenhoangan060703@gmail.com |\s
-                    password: Kaka1342""", content = @Content)
-    })
-    @GetMapping("/vn-pay")
-    public VnPayResponse payment(
-            @RequestParam String amountRequest,
-            HttpServletRequest request
-    ){
-       return vnPayService.vnPayPayment(amountRequest, request);
+    @GetMapping("/{registeredStudentId}")
+    public ResponseObject getOrderByRegisterId(@PathVariable("registeredStudentId") Integer registeredStudentId) {
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .ordersDTO(orderService.getOrderByRegisterId(registeredStudentId))
+                .build();
     }
 
-    @GetMapping("/vn-pay/call-back")
-    public VnPayResponse paymentCallBack(HttpServletRequest request){
-        return vnPayService.vnPayPaymentCallBack(request);
-    }
 }

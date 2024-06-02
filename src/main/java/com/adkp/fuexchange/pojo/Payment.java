@@ -1,5 +1,6 @@
 package com.adkp.fuexchange.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -29,6 +30,10 @@ public class Payment {
     private boolean paymentStatus;
 
     private Date createTime;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "paymentId")
+    @JsonBackReference
+    private Transactions transactionId;
 
     public Payment(Orders orderId, PaymentMethod paymentMethodId, boolean paymentStatus, Date createTime) {
         this.orderId = orderId;
