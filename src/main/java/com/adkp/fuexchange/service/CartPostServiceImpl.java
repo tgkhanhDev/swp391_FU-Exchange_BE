@@ -1,7 +1,11 @@
 package com.adkp.fuexchange.service;
 
+import com.adkp.fuexchange.dto.CartDTO;
 import com.adkp.fuexchange.dto.CartPostDTO;
+import com.adkp.fuexchange.dto.PostProductDTO;
+import com.adkp.fuexchange.mapper.CartMapper;
 import com.adkp.fuexchange.mapper.CartPostMapper;
+import com.adkp.fuexchange.mapper.PostProductMapper;
 import com.adkp.fuexchange.pojo.Cart;
 import com.adkp.fuexchange.pojo.CartPost;
 import com.adkp.fuexchange.pojo.CartPostEmbeddable;
@@ -26,19 +30,22 @@ public class CartPostServiceImpl implements CartPostService{
     private final PostProductRepository postProductRepository;
     private final RegisteredStudentRepository registeredStudentRepository;
     private final CartPostMapper cartPostMapper;
+    private final CartMapper cartMapper;
+    private final PostProductMapper postProductMapper;
 
     @Autowired
-    public CartPostServiceImpl(CartPostRepository cartPostRepository, CartRepository cartRepository, PostProductRepository postProductRepository, RegisteredStudentRepository registeredStudentRepository, CartPostMapper cartPostMapper) {
+    public CartPostServiceImpl(CartPostRepository cartPostRepository, CartRepository cartRepository, PostProductRepository postProductRepository, RegisteredStudentRepository registeredStudentRepository, CartPostMapper cartPostMapper, CartMapper cartMapper, PostProductMapper postProductMapper) {
         this.cartPostRepository = cartPostRepository;
         this.cartRepository = cartRepository;
         this.postProductRepository = postProductRepository;
         this.registeredStudentRepository = registeredStudentRepository;
         this.cartPostMapper = cartPostMapper;
+        this.cartMapper = cartMapper;
+        this.postProductMapper = postProductMapper;
     }
-
     @Override
-    public List<CartPostDTO> viewCartPostItemByStudentId(String studentId) {
-        return cartPostMapper.toCartPostDTOList(cartPostRepository.getCartPostByStudentId(studentId));
+    public List<PostProductDTO> viewCartPostProductByStudentId(String studentId) {
+        return postProductMapper.toPostProductDTOList(cartPostRepository.getCartProductByStudentId(studentId));
     }
 
     @Override
@@ -48,11 +55,6 @@ public class CartPostServiceImpl implements CartPostService{
         Cart c = cartRepository.getCartByRegisterdStudentId(regisId);
         PostProduct pp = postProductRepository.getReferenceById(cartRequest.getPostProductId());
 
-//        boolean isPpexist = postProductRepository.existsById(cartRequest.getPostProductId());
-//        if(isPpexist){
-//
-//        }
-
         cartPostRepository.save(
                 CartPost.builder()
                         .cartPostId(new CartPostEmbeddable(c.getCartId(), cartRequest.getPostProductId()))
@@ -60,14 +62,12 @@ public class CartPostServiceImpl implements CartPostService{
                         .postProductId(pp)
                         .build()
         );
+
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
                 .content("Thêm giỏ hàng thành công")
                 .build();
-
-        //Lay CartDTO theo CartID
-        //Lay PostProductDTO theo postProductId
     }
 
 }

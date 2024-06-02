@@ -1,8 +1,11 @@
 package com.adkp.fuexchange.controller.cart;
 
+import com.adkp.fuexchange.dto.CartDTO;
 import com.adkp.fuexchange.dto.CartPostDTO;
+import com.adkp.fuexchange.dto.PostProductDTO;
 import com.adkp.fuexchange.pojo.CartPost;
 import com.adkp.fuexchange.pojo.CartPostEmbeddable;
+import com.adkp.fuexchange.pojo.PostProduct;
 import com.adkp.fuexchange.request.CartRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.CartPostService;
@@ -32,8 +35,8 @@ public class CartController {
             @ApiResponse(responseCode = "200",description = "Data sample: DE170001",
                     content = {@Content(mediaType = "application/json")}),
     })
-    public List<CartPostDTO> viewCartPostByStudentId(@PathVariable String studentId){
-        return cartPostService.viewCartPostItemByStudentId(studentId);
+    public List<PostProductDTO> viewCartPostByStudentId(@PathVariable String studentId){
+        return cartPostService.viewCartPostProductByStudentId(studentId);
     }
 
     @PostMapping("/cart")
