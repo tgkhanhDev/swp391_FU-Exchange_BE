@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(force = true)
 public class LoginResponse {
 
-    private int statusCode;
+    private int status;
 
     private String message;
 

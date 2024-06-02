@@ -2,15 +2,14 @@ package com.adkp.fuexchange.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-
 import java.util.Date;
 
 @Data
-@ToString
 @NoArgsConstructor(force = true)
+@AllArgsConstructor
+@Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "PostProduct")

@@ -1,16 +1,14 @@
 package com.adkp.fuexchange.service;
 
-import com.adkp.fuexchange.dto.CampusDTO;
 import com.adkp.fuexchange.mapper.CampusMapper;
-import com.adkp.fuexchange.mapper.PostProductMapper;
 import com.adkp.fuexchange.repository.CampusRepository;
-import com.adkp.fuexchange.repository.PostProductRepository;
+import com.adkp.fuexchange.response.ResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 @Service
-public class CampusServiceImpl implements  CampusService{
+public class CampusServiceImpl implements CampusService {
     private final CampusRepository campusRepository;
 
     private final CampusMapper campusMapper;
@@ -22,7 +20,14 @@ public class CampusServiceImpl implements  CampusService{
     }
 
     @Override
-    public List<CampusDTO> viewAllCampus() {
-        return campusMapper.toCampusDTOList(campusRepository.findAllCampus());
+    public ResponseObject<Object> viewAllCampus() {
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Xem campus thành công!")
+                .data(
+                        campusMapper.toCampusDTOList(campusRepository.findAllCampus())
+                )
+                .build();
     }
 }

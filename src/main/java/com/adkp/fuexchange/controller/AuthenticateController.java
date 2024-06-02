@@ -1,13 +1,17 @@
 package com.adkp.fuexchange.controller;
 
 import com.adkp.fuexchange.request.LoginRequest;
-import com.adkp.fuexchange.response.LoginResponse;
+import com.adkp.fuexchange.request.RegisterRequest;
+import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.AuthenticationService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "Authentication")
 public class AuthenticateController {
 
     private final AuthenticationService authenticationService;
@@ -18,7 +22,48 @@ public class AuthenticateController {
     }
 
     @PostMapping("/login")
-    public LoginResponse loginStudent(@RequestBody LoginRequest loginRequest) {
-        return authenticationService.loginResponse(loginRequest);
+    public ResponseObject<Object> loginStudent(@RequestBody LoginRequest loginRequest) {
+        if (
+                loginRequest.getPassword() != null
+                        && loginRequest.getUsername() != null
+        ) {
+            return authenticationService.login(loginRequest);
+        }
+        return ResponseObject.builder()
+
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message(HttpStatus.BAD_REQUEST.name())
+                .content("Vui lòng nhập đầy đủ thông tin")
+                .build();
+    }
+
+    @PostMapping("/register")
+    public ResponseObject<Object> registerStudent(@RequestBody RegisterRequest registerRequest) {
+        if (
+                registerRequest.getPassword() != null
+                        && registerRequest.getConfirmPassword() != null
+                        && registerRequest.getStudentId() != null
+                        && registerRequest.getIdentifyNumber() != null
+        ) {
+            return authenticationService.register(registerRequest);
+        }
+        return ResponseObject.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message(HttpStatus.BAD_REQUEST.name())
+                .content("Vui lòng nhập đầy đủ thông tin")
+                .build();
+    }
+
+    @GetMapping("/check-information")
+    public ResponseObject<Object> checkInformationRegister(
+            @RequestParam("studentId") String studentId,
+            @RequestParam("identity") String identity
+    ) {
+        return authenticationService.checkInformationRegister(studentId, identity);
+    }
+
+    @GetMapping("/isRegistered/{studentId}")
+    public ResponseObject<Object> IsRegistered(@PathVariable String studentId) {
+        return authenticationService.isRegistered(studentId);
     }
 }

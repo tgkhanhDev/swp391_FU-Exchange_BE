@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
-@ToString
 @NoArgsConstructor(force = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
@@ -20,7 +18,10 @@ public class Campus {
 
     private String campusName;
 
-    public Campus(String campusName) {
+    private String imageUrl;
+
+    public Campus(String campusName, String imageUrl) {
         this.campusName = campusName;
+        this.imageUrl = imageUrl;
     }
 }

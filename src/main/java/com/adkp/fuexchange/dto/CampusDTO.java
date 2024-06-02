@@ -9,4 +9,5 @@ public class CampusDTO {
 
     private String campusName;
 
+    private String imageUrl;
 }

@@ -1,14 +1,19 @@
 package com.adkp.fuexchange.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+
+import java.util.List;
 
 @Data
-@ToString
 @NoArgsConstructor(force = true)
+@AllArgsConstructor
+@Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "RegisteredStudent")
@@ -26,12 +31,13 @@ public class RegisteredStudent {
     @JoinColumn(name = "roleId", referencedColumnName = "roleId")
     private Roles roleId;
 
-    @Column(nullable = false)
     private String password;
 
-    @Column(name = "isActive")
     private boolean isActive;
 
+    @OneToMany(mappedBy = "registeredStudentId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JsonBackReference
+    private List<Orders> orderId;
     public RegisteredStudent(Student studentId, Roles roleId, String password, boolean isActive) {
         this.studentId = studentId;
         this.roleId = roleId;

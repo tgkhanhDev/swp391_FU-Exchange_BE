@@ -1,19 +1,10 @@
 package com.adkp.fuexchange.controller.student;
 
-import com.adkp.fuexchange.dto.PostProductDTO;
-import com.adkp.fuexchange.dto.ProductDTO;
-import com.adkp.fuexchange.response.MetaPostProduct;
-import com.adkp.fuexchange.response.PostProductResponse;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.PostProductService;
-import com.adkp.fuexchange.service.ProductService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/post-product")
@@ -27,23 +18,18 @@ public class PostProductController {
     }
 
     @GetMapping("/{current}")
-    public PostProductResponse viewMorePostProduct(
+    public ResponseObject<Object> viewMorePostProduct(
             @PathVariable("current") int current,
             @RequestParam(value = "campusId", required = false) Integer campusId,
             @RequestParam(value = "postTypeId", required = false) Integer postTypeId,
-            @RequestParam(value = "name", required = false) String name) {
-
-        List<PostProductDTO> postProductDTO = postProductService.viewMorePostProduct(current, campusId, postTypeId, name);
-
-        return PostProductResponse
-                .builder()
-                .responseObject(new ResponseObject(HttpStatusCode.valueOf(200).value(), "Success"))
-                .meta(new MetaPostProduct(postProductService.countPostProduct(campusId, postTypeId, name, postProductDTO), current))
-                .data(postProductDTO)
-                .build();
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "categoryId", required = false) Integer categoryId
+    ) {
+        return postProductService.viewMorePostProduct(current, campusId, postTypeId, name, categoryId);
     }
+
     @GetMapping("detail/{postProductId}")
-    public PostProductDTO getPostProductByPostId(@PathVariable("postProductId") int postProductId){
+    public ResponseObject<Object> getPostProductByPostId(@PathVariable("postProductId") int postProductId) {
         return postProductService.getPostProductById(postProductId);
     }
 

@@ -1,9 +1,7 @@
 package com.adkp.fuexchange.service;
 
-import com.adkp.fuexchange.dto.CampusDTO;
-
-import java.util.List;
+import com.adkp.fuexchange.response.ResponseObject;
 
 public interface CampusService {
-    List<CampusDTO> viewAllCampus();
+    ResponseObject<Object> viewAllCampus();
 }

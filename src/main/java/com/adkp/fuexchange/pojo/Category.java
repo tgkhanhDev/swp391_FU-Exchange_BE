@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
-@ToString
 @NoArgsConstructor(force = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
@@ -20,7 +18,9 @@ public class Category {
 
     private String categoryName;
 
-    public Category(String categoryName) {
+    private String imageUrl;
+    public Category(String categoryName, String imageUrl) {
         this.categoryName = categoryName;
+        this.imageUrl = imageUrl;
     }
 }

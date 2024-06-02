@@ -1,15 +1,14 @@
 package com.adkp.fuexchange.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.util.Date;
 
 @Data
-@ToString
 @NoArgsConstructor(force = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
@@ -32,13 +31,14 @@ public class Payment {
 
     private Date createTime;
 
-    private Date completeTime;
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "paymentId")
+    @JsonBackReference
+    private Transactions transactionId;
 
-    public Payment(Orders orderId, PaymentMethod paymentMethodId, boolean paymentStatus, Date createTime, Date completeTime) {
+    public Payment(Orders orderId, PaymentMethod paymentMethodId, boolean paymentStatus, Date createTime) {
         this.orderId = orderId;
         this.paymentMethodId = paymentMethodId;
         this.paymentStatus = paymentStatus;
         this.createTime = createTime;
-        this.completeTime = completeTime;
     }
 }
