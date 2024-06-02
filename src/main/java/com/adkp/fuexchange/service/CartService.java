@@ -1,9 +1,7 @@
 package com.adkp.fuexchange.service;
 
-import com.adkp.fuexchange.pojo.Cart;
-
-import java.util.List;
+import com.adkp.fuexchange.response.ResponseObject;
 
 public interface CartService {
-    List<Cart> viewAllCartItemByStudentId(int studentId);
+    ResponseObject<Object> viewAllCartItemByStudentId(int studentId);
 }

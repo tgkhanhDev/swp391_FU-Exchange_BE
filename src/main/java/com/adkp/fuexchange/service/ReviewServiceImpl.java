@@ -1,15 +1,14 @@
 package com.adkp.fuexchange.service;
 
-import com.adkp.fuexchange.dto.ReviewDTO;
 import com.adkp.fuexchange.mapper.ReviewMapper;
 import com.adkp.fuexchange.repository.ReviewRepository;
+import com.adkp.fuexchange.response.ResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class ReviewServiceImpl implements ReviewService{
+public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewMapper reviewMapper;
 
@@ -22,7 +21,14 @@ public class ReviewServiceImpl implements ReviewService{
     }
 
     @Override
-    public List<ReviewDTO> getReviewByOrderId(Integer orderId) {
-        return reviewMapper.toReviewDTOList(reviewRepository.getReviewByOrderId(orderId));
+    public ResponseObject<Object> getReviewByOrderId(Integer orderId) {
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Xem thông tin thành công!")
+                .data(
+                        reviewMapper.toReviewDTOList(reviewRepository.getReviewByOrderId(orderId))
+                )
+                .build();
     }
 }

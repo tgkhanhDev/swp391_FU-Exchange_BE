@@ -1,11 +1,10 @@
 package com.adkp.fuexchange.service;
 
-import com.adkp.fuexchange.dto.OrdersDTO;
 import com.adkp.fuexchange.mapper.OrdersMapper;
 import com.adkp.fuexchange.repository.OrdersRepository;
+import com.adkp.fuexchange.response.ResponseObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService{
@@ -19,7 +18,12 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public List<OrdersDTO> getOrderByRegisterId(Integer registeredStudentId) {
-        return ordersMapper.toOrdersDTOList(ordersRepository.getOrderByRegisterId(registeredStudentId));
+    public ResponseObject<Object> getOrderByRegisterId(Integer registeredStudentId) {
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .message("Xem thông tin thành công")
+                .data(ordersMapper.toOrdersDTOList(ordersRepository.getOrderByRegisterId(registeredStudentId)))
+                .build();
     }
 }

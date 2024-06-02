@@ -22,7 +22,7 @@ public class AuthenticateController {
     }
 
     @PostMapping("/login")
-    public ResponseObject loginStudent(@RequestBody LoginRequest loginRequest) {
+    public ResponseObject<Object> loginStudent(@RequestBody LoginRequest loginRequest) {
         if (
                 loginRequest.getPassword() != null
                         && loginRequest.getUsername() != null
@@ -38,7 +38,7 @@ public class AuthenticateController {
     }
 
     @PostMapping("/register")
-    public ResponseObject registerStudent(@RequestBody RegisterRequest registerRequest) {
+    public ResponseObject<Object> registerStudent(@RequestBody RegisterRequest registerRequest) {
         if (
                 registerRequest.getPassword() != null
                         && registerRequest.getConfirmPassword() != null
@@ -55,7 +55,7 @@ public class AuthenticateController {
     }
 
     @GetMapping("/check-information")
-    public ResponseObject checkInformationRegister(
+    public ResponseObject<Object> checkInformationRegister(
             @RequestParam("studentId") String studentId,
             @RequestParam("identity") String identity
     ) {
@@ -63,7 +63,7 @@ public class AuthenticateController {
     }
 
     @GetMapping("/isRegistered/{studentId}")
-    public ResponseObject IsRegistered(@PathVariable String studentId) {
+    public ResponseObject<Object> IsRegistered(@PathVariable String studentId) {
         return authenticationService.isRegistered(studentId);
     }
 }

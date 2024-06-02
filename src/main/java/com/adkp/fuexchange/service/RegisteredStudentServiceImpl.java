@@ -1,6 +1,5 @@
 package com.adkp.fuexchange.service;
 
-import com.adkp.fuexchange.dto.RegisteredStudentDTO;
 import com.adkp.fuexchange.mapper.RegisteredStudentMapper;
 import com.adkp.fuexchange.pojo.RegisteredStudent;
 import com.adkp.fuexchange.repository.RegisteredStudentRepository;
@@ -30,16 +29,21 @@ public class RegisteredStudentServiceImpl implements RegisteredStudentService {
     }
 
     @Override
-    public RegisteredStudentDTO viewProfile(Integer registeredStudentId) {
+    public ResponseObject<Object> viewProfile(Integer registeredStudentId) {
 
-        return registeredStudentMapper.toRegisteredStudentDTO(
-                registeredStudentRepository.getReferenceById(registeredStudentId)
-        );
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Xem thông tin thành công!")
+                .data(registeredStudentMapper.toRegisteredStudentDTO(
+                        registeredStudentRepository.getReferenceById(registeredStudentId)
+                ))
+                .build();
     }
 
     @Override
     @Transactional
-    public ResponseObject updatePassword(UpdatePasswordRequest updatePasswordRequest) {
+    public ResponseObject<Object> updatePassword(UpdatePasswordRequest updatePasswordRequest) {
         boolean isExist = registeredStudentRepository.existsById(updatePasswordRequest.getIdWantUpdate());
         if (isExist) {
             if (updatePasswordRequest.getPassword().equals(updatePasswordRequest.getConfirmPassword())) {

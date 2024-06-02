@@ -21,11 +21,11 @@ public class OrdersController {
     }
 
     @GetMapping("/{registeredStudentId}")
-    public ResponseObject getOrderByRegisterId(@PathVariable("registeredStudentId") Integer registeredStudentId) {
+    public ResponseObject<Object> getOrderByRegisterId(@PathVariable("registeredStudentId") Integer registeredStudentId) {
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
-                .ordersDTO(orderService.getOrderByRegisterId(registeredStudentId))
+                .data(orderService.getOrderByRegisterId(registeredStudentId))
                 .build();
     }
 

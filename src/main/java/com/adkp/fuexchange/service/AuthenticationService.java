@@ -6,12 +6,12 @@ import com.adkp.fuexchange.response.ResponseObject;
 
 public interface AuthenticationService {
 
-    ResponseObject login(LoginRequest loginRequest);
+    ResponseObject<Object> login(LoginRequest loginRequest);
 
-    ResponseObject register(RegisterRequest registerRequest);
+    ResponseObject<Object> register(RegisterRequest registerRequest);
 
-    ResponseObject checkInformationRegister(String studentId,String identity);
+    ResponseObject<Object> checkInformationRegister(String studentId,String identity);
 
-    ResponseObject isRegistered(String studentId);
+    ResponseObject<Object> isRegistered(String studentId);
 
 }
