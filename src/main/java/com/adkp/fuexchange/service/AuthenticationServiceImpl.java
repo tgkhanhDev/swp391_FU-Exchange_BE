@@ -64,17 +64,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                                 loginRequest.getPassword())
                 );
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseObject(
-                HttpStatus.OK.value(),
-                HttpStatus.OK.name().toLowerCase(),
-                "Đăng nhập thành công",
-                InforLoginResponse
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name().toLowerCase())
+                .content("Đăng nhập thành công")
+                .data(InforLoginResponse
                         .builder()
                         .username(registeredStudent.getUsername())
                         .role(registeredStudent.getAuthorities().toString())
                         .accessToken("123")
-                        .build()
-        );
+                        .build())
+                .build();
     }
 
     @Override

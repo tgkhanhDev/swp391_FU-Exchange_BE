@@ -1,9 +1,12 @@
 package com.adkp.fuexchange.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor(force = true)
@@ -17,6 +20,10 @@ public class TransactionsStatus {
     private int transactionsStatusId;
 
     private String transactionsStatusName;
+
+    @OneToMany(mappedBy = "transactionsStatusId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JsonBackReference
+    private List<Transactions> transactionId;
 
     public TransactionsStatus(String transactionsStatusName) {
         this.transactionsStatusName = transactionsStatusName;
