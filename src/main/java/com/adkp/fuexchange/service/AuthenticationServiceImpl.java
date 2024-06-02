@@ -1,7 +1,9 @@
 package com.adkp.fuexchange.service;
 
+import com.adkp.fuexchange.pojo.Cart;
 import com.adkp.fuexchange.pojo.RegisteredStudent;
 import com.adkp.fuexchange.pojo.Student;
+import com.adkp.fuexchange.repository.CartRepository;
 import com.adkp.fuexchange.repository.RegisteredStudentRepository;
 import com.adkp.fuexchange.repository.RoleRepository;
 import com.adkp.fuexchange.repository.StudentRepository;
@@ -30,15 +32,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final StudentRepository studentRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final CartRepository cartRepository;
 
     @Autowired
-    public AuthenticationServiceImpl(AuthenticationManager authenticationManager, RegisteredStudentDetailService registeredStudentDetailService, RegisteredStudentRepository registeredStudentRepository, StudentRepository studentRepository, BCryptPasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+    public AuthenticationServiceImpl(RegisteredStudentDetailService registeredStudentDetailService, RegisteredStudentRepository registeredStudentRepository, AuthenticationManager authenticationManager, StudentRepository studentRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, CartRepository cartRepository) {
         this.registeredStudentDetailService = registeredStudentDetailService;
-        this.authenticationManager = authenticationManager;
         this.registeredStudentRepository = registeredStudentRepository;
+        this.authenticationManager = authenticationManager;
         this.studentRepository = studentRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
+        this.cartRepository = cartRepository;
     }
 
     @Override
@@ -87,7 +91,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .content("Mật khẩu xác nhận không trùng khớp!")
                     .build();
         }
-        registeredStudentRepository.save(
+        RegisteredStudent rs = registeredStudentRepository.save(
                 RegisteredStudent.builder()
                         .studentId(studentRepository.getReferenceById(registerRequest.getStudentId()))
                         .password(passwordEncoder.encode(registerRequest.getPassword()))
@@ -95,6 +99,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         .isActive(true)
                         .build()
         );
+        //Đăng ký tk mới xong là phải thêm record vào giỏ hàng
+        cartRepository.save(
+                Cart.builder()
+                        .registeredStudentId(rs)
+                        .build()
+        );
+
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())

@@ -30,14 +30,14 @@ public class GlobalExceptionHandler {
                 .build();
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseObject exception(Exception exception) {
-        return ResponseObject.builder()
-                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .message(HttpStatus.INTERNAL_SERVER_ERROR.name())
-                .content("Lỗi không xác định!")
-                .build();
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseObject exception(Exception exception) {
+//        return ResponseObject.builder()
+//                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+//                .message(HttpStatus.INTERNAL_SERVER_ERROR.name())
+//                .content("Lỗi không xác định!")
+//                .build();
+//    }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseObject entityNotFoundException(Exception exception) {
