@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor(force = true)
@@ -28,11 +28,11 @@ public class Transactions {
 
     private double totalPrice;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 
-    private Date completeTime;
+    private LocalDateTime completeTime;
 
-    public Transactions(Payment paymentId, TransactionsStatus transactionsStatusId, double totalPrice, Date createTime, Date completeTime) {
+    public Transactions(Payment paymentId, TransactionsStatus transactionsStatusId, double totalPrice, LocalDateTime createTime, LocalDateTime completeTime) {
         this.paymentId = paymentId;
         this.transactionsStatusId = transactionsStatusId;
         this.totalPrice = totalPrice;

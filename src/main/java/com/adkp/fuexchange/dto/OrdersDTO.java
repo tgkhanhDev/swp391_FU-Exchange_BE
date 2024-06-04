@@ -1,6 +1,5 @@
 package com.adkp.fuexchange.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;

@@ -45,14 +45,15 @@ public class CartPostServiceImpl implements CartPostService {
     @Override
     @Transactional
     public ResponseObject<Object> addToCart(CartRequest cartRequest) {
-        int regisId = registeredStudentRepository.findRegisteredStudentByStudentId(cartRequest.getStudentId()).getRegisteredStudentId();
-        Cart cart = cartRepository.getCartByRegisterdStudentId(regisId);
+        RegisteredStudent registeredStudent = registeredStudentRepository.findRegisteredStudentByStudentId(cartRequest.getStudentId());
+        Cart cart = registeredStudent.getCartId();
         PostProduct postProduct = postProductRepository.getReferenceById(cartRequest.getPostProductId());
         VariationDetail variationDetail = variationDetailRepository.getReferenceById(cartRequest.getVariationId());
+
         cartPostRepository.save(
                 CartPost.builder()
                         .cartPostId(new CartPostEmbeddable(cart.getCartId(), cartRequest.getPostProductId(), cartRequest.getVariationId()))
-                        .cartId(cart)
+                        .cartId(registeredStudent.getCartId())
                         .postProductId(postProduct)
                         .variationDetailId(variationDetail)
                         .quantity(cartRequest.getQuantity())

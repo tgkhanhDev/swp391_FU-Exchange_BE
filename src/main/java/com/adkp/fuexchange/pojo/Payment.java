@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor(force = true)
@@ -29,13 +29,13 @@ public class Payment {
 
     private boolean paymentStatus;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "paymentId")
     @JsonBackReference
     private Transactions transactionId;
 
-    public Payment(Orders orderId, PaymentMethod paymentMethodId, boolean paymentStatus, Date createTime) {
+    public Payment(Orders orderId, PaymentMethod paymentMethodId, boolean paymentStatus, LocalDateTime createTime) {
         this.orderId = orderId;
         this.paymentMethodId = paymentMethodId;
         this.paymentStatus = paymentStatus;

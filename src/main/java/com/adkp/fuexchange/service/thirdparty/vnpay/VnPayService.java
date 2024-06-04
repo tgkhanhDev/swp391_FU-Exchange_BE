@@ -1,5 +1,7 @@
 package com.adkp.fuexchange.service.thirdparty.vnpay;
 
+import com.adkp.fuexchange.request.OrdersRequest;
+import com.adkp.fuexchange.response.ResponseObject;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -9,7 +11,7 @@ import java.util.Map;
 @Service
 public class VnPayService {
 
-    public VnPayResponse vnPayPayment(String amountRequest, HttpServletRequest request){
+    public VnPayResponse vnPayPayment(String amountRequest, HttpServletRequest request) {
         long amount = Integer.parseInt(amountRequest) * 100L;
         String bankCode = "NCB";
         Map<String, String> vnpParamsMap = VnPayConfig.getVNPayConfig();
@@ -22,26 +24,31 @@ public class VnPayService {
         queryUrl += "&vnp_SecureHash=" + vnpSecureHash;
         String paymentUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html" + "?" + queryUrl;
         return VnPayResponse.builder()
-                .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
                 .paymentUrl(paymentUrl)
+                .ordersRequest(
+                        OrdersRequest.builder()
+                                .build()
+                )
                 .build();
     }
 
-    public VnPayResponse vnPayPaymentCallBack(HttpServletRequest request){
-        if (request.getParameter("vnp_ResponseCode").equals("00")){
+    public ResponseObject<Object> vnPayCallBack(HttpServletRequest request) {
+        if (request.getParameter("vnp_ResponseCode").equals("00")) {
 
-            return VnPayResponse.builder()
-                    .code(HttpStatus.OK.value())
+            return ResponseObject.builder()
+                    .status(HttpStatus.OK.value())
                     .message(HttpStatus.OK.name())
                     .content("Giao dịch thành công!")
                     .build();
         } else {
-            return VnPayResponse.builder()
-                    .code(HttpStatus.BAD_REQUEST.value())
+            return ResponseObject.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
                     .message(HttpStatus.BAD_REQUEST.name())
                     .content("Giao dịch thất bại!")
                     .build();
         }
     }
+
 }

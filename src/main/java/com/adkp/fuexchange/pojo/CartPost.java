@@ -36,10 +36,4 @@ public class CartPost {
 
     private int quantity;
 
-    public CartPost(Cart cartId, PostProduct postProductId, VariationDetail variationDetailId, int quantity) {
-        this.cartId = cartId;
-        this.postProductId = postProductId;
-        this.variationDetailId = variationDetailId;
-        this.quantity = quantity;
-    }
 }

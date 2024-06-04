@@ -3,6 +3,7 @@ package com.adkp.fuexchange.controller;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.OrderService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ public class OrdersController {
 
     private final OrderService orderService;
 
+    @Autowired
     public OrdersController(OrderService orderService) {
         this.orderService = orderService;
     }

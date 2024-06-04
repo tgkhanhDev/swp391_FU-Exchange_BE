@@ -5,11 +5,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@ToString
 @Data
 @NoArgsConstructor(force = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -29,9 +30,9 @@ public class Orders {
     @JoinColumn(name = "orderStatusId", referencedColumnName = "orderStatusId")
     private OrderStatus orderStatusId;
 
-    private LocalDate completeDate;
+    private LocalDateTime createDate;
 
-    private LocalDate createDate;
+    private LocalDateTime completeDate;
 
     private String description;
 
@@ -47,7 +48,7 @@ public class Orders {
     @JsonBackReference
     private Review reviewId;
 
-    public Orders(RegisteredStudent registeredStudentId, OrderStatus orderStatusId, LocalDate completeDate, LocalDate createDate, String description) {
+    public Orders(RegisteredStudent registeredStudentId, OrderStatus orderStatusId, LocalDateTime createDate, LocalDateTime completeDate, String description) {
         this.registeredStudentId = registeredStudentId;
         this.orderStatusId = orderStatusId;
         this.completeDate = completeDate;
