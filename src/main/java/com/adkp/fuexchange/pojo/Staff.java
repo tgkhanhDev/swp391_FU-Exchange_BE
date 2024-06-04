@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor(force = true)
@@ -35,14 +35,14 @@ public class Staff {
     @Column(unique = true)
     private String phoneNumber;
 
-    private Date dob;
+    private LocalDate dob;
 
     @Column(nullable = false)
     private String password;
 
     private boolean isActive;
 
-    public Staff(Roles roleId, String firstName, String lastName, String gender, String identityCard, String address, String phoneNumber, Date dob, String password, boolean isActive) {
+    public Staff(Roles roleId, String firstName, String lastName, String gender, String identityCard, String address, String phoneNumber, LocalDate dob, String password, boolean isActive) {
         this.roleId = roleId;
         this.firstName = firstName;
         this.lastName = lastName;

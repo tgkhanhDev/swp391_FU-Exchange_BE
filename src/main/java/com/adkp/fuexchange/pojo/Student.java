@@ -8,7 +8,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor(force = true)
@@ -33,9 +33,9 @@ public class Student {
 
     private String gender;
 
-    private Date dob;
+    private LocalDate dob;
 
-    public Student(String firstName, String lastName, String identityCard, String address, String phoneNumber, String gender, Date dob) {
+    public Student(String firstName, String lastName, String identityCard, String address, String phoneNumber, String gender, LocalDate dob) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.identityCard = identityCard;

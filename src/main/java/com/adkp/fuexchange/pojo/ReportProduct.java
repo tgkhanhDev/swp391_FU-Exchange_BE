@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor(force = true)
@@ -34,12 +34,12 @@ public class ReportProduct {
     @JoinColumn(name = "reportStatusId", referencedColumnName = "reportStatusId")
     private ReportStatus reportStatusId;
 
-    private Date createTime;
+    private LocalDate createTime;
 
     @Column(nullable = true)
     private String content;
 
-    public ReportProduct(RegisteredStudent buyerId, Product productId, ReportProductType reportProductTypeId, ReportStatus reportStatusId, Date createTime, String content) {
+    public ReportProduct(RegisteredStudent buyerId, Product productId, ReportProductType reportProductTypeId, ReportStatus reportStatusId, LocalDate createTime, String content) {
         this.buyerId = buyerId;
         this.productId = productId;
         this.reportProductTypeId = reportProductTypeId;

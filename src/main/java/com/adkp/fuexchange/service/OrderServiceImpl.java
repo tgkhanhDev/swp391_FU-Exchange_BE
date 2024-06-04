@@ -7,11 +7,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
-public class OrderServiceImpl implements OrderService{
+public class OrderServiceImpl implements OrderService {
 
     private final OrdersRepository ordersRepository;
 
     private final OrdersMapper ordersMapper;
+
     public OrderServiceImpl(OrdersRepository ordersRepository, OrdersMapper ordersMapper) {
         this.ordersRepository = ordersRepository;
         this.ordersMapper = ordersMapper;
@@ -26,4 +27,5 @@ public class OrderServiceImpl implements OrderService{
                 .data(ordersMapper.toOrdersDTOList(ordersRepository.getOrderByRegisterId(registeredStudentId)))
                 .build();
     }
+
 }

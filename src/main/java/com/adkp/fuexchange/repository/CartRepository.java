@@ -8,5 +8,5 @@ import org.springframework.data.repository.query.Param;
 
 public interface CartRepository extends JpaRepository<Cart, Integer> {
     @Query("SELECT c FROM Cart c WHERE c.registeredStudentId.registeredStudentId = :registeredStudentId")
-    Cart getCartByRegisterdStudentId(@Param("registeredStudentId") int registeredStudentId);
+    Cart getCartByRegisteredStudentId(@Param("registeredStudentId") int registeredStudentId);
 }
