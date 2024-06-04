@@ -9,11 +9,14 @@ import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
+        uses = {VariationMapper.class}
+)
 public interface VariationMapper {
 
     @Mapping(source = "variationId", target = "variationId")
     @Mapping(source = "variationName", target = "variationName")
+    @Mapping(source = "variationDetailId", target = "variationDetail")
     VariationDTO toVariationDTO(Variation variation);
 
     @InheritInverseConfiguration(name = "toVariationDTO")
