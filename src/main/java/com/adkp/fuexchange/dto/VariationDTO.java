@@ -9,5 +9,4 @@ public class VariationDTO {
 
     private String variationName;
 
-    private String description;
 }

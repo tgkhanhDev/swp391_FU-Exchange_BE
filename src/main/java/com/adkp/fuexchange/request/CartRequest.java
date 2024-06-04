@@ -9,4 +9,6 @@ import lombok.experimental.FieldDefaults;
 public class CartRequest {
     String studentId;
     int postProductId;
+    int variationId;
+    int quantity;
 }

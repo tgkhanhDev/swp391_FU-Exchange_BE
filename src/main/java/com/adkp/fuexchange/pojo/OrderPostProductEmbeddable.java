@@ -13,4 +13,6 @@ public class OrderPostProductEmbeddable {
     private int orderId;
 
     private int postProductId;
+
+    private int variationDetailId;
 }

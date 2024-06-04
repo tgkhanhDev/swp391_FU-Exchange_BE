@@ -74,7 +74,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .data(InforLoginResponse
                         .builder()
                         .username(registeredStudent.getUsername())
-                        .role(registeredStudent.getAuthorities().toString())
+                        .role(registeredStudent.getAuthorities().toArray()[0].toString())
                         .accessToken("123")
                         .build())
                 .build();

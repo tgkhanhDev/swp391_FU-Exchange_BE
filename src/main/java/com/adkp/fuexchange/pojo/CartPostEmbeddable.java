@@ -13,5 +13,8 @@ import java.io.Serializable;
 @Builder
 public class CartPostEmbeddable implements Serializable {
     private int cartId;
+
     private int postProductId;
+
+    private int variationDetailId;
 }

@@ -9,20 +9,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(force = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
-@Table(name = "Variation")
-public class Variation {
+@Table(name = "VariationDetail")
+public class VariationDetail {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int variationId;
+    private int variationDetailId;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "productId", referencedColumnName = "productId")
-    private Product productId;
+    @JoinColumn(name = "variationId", referencedColumnName = "variationId")
+    private Variation variationId;
 
-    private String variationName;
+    private String description;
 
-    public Variation(String variationName, Product productId) {
-        this.variationName = variationName;
-        this.productId = productId;
+    public VariationDetail(Variation variationId, String description) {
+        this.variationId = variationId;
+        this.description = description;
     }
 }

@@ -25,8 +25,20 @@ public class OrderPostProduct {
     @JoinColumn(name = "postProductId", referencedColumnName = "postProductId")
     private PostProduct postProductId;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @MapsId("variationDetailId")
+    @JoinColumn(name = "variationDetailId", referencedColumnName = "variationDetailId")
+    private VariationDetail variationDetailId;
+
     private int quantity;
 
     private double priceBought;
 
+    public OrderPostProduct(Orders orderId, PostProduct postProductId, VariationDetail variationDetailId, int quantity, double priceBought) {
+        this.orderId = orderId;
+        this.postProductId = postProductId;
+        this.variationDetailId = variationDetailId;
+        this.quantity = quantity;
+        this.priceBought = priceBought;
+    }
 }
