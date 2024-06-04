@@ -29,4 +29,17 @@ public class CartPost {
     @JoinColumn(name = "postProductId", referencedColumnName = "postProductId")
     private PostProduct postProductId;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @MapsId("variationDetailId")
+    @JoinColumn(name = "variationDetailId", referencedColumnName = "variationDetailId")
+    private VariationDetail variationDetailId;
+
+    private int quantity;
+
+    public CartPost(Cart cartId, PostProduct postProductId, VariationDetail variationDetailId, int quantity) {
+        this.cartId = cartId;
+        this.postProductId = postProductId;
+        this.variationDetailId = variationDetailId;
+        this.quantity = quantity;
+    }
 }
