@@ -2,7 +2,6 @@ package com.adkp.fuexchange.controller;
 
 import com.adkp.fuexchange.request.OrdersRequest;
 import com.adkp.fuexchange.response.ResponseObject;
-import com.adkp.fuexchange.service.OrderService;
 import com.adkp.fuexchange.service.PaymentService;
 import com.adkp.fuexchange.service.thirdparty.vnpay.VnPayResponse;
 import com.adkp.fuexchange.service.thirdparty.vnpay.VnPayService;
@@ -23,6 +22,7 @@ public class PaymentController {
     private final VnPayService vnPayService;
 
     private final PaymentService paymentService;
+
     @Autowired
     public PaymentController(VnPayService vnPayService, PaymentService paymentService) {
         this.vnPayService = vnPayService;
@@ -57,10 +57,16 @@ public class PaymentController {
 
     @PostMapping("/cod")
     public ResponseObject<Object> paymentCod(@RequestBody OrdersRequest ordersRequest) {
-        if(
+        if (
                 ordersRequest.getRegisteredStudentId() != 0 ||
-                        ordersRequest.getPaymentMethodId() != 0
-        ){
+                        ordersRequest.getPaymentMethodId() != 0 ||
+                        ordersRequest.getPostProductToBuyRequests().stream().anyMatch(
+                                postRequest -> postRequest.getQuantity() != 0 ||
+                                        postRequest.getVariationDetailId() == 0 ||
+                                        postRequest.getPostProductId() == 0 ||
+                                        postRequest.getPrice() == 0
+                        )
+        ) {
             return paymentService.paymentCod(ordersRequest);
         }
         return ResponseObject.builder()
