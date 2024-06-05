@@ -5,7 +5,7 @@ import com.adkp.fuexchange.pojo.PaymentMethod;
 import com.adkp.fuexchange.pojo.Transactions;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 public class PaymentDTO {
@@ -17,7 +17,7 @@ public class PaymentDTO {
 
     private boolean paymentStatus;
 
-    private Date createTime;
+    private LocalDate createTime;
 
     private Transactions transaction;
 }

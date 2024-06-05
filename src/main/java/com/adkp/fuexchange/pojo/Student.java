@@ -5,15 +5,19 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor(force = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
+@Builder
+@AllArgsConstructor
 @Table(name = "Student")
 public class Student {
 
@@ -33,15 +37,6 @@ public class Student {
 
     private String gender;
 
-    private Date dob;
+    private LocalDate dob;
 
-    public Student(String firstName, String lastName, String identityCard, String address, String phoneNumber, String gender, Date dob) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.identityCard = identityCard;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-        this.gender = gender;
-        this.dob = dob;
-    }
 }

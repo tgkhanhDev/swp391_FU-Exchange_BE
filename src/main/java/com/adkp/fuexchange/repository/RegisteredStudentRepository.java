@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface RegisteredStudentRepository extends JpaRepository<RegisteredStudent, Integer> {
 
-    @Query("Select rgtstd From RegisteredStudent rgtstd Join Fetch rgtstd.roleId " +
+    @Query("Select rgtstd From RegisteredStudent rgtstd " +
             "Where rgtstd.studentId.studentId = :studentId")
     RegisteredStudent findRegisteredStudentByStudentId(@Param("studentId") String studentId);
 

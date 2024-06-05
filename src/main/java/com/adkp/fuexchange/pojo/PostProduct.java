@@ -2,9 +2,12 @@ package com.adkp.fuexchange.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.Date;
+
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor(force = true)
@@ -37,11 +40,11 @@ public class PostProduct {
 
     private int quantity;
 
-    private Date createDate;
+    private LocalDate createDate;
 
     private String content;
 
-    public PostProduct(Product productId, PostType postTypeId, Campus campusId, PostStatus postStatusId, int quantity, Date createDate) {
+    public PostProduct(Product productId, PostType postTypeId, Campus campusId, PostStatus postStatusId, int quantity, LocalDate createDate) {
         this.productId = productId;
         this.postTypeId = postTypeId;
         this.campusId = campusId;

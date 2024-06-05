@@ -1,9 +1,12 @@
 package com.adkp.fuexchange.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor(force = true)
@@ -21,6 +24,10 @@ public class Variation {
 
     private String variationName;
 
+    @OneToMany(mappedBy = "variationId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JsonBackReference
+    private List<VariationDetail> variationDetailId;
+    
     public Variation(String variationName, Product productId) {
         this.variationName = variationName;
         this.productId = productId;

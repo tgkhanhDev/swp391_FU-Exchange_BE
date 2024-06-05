@@ -2,6 +2,8 @@ package com.adkp.fuexchange.dto;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class VariationDTO {
 
@@ -9,4 +11,5 @@ public class VariationDTO {
 
     private String variationName;
 
+    private List<VariationDetailDTO> variationDetail;
 }
