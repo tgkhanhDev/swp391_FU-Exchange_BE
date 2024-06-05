@@ -10,14 +10,15 @@ import org.mapstruct.ReportingPolicy;
 import java.util.List;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
-        uses = {StudentMapper.class, RoleMapper.class})
+        uses = {StudentMapper.class, RoleMapper.class, OrdersMapper.class})
 public interface RegisteredStudentMapper {
 
     @Mapping(source = "registeredStudentId", target = "registeredStudentId")
     @Mapping(source = "studentId", target = "student")
     @Mapping(source = "roleId", target = "role")
+    @Mapping(source = "orderId", target = "order")
     @Mapping(source = "active", target = "active")
-    @Mapping(source = "password", target = "password", ignore = true)
+    @Mapping(source = "password", target = "password")
     RegisteredStudentDTO toRegisteredStudentDTO(RegisteredStudent registeredStudent);
 
     @InheritInverseConfiguration(name = "toRegisteredStudentDTO")

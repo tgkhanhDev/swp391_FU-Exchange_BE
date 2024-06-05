@@ -4,10 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
-@ToString
 @NoArgsConstructor(force = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
@@ -26,13 +24,12 @@ public class Seller {
 
     private String bankingName;
 
-    @Column(name = "isActive")
-    private boolean active;
+    private boolean isActive;
 
-    public Seller(RegisteredStudent registeredStudentId, String bankingNumber, String bankingName, boolean active) {
+    public Seller(RegisteredStudent registeredStudentId, String bankingNumber, String bankingName, boolean isActive) {
         this.registeredStudentId = registeredStudentId;
         this.bankingNumber = bankingNumber;
         this.bankingName = bankingName;
-        this.active = active;
+        this.isActive = isActive;
     }
 }

@@ -14,6 +14,7 @@ public interface CategoryMapper {
 
     @Mapping(source = "categoryId", target = "categoryId")
     @Mapping(source = "categoryName", target = "categoryName")
+    @Mapping(source = "imageUrl", target = "imageUrl")
     CategoryDTO toCategoryDTO(Category category);
 
     @InheritInverseConfiguration(name = "toCategoryDTO")

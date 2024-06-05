@@ -14,6 +14,7 @@ public interface CampusMapper {
 
     @Mapping(source = "campusId", target = "campusId")
     @Mapping(source = "campusName", target = "campusName")
+    @Mapping(source = "imageUrl", target = "imageUrl")
     CampusDTO toCampusDTO(Campus campus);
 
     @InheritInverseConfiguration(name = "toCampusDTO")

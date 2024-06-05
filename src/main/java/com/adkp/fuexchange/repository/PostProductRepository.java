@@ -1,7 +1,6 @@
 package com.adkp.fuexchange.repository;
 
 import com.adkp.fuexchange.pojo.PostProduct;
-import com.adkp.fuexchange.pojo.Product;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,14 +19,17 @@ public interface PostProductRepository extends JpaRepository<PostProduct, Intege
     PostProduct getPostProductByPostId(@Param("postProductId") Integer postProductId);
 
     @Query(
-            value = "SELECT * FROM PostProduct pprd " +
-                    "WHERE pprd.postProductId LIKE CONCAT('%', :campus, '%') " +
-                    "AND pprd.postStatusId LIKE CONCAT('%', :postType, '%') " +
-                    "AND pprd.postTypeId LIKE CONCAT('%', :nameProduct, '%')",
+            value = "SELECT pprd.* FROM PostProduct pprd " +
+                    "JOIN Product p ON pprd.productId = p.productId " +
+                    "JOIN ProductDetail pd ON p.productDetailId = pd.productDetailId " +
+                    "WHERE pprd.campusId LIKE CONCAT('%', :campus, '%') " +
+                    "AND pprd.postTypeId LIKE CONCAT('%', :postType, '%') " +
+                    "AND pd.productName LIKE CONCAT('%', :name, '%') " +
+                    "AND p.categoryId LIKE CONCAT('%', :category, '%')",
             nativeQuery = true
     )
     List<PostProduct> filterPostProduct(
             Pageable pageable, @Param("campus") String campus, @Param("postType") String postType,
-            @Param("nameProduct") String nameProduct
+            @Param("name") String name, @Param("category") String categoryId
     );
 }

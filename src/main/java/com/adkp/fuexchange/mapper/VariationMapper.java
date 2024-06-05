@@ -14,7 +14,6 @@ public interface VariationMapper {
 
     @Mapping(source = "variationId", target = "variationId")
     @Mapping(source = "variationName", target = "variationName")
-    @Mapping(source = "description", target = "description")
     VariationDTO toVariationDTO(Variation variation);
 
     @InheritInverseConfiguration(name = "toVariationDTO")

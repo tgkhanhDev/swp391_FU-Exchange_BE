@@ -1,15 +1,11 @@
 package com.adkp.fuexchange.service;
 
-import com.adkp.fuexchange.dto.CampusDTO;
-import com.adkp.fuexchange.dto.CategoryDTO;
-import com.adkp.fuexchange.dto.PostTypeDTO;
-
-import java.util.List;
+import com.adkp.fuexchange.response.ResponseObject;
 
 public interface ViewRenderService {
-    List<CampusDTO> viewAllCampus();
+    ResponseObject<Object> viewAllCampus();
 
-    List<PostTypeDTO> viewAllPostType();
+    ResponseObject<Object> viewAllPostType();
 
-    List<CategoryDTO> viewAllCategoryType();
+    ResponseObject<Object> viewAllCategoryType();
 }
