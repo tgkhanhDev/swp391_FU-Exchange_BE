@@ -5,6 +5,7 @@ import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.PaymentService;
 import com.adkp.fuexchange.service.thirdparty.vnpay.VnPayResponse;
 import com.adkp.fuexchange.service.thirdparty.vnpay.VnPayService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -51,6 +52,7 @@ public class PaymentController {
     }
 
     @GetMapping("/vn-pay/call-back")
+    @Hidden
     public ResponseObject<Object> paymentCallBack(@RequestParam("vnp_ResponseCode") String vnp_ResponseCode) {
 
         if (vnPayService.vnPayPaymentCallBack(vnp_ResponseCode)) {
@@ -67,6 +69,11 @@ public class PaymentController {
                 .build();
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(description = "Using for payment with cod",
+                    content = @Content
+            )
+    })
     @PostMapping(value = "/pay-order", consumes = "application/json")
     public ResponseObject<Object> payOrders(@RequestBody OrdersRequest ordersRequest) {
         if (
