@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseObject usernameNotFoundException() {
+    public ResponseObject<Object> usernameNotFoundException() {
         return ResponseObject.builder()
                 .status(HttpStatus.NOT_FOUND.value())
                 .message(HttpStatus.NOT_FOUND.name())
@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DataAccessException.class)
-    public ResponseObject dataAccessException(UsernameNotFoundException usernameNotFoundException) {
+    public ResponseObject<Object> dataAccessException(UsernameNotFoundException usernameNotFoundException) {
         return ResponseObject.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .message(HttpStatus.INTERNAL_SERVER_ERROR.name())
@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
 //    }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseObject entityNotFoundException(Exception exception) {
+    public ResponseObject<Object> entityNotFoundException(Exception exception) {
         return ResponseObject.builder()
                 .status(HttpStatus.NOT_FOUND.value())
                 .message(HttpStatus.NOT_FOUND.name())
@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseObject dataIntegrityViolationException(DataIntegrityViolationException exception) {
+    public ResponseObject<Object> dataIntegrityViolationException(DataIntegrityViolationException exception) {
         return ResponseObject.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message(HttpStatus.BAD_REQUEST.name())
