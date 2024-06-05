@@ -11,5 +11,5 @@ public class PostProductRequest {
 
     private int quantity;
 
-    private double price;
+    private long price;
 }

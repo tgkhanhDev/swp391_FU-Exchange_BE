@@ -1,7 +1,7 @@
 package com.adkp.fuexchange.service.thirdparty.vnpay;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
+import org.springframework.http.HttpHeaders;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -91,17 +91,17 @@ public class VnPayUtils {
         }
     }
 
-    public static String getIpAddress(HttpServletRequest request) {
-        String ipAdress;
+    public static String getIpAddress(HttpHeaders headerRequest) {
+        String ipAddress;
         try {
-            ipAdress = request.getHeader("X-FORWARDED-FOR");
-            if (ipAdress == null) {
-                ipAdress = request.getRemoteAddr();
+            ipAddress = headerRequest.getFirst("X-FORWARDED-FOR");
+            if (ipAddress == null || ipAddress.isEmpty()) {
+                ipAddress = "Unknown";
             }
         } catch (Exception e) {
-            ipAdress = "Invalid IP:" + e.getMessage();
+            ipAddress = "Invalid IP:" + e.getMessage();
         }
-        return ipAdress;
+        return ipAddress;
     }
 
     public static String getRandomNumber(int len) {
