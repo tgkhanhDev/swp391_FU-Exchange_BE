@@ -1,5 +1,6 @@
 package com.adkp.fuexchange.controller.cart;
 
+import com.adkp.fuexchange.pojo.CartPostEmbeddable;
 import com.adkp.fuexchange.request.CartRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.CartPostService;
@@ -34,6 +35,16 @@ public class CartController {
     @PostMapping("/cart")
     public ResponseObject<Object> addPostProductToCart(@RequestBody CartRequest cartRequest){
         return cartPostService.addToCart(cartRequest);
+    }
+
+    @PutMapping("/cart-update")
+    public ResponseObject<Object> updatePostProduct(@RequestBody CartRequest cartRequest){
+        return cartPostService.updateCart(cartRequest);
+    }
+
+    @DeleteMapping("cart-delete")
+    public ResponseObject<Object> deletePostProduct(@RequestBody CartPostEmbeddable cartPostEmbeddable){
+        return cartPostService.removeFromCart(cartPostEmbeddable);
     }
 
 
