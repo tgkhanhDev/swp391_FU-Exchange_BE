@@ -5,9 +5,6 @@ import com.adkp.fuexchange.response.ResponseObject;
 
 public interface PaymentService {
 
-    ResponseObject<Object> paymentCod(OrdersRequest ordersRequest);
-
-    ResponseObject<Object> paymentBanking(OrdersRequest ordersRequest);
-
+    ResponseObject<Object> payOrders(OrdersRequest ordersRequest);
 
 }

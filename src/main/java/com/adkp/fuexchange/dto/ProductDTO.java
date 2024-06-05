@@ -26,4 +26,5 @@ public class ProductDTO {
 
     private ProductDetail productDetailId;
 
+    private boolean productStatus;
 }

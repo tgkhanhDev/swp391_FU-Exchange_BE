@@ -36,4 +36,6 @@ public class OrderPostProduct {
 
     private double priceBought;
 
+    private boolean orderPostProductStatus;
+
 }
