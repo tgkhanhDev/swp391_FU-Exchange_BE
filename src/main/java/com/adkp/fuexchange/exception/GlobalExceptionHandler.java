@@ -2,12 +2,16 @@ package com.adkp.fuexchange.exception;
 
 import com.adkp.fuexchange.response.ResponseObject;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Objects;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -57,4 +61,21 @@ public class GlobalExceptionHandler {
                 .build();
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseObject<Object> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        return ResponseObject.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message(HttpStatus.BAD_REQUEST.name())
+                .content(Objects.requireNonNull(ex.getFieldError()).getDefaultMessage())
+                .build();
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseObject<Object> handleConstraintViolationExceptions(ConstraintViolationException ex) {
+        return ResponseObject.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message(HttpStatus.BAD_REQUEST.name())
+                .content(ex.getLocalizedMessage())
+                .build();
+    }
 }

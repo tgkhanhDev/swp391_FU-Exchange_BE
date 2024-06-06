@@ -44,8 +44,7 @@ public class OrderServiceImpl implements OrderService {
     public OrdersDTO updateOrder(OrderUpdateRequest orderUpdateRequest) {
 
         if (
-                orderUpdateRequest.getOrderStatusId() == 0 ||
-                        !ordersRepository.existsById(orderUpdateRequest.getOrderId())
+                !ordersRepository.existsById(orderUpdateRequest.getOrderId())
         ) {
             return null;
         }

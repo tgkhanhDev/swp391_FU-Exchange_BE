@@ -11,14 +11,19 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/order/payment")
 @Tag(name = "Order")
+@Validated
 public class PaymentController {
 
     private final VnPayService vnPayService;
@@ -47,9 +52,10 @@ public class PaymentController {
     @Operation(summary = "Payment of VnPay")
     @PostMapping("/vn-pay")
     public VnPayResponse payment(
-            @RequestBody OrdersRequest ordersRequest,
+            @Valid @RequestBody OrdersRequest ordersRequest,
             @RequestHeader HttpHeaders headers
     ) {
+
         return vnPayService.vnPayPayment(ordersRequest, headers);
     }
 
@@ -78,24 +84,9 @@ public class PaymentController {
     })
     @Operation(summary = "Pay order for all")
     @PostMapping(value = "/pay-order", consumes = "application/json")
-    public ResponseObject<Object> payOrders(@RequestBody OrdersRequest ordersRequest) {
-        if (
-                ordersRequest.getRegisteredStudentId() != 0 ||
-                        ordersRequest.getPaymentMethodId() != 0 ||
-                        ordersRequest.getPostProductToBuyRequests().stream().anyMatch(
-                                postRequest -> postRequest.getQuantity() != 0 ||
-                                        postRequest.getVariationDetailId() == 0 ||
-                                        postRequest.getPostProductId() == 0 ||
-                                        postRequest.getPrice() == 0
-                        )
-        ) {
-            return paymentService.payOrders(ordersRequest);
-        }
-        return ResponseObject.builder()
-                .status(HttpStatus.BAD_REQUEST.value())
-                .message(HttpStatus.BAD_REQUEST.name())
-                .content("Không đủ thông tin mua hàng!")
-                .build();
+    public ResponseObject<Object> payOrders(@Valid @RequestBody OrdersRequest ordersRequest) {
+
+        return paymentService.payOrders(ordersRequest);
     }
 
 }
