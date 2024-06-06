@@ -32,13 +32,21 @@ public class OrdersController {
     }
 
     @PutMapping("/update")
-    public ResponseObject<Object> updateOrder(@RequestBody OrderUpdateRequest orderUpdateRequest){
-        orderService.updateOrder(orderUpdateRequest);
+    public ResponseObject<Object> updateOrder(@RequestBody OrderUpdateRequest orderUpdateRequest) {
+        if (orderService.updateOrder(orderUpdateRequest) != null) {
+            return ResponseObject.builder()
+                    .status(HttpStatus.OK.value())
+                    .message(HttpStatus.OK.name())
+                    .content("Cập nhật thành công!")
+                    .build();
+        }
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
-                .content("Cập nhật thành công!")
+                .content("Cập nhật thất bại!")
+                .data(orderService.updateOrder(orderUpdateRequest))
                 .build();
+
     }
 
 }

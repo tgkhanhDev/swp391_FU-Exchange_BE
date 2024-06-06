@@ -40,19 +40,23 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrdersDTO updateOrder(OrderUpdateRequest orderUpdateRequest) {
 
-        if(
-                orderUpdateRequest.getOrderStatusId() == 0 &&
+        if (
+                orderUpdateRequest.getOrderStatusId() == 0 ||
                         !ordersRepository.existsById(orderUpdateRequest.getOrderId())
-                && orderUpdateRequest.getCompleteDate() == null
-        ){
+        ) {
             return null;
         }
         Orders orders = ordersRepository.getReferenceById(orderUpdateRequest.getOrderId());
 
         orders.setOrderStatusId(ordersStatusRepository.getReferenceById(orderUpdateRequest.getOrderStatusId()));
 
+        if (orderUpdateRequest.getCompleteDate() != null) {
+            orders.setCompleteDate(orderUpdateRequest.getCompleteDate());
+        }
 
-        return null;
+        orders.setDescription(orderUpdateRequest.getDescription());
+
+        return ordersMapper.toOrdersDTO(orders);
     }
 
 }

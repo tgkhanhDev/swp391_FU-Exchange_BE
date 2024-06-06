@@ -9,7 +9,9 @@ import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
+        uses = {RegisteredStudentMapper.class}
+)
 public interface CartMapper {
 
     @Mapping(source = "cartId", target = "cartId")
