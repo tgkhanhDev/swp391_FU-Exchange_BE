@@ -8,12 +8,15 @@ import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.StudentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/student")
 @Tag(name = "Student")
+@Validated
 public class StudentController {
 
     private final StudentService studentService;
@@ -50,7 +53,7 @@ public class StudentController {
 
     @Operation(summary = "Create student")
     @PostMapping("/create-student")
-    public ResponseObject<Object> createStudent(@RequestBody StudentRequest studentRequest) {
+    public ResponseObject<Object> createStudent(@Valid @RequestBody StudentRequest studentRequest) {
         Student createdStudent = studentService.createStudent(studentRequest);
         if(createdStudent == null){
             return ResponseObject.builder()
@@ -70,7 +73,7 @@ public class StudentController {
     @Operation(summary = "Update student")
     @PutMapping("/{studentId}/update-student")
     public ResponseObject<Object> updateStudentById(
-            @RequestBody StudentRequest studentRequest
+            @Valid @RequestBody StudentRequest studentRequest
     ) {
         Student updatedStudent = studentService.updateStudentByStudentId(studentRequest);
         return ResponseObject.builder()

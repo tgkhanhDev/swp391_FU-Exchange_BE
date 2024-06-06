@@ -6,13 +6,16 @@ import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/order")
 @Tag(name = "Order")
+@Validated
 public class OrdersController {
 
     private final OrderService orderService;
@@ -36,7 +39,7 @@ public class OrdersController {
 
     @Operation(summary = "Update order")
     @PutMapping("/update")
-    public ResponseObject<Object> updateOrder(@RequestBody OrderUpdateRequest orderUpdateRequest) {
+    public ResponseObject<Object> updateOrder(@Valid @RequestBody OrderUpdateRequest orderUpdateRequest) {
         if (orderService.updateOrder(orderUpdateRequest) != null) {
             return ResponseObject.builder()
                     .status(HttpStatus.OK.value())

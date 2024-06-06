@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/product")
-@Tag(name = "product")
+@Tag(name = "Product")
 public class ProductController {
     private final ProductServiceImpl productService;
 

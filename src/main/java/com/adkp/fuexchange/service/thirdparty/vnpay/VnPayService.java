@@ -2,28 +2,26 @@ package com.adkp.fuexchange.service.thirdparty.vnpay;
 
 import com.adkp.fuexchange.request.OrdersRequest;
 import com.adkp.fuexchange.request.PostProductRequest;
+import com.adkp.fuexchange.utils.Utils;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 public class VnPayService {
 
     private final HttpSession session;
 
-    private final RestTemplate restTemplate;
-
+    private final Utils utils;
     @Autowired
-    public VnPayService(HttpSession session, RestTemplate restTemplate) {
+    public VnPayService(HttpSession session, Utils utils) {
         this.session = session;
-        this.restTemplate = restTemplate;
+        this.utils = utils;
     }
 
     public VnPayResponse vnPayPayment(OrdersRequest ordersRequest, HttpHeaders headers) {
@@ -50,7 +48,7 @@ public class VnPayService {
         if (vnp_ResponseCode.equals("00")) {
             OrdersRequest ordersRequest = (OrdersRequest) session.getAttribute("ordersRequest");
             session.removeAttribute("ordersRequest");
-            navigationToSaveOrderAsync(ordersRequest);
+            utils.navigationToSaveOrderAsync("http://localhost:8080/order/payment/pay-order", ordersRequest);
             return true;
         }
         session.removeAttribute("ordersRequest");
@@ -74,20 +72,4 @@ public class VnPayService {
         return totalPrice;
     }
 
-    @Async
-    public void navigationToSaveOrderAsync(OrdersRequest ordersRequest) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-        HttpEntity<OrdersRequest> ordersRequest1 = new HttpEntity<>(ordersRequest, headers);
-
-        String response = restTemplate
-                .exchange(
-                        "http://localhost:8080/order/payment/pay-order",
-                        HttpMethod.POST,
-                        ordersRequest1,
-                        String.class)
-                .getBody();
-
-        CompletableFuture.completedFuture(response);
-    }
 }
