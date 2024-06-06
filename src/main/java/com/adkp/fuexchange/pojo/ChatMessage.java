@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor(force = true)
@@ -31,9 +31,9 @@ public class ChatMessage {
 
     private String content;
 
-    private LocalDate timeSend;
+    private LocalDateTime timeSend;
 
-    public ChatMessage(ChatRoom chatRoomId, RegisteredStudent studentSendId, RegisteredStudent studentReceiveId, String content, LocalDate timeSend) {
+    public ChatMessage(ChatRoom chatRoomId, RegisteredStudent studentSendId, RegisteredStudent studentReceiveId, String content, LocalDateTime timeSend) {
         this.chatRoomId = chatRoomId;
         this.studentSendId = studentSendId;
         this.studentReceiveId = studentReceiveId;

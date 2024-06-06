@@ -6,6 +6,7 @@ import com.adkp.fuexchange.utils.Utils;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +49,7 @@ public class VnPayService {
         if (vnp_ResponseCode.equals("00")) {
             OrdersRequest ordersRequest = (OrdersRequest) session.getAttribute("ordersRequest");
             session.removeAttribute("ordersRequest");
-            utils.navigationToSaveOrderAsync("http://localhost:8080/order/payment/pay-order", ordersRequest);
+            utils.navigationDataAsyncForAnotherMethod("http://localhost:8080/order/payment/pay-order", ordersRequest, HttpMethod.POST);
             return true;
         }
         session.removeAttribute("ordersRequest");
