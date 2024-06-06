@@ -6,10 +6,9 @@ import com.adkp.fuexchange.response.ResponseObject;
 
 public interface CartPostService {
     ResponseObject<Object> viewCartPostProductByStudentId(String studentId);
-
     ResponseObject<Object> viewCartPostById(CartPostEmbeddable cartPostId);
-
     ResponseObject<Object> addToCart(CartRequest cartRequest);
     ResponseObject<Object> updateCart(CartRequest cartRequest);
     ResponseObject<Object> removeFromCart(CartPostEmbeddable cartPostId);
+
 }

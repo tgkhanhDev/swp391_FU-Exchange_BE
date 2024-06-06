@@ -12,4 +12,5 @@ public class VariationDTO {
     private String variationName;
 
     private List<VariationDetailDTO> variationDetail;
+
 }

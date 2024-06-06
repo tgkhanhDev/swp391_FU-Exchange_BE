@@ -29,7 +29,7 @@ public class Variation {
     @OneToMany(mappedBy = "variationId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JsonBackReference
     private List<VariationDetail> variationDetailId;
-    
+
     public Variation(String variationName, Product productId) {
         this.variationName = variationName;
         this.productId = productId;

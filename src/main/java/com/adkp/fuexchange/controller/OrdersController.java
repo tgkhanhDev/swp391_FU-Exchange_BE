@@ -1,7 +1,6 @@
 package com.adkp.fuexchange.controller;
 
 import com.adkp.fuexchange.request.OrderUpdateRequest;
-import com.adkp.fuexchange.request.OrdersRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.OrderService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -48,5 +47,4 @@ public class OrdersController {
                 .build();
 
     }
-
 }
