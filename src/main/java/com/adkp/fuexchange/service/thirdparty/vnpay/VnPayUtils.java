@@ -102,6 +102,7 @@ public class VnPayUtils {
             ipAddress = "Invalid IP:" + e.getMessage();
         }
         return ipAddress;
+
     }
 
     public static String getRandomNumber(int len) {

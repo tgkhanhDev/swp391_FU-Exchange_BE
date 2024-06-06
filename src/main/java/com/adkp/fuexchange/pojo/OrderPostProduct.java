@@ -38,4 +38,12 @@ public class OrderPostProduct {
 
     private boolean orderPostProductStatus;
 
+    public OrderPostProduct(Orders orderId, PostProduct postProductId, VariationDetail variationDetailId, int quantity, double priceBought, boolean orderPostProductStatus) {
+        this.orderId = orderId;
+        this.postProductId = postProductId;
+        this.variationDetailId = variationDetailId;
+        this.quantity = quantity;
+        this.priceBought = priceBought;
+        this.orderPostProductStatus = orderPostProductStatus;
+    }
 }
