@@ -17,7 +17,7 @@ public class OrderPostProduct {
     @EmbeddedId
     private OrderPostProductEmbeddable orderPostProductId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     @MapsId("orderId")
     @JoinColumn(name = "orderId", referencedColumnName = "orderId")
     private Orders orderId;
@@ -27,7 +27,7 @@ public class OrderPostProduct {
     @JoinColumn(name = "postProductId", referencedColumnName = "postProductId")
     private PostProduct postProductId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
     @MapsId("variationDetailId")
     @JoinColumn(name = "variationDetailId", referencedColumnName = "variationDetailId")
     private VariationDetail variationDetailId;
@@ -36,4 +36,14 @@ public class OrderPostProduct {
 
     private double priceBought;
 
+    private boolean orderPostProductStatus;
+
+    public OrderPostProduct(Orders orderId, PostProduct postProductId, VariationDetail variationDetailId, int quantity, double priceBought, boolean orderPostProductStatus) {
+        this.orderId = orderId;
+        this.postProductId = postProductId;
+        this.variationDetailId = variationDetailId;
+        this.quantity = quantity;
+        this.priceBought = priceBought;
+        this.orderPostProductStatus = orderPostProductStatus;
+    }
 }

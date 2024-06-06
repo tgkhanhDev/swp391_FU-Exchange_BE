@@ -13,7 +13,7 @@ import java.util.List;
 public interface CartMapper {
 
     @Mapping(source = "cartId", target = "cartId")
-    @Mapping(source = "registeredStudentId", target = "registeredStudentId")
+    @Mapping(source = "registeredStudentId.registeredStudentId", target = "registeredStudentId")
     CartDTO toCartDTO(Cart cart);
 
     @InheritInverseConfiguration(name = "toCartDTO")

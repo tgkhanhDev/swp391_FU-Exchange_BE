@@ -1,7 +1,5 @@
 package com.adkp.fuexchange.repository;
 
-import com.adkp.fuexchange.dto.CartPostDTO;
-import com.adkp.fuexchange.pojo.Cart;
 import com.adkp.fuexchange.pojo.CartPost;
 import com.adkp.fuexchange.pojo.PostProduct;
 import org.springframework.data.jpa.repository.JpaRepository;

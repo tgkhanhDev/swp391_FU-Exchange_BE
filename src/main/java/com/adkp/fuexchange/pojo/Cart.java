@@ -1,8 +1,11 @@
 package com.adkp.fuexchange.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor(force = true)
@@ -22,6 +25,9 @@ public class Cart {
     @JoinColumn(name = "registeredStudentId", referencedColumnName = "registeredStudentId")
     private RegisteredStudent registeredStudentId;
 
+    @OneToMany(mappedBy = "cartId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JsonBackReference
+    private List<CartPost> cartPostId;
     public Cart(RegisteredStudent registeredStudentId) {
         this.registeredStudentId = registeredStudentId;
     }

@@ -47,5 +47,4 @@ public class CartController {
         return cartPostService.removeFromCart(cartPostEmbeddable);
     }
 
-
 }

@@ -4,14 +4,18 @@ import com.adkp.fuexchange.request.LoginRequest;
 import com.adkp.fuexchange.request.RegisterRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.AuthenticationService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 @Tag(name = "Authentication")
+@Validated
 public class AuthenticateController {
 
     private final AuthenticationService authenticationService;
@@ -21,6 +25,7 @@ public class AuthenticateController {
         this.authenticationService = authenticationService;
     }
 
+    @Operation(summary = "Login into website")
     @PostMapping("/login")
     public ResponseObject<Object> loginStudent(@RequestBody LoginRequest loginRequest) {
         if (
@@ -37,23 +42,16 @@ public class AuthenticateController {
                 .build();
     }
 
+    @Operation(summary = "Register to become user in website")
     @PostMapping("/register")
-    public ResponseObject<Object> registerStudent(@RequestBody RegisterRequest registerRequest) {
-        if (
-                registerRequest.getPassword() != null
-                        && registerRequest.getConfirmPassword() != null
-                        && registerRequest.getStudentId() != null
-                        && registerRequest.getIdentifyNumber() != null
-        ) {
-            return authenticationService.register(registerRequest);
-        }
-        return ResponseObject.builder()
-                .status(HttpStatus.BAD_REQUEST.value())
-                .message(HttpStatus.BAD_REQUEST.name())
-                .content("Vui lòng nhập đầy đủ thông tin")
-                .build();
+    public ResponseObject<Object> registerStudent(
+            @Valid @RequestBody RegisterRequest registerRequest
+    ) {
+        return authenticationService.register(registerRequest);
     }
 
+
+    @Operation(summary = "Check information by registeredStudentId and identity")
     @GetMapping("/check-information")
     public ResponseObject<Object> checkInformationRegister(
             @RequestParam("studentId") String studentId,
@@ -62,6 +60,7 @@ public class AuthenticateController {
         return authenticationService.checkInformationRegister(studentId, identity);
     }
 
+    @Operation(summary = "Check registered by studentId")
     @GetMapping("/isRegistered/{studentId}")
     public ResponseObject<Object> IsRegistered(@PathVariable String studentId) {
         return authenticationService.isRegistered(studentId);

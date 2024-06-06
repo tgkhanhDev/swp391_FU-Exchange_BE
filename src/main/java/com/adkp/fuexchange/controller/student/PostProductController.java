@@ -2,6 +2,7 @@ package com.adkp.fuexchange.controller.student;
 
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.PostProductService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ public class PostProductController {
     public PostProductController(PostProductService postProductService) {
         this.postProductService = postProductService;
     }
-
+    @Operation(summary = "Filter post product all case")
     @GetMapping("/{current}")
     public ResponseObject<Object> viewMorePostProduct(
             @PathVariable("current") int current,
@@ -28,8 +29,9 @@ public class PostProductController {
         return postProductService.viewMorePostProduct(current, campusId, postTypeId, name, categoryId);
     }
 
+    @Operation(summary = "Get post product by postProductId")
     @GetMapping("detail/{postProductId}")
-    public ResponseObject<Object> getPostProductByPostId(@PathVariable("postProductId") int postProductId) {
+    public ResponseObject<Object> getPostProductByPostProductId(@PathVariable("postProductId") int postProductId) {
         return postProductService.getPostProductById(postProductId);
     }
 

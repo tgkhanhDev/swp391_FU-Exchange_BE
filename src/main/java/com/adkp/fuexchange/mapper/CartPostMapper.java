@@ -9,10 +9,16 @@ import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
+        uses = {CartMapper.class, PostProductMapper.class, VariationDetailMapper.class}
+)
 public interface CartPostMapper {
-    @Mapping(source = "cartId", target = "cartId")
-    @Mapping(source = "postProductId", target = "postProductId")
+    @Mapping(source = "cartPostId", target = "cartPostId")
+    @Mapping(source = "cartId", target = "cart")
+    @Mapping(source = "postProductId", target = "postProduct")
+    @Mapping(source = "postProductId.productId.sellerId", target = "postProduct.product.seller", ignore = true)
+    @Mapping(source = "variationDetailId", target = "variationDetail")
+    @Mapping(source = "quantity", target = "quantity")
     CartPostDTO toCartPostDTO(CartPost cartPost);
 
     @InheritInverseConfiguration(name = "toCartPostDTO")

@@ -5,6 +5,7 @@ import com.adkp.fuexchange.repository.*;
 import com.adkp.fuexchange.request.OrdersRequest;
 import com.adkp.fuexchange.request.PostProductRequest;
 import com.adkp.fuexchange.response.ResponseObject;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -51,25 +52,16 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public ResponseObject<Object> paymentCod(OrdersRequest ordersRequest) {
-
+    @Transactional
+    public ResponseObject<Object> payOrders(OrdersRequest ordersRequest) {
+        boolean paymentStatus = false;
         Orders ordersSaved = saveOrderAndOrderPostProduct(ordersRequest);
 
-        savePaymentAndTransaction(ordersRequest, ordersSaved, false);
+        if (ordersRequest.getPaymentMethodId() == 2) {
+            paymentStatus = true;
+        }
 
-        return ResponseObject.builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.name())
-                .content("Mua hàng thành công!")
-                .build();
-    }
-
-    @Override
-    public ResponseObject<Object> paymentBanking(OrdersRequest ordersRequest) {
-
-        Orders ordersSaved = saveOrderAndOrderPostProduct(ordersRequest);
-
-        savePaymentAndTransaction(ordersRequest, ordersSaved, true);
+        savePaymentAndTransaction(ordersRequest, ordersSaved, paymentStatus);
 
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
@@ -137,7 +129,8 @@ public class PaymentServiceImpl implements PaymentService {
                             postProductRepository.getReferenceById(postProductRequest.getPostProductId()),
                             variationDetailRepository.getReferenceById(postProductRequest.getVariationDetailId()),
                             postProductRequest.getQuantity(),
-                            Double.parseDouble(new DecimalFormat("#.###").format(postProductRequest.getPrice() / 1000))
+                            Double.parseDouble(new DecimalFormat("#.###").format(postProductRequest.getPrice() / 1000)),
+                            false
                     )
             );
         }

@@ -47,7 +47,7 @@ public class CartPostServiceImpl implements CartPostService {
     }
 
     @Override
-    public ResponseObject<Object> viewCartPostById(CartPostEmbeddable cartPostId){
+    public ResponseObject<Object> viewCartPostById(CartPostEmbeddable cartPostId) {
 
 //        return ResponseObject.builder()
 //                .status(HttpStatus.OK.value())
@@ -57,7 +57,7 @@ public class CartPostServiceImpl implements CartPostService {
 //                        postProductMapper.toPostProductDTOList(cartPostRepository.getCartProductByStudentId(studentId))
 //                )
 //                .build();
-        return  null;
+        return null;
     }
 
 
@@ -65,7 +65,7 @@ public class CartPostServiceImpl implements CartPostService {
     @Transactional
     public ResponseObject<Object> addToCart(CartRequest cartRequest) {
         RegisteredStudent registeredStudent = registeredStudentRepository.findRegisteredStudentByStudentId(cartRequest.getStudentId());
-        if(registeredStudent == null){
+        if (registeredStudent == null) {
             return ResponseObject.builder()
                     .status(HttpStatus.NOT_FOUND.value())
                     .message(HttpStatus.NOT_FOUND.name())
@@ -96,10 +96,10 @@ public class CartPostServiceImpl implements CartPostService {
 
     @Override
     @Transactional
-    public ResponseObject<Object> updateCart(CartRequest cartRequest){
+    public ResponseObject<Object> updateCart(CartRequest cartRequest) {
 
         RegisteredStudent registeredStudent = registeredStudentRepository.findRegisteredStudentByStudentId(cartRequest.getStudentId());
-        if(registeredStudent == null){
+        if (registeredStudent == null) {
             return ResponseObject.builder()
                     .status(HttpStatus.NOT_FOUND.value())
                     .message(HttpStatus.NOT_FOUND.name())
@@ -130,10 +130,10 @@ public class CartPostServiceImpl implements CartPostService {
 
     @Override
     @Transactional
-    public ResponseObject<Object> removeFromCart(CartPostEmbeddable cartPostId){
+    public ResponseObject<Object> removeFromCart(CartPostEmbeddable cartPostId) {
 
         CartPost cartpost = cartPostRepository.getCartPostById(cartPostId.getCartId(), cartPostId.getPostProductId(), cartPostId.getVariationDetailId());
-        if(cartpost == null){
+        if (cartpost == null) {
             return ResponseObject.builder()
                     .status(HttpStatus.NOT_FOUND.value())
                     .message(HttpStatus.NOT_FOUND.name())
@@ -148,5 +148,4 @@ public class CartPostServiceImpl implements CartPostService {
                 .content("Xóa sản phẩm thành công")
                 .build();
     }
-
 }

@@ -5,18 +5,25 @@ import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.PaymentService;
 import com.adkp.fuexchange.service.thirdparty.vnpay.VnPayResponse;
 import com.adkp.fuexchange.service.thirdparty.vnpay.VnPayService;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/order/payment")
 @Tag(name = "Order")
+@Validated
 public class PaymentController {
 
     private final VnPayService vnPayService;
@@ -42,37 +49,44 @@ public class PaymentController {
                     gmail: nguyenhoangan060703@gmail.com |\s
                     password: Kaka1342""", content = @Content)
     })
-    @GetMapping("/vn-pay")
+    @Operation(summary = "Payment of VnPay")
+    @PostMapping("/vn-pay")
     public VnPayResponse payment(
-            @RequestParam("amount") String amountRequest,
-            HttpServletRequest request
+            @Valid @RequestBody OrdersRequest ordersRequest,
+            @RequestHeader HttpHeaders headers
     ) {
-        return vnPayService.vnPayPayment(amountRequest, request);
+
+        return vnPayService.vnPayPayment(ordersRequest, headers);
     }
 
     @GetMapping("/vn-pay/call-back")
-    public ResponseObject<Object> vnPayCallBack(HttpServletRequest request) {
-        return vnPayService.vnPayCallBack(request);
-    }
+    @Hidden
+    public ResponseObject<Object> paymentCallBack(@RequestParam("vnp_ResponseCode") String vnp_ResponseCode) {
 
-    @PostMapping("/cod")
-    public ResponseObject<Object> paymentCod(@RequestBody OrdersRequest ordersRequest) {
-        if (
-                ordersRequest.getRegisteredStudentId() != 0 ||
-                        ordersRequest.getPaymentMethodId() != 0 ||
-                        ordersRequest.getPostProductToBuyRequests().stream().anyMatch(
-                                postRequest -> postRequest.getQuantity() != 0 ||
-                                        postRequest.getVariationDetailId() == 0 ||
-                                        postRequest.getPostProductId() == 0 ||
-                                        postRequest.getPrice() == 0
-                        )
-        ) {
-            return paymentService.paymentCod(ordersRequest);
+        if (vnPayService.vnPayPaymentCallBack(vnp_ResponseCode)) {
+            return ResponseObject.builder()
+                    .status(HttpStatus.OK.value())
+                    .message(HttpStatus.OK.name())
+                    .content("Mua hàng thành công!")
+                    .build();
         }
         return ResponseObject.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message(HttpStatus.BAD_REQUEST.name())
-                .content("Không đủ thông tin mua hàng!")
+                .content("Mua hàng thất bại!")
                 .build();
     }
+
+    @ApiResponses(value = {
+            @ApiResponse(description = "Using for payment with cod",
+                    content = @Content
+            )
+    })
+    @Operation(summary = "Pay order for all")
+    @PostMapping(value = "/pay-order", consumes = "application/json")
+    public ResponseObject<Object> payOrders(@Valid @RequestBody OrdersRequest ordersRequest) {
+
+        return paymentService.payOrders(ordersRequest);
+    }
+
 }

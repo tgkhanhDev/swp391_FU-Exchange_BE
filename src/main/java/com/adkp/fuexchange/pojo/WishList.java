@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-
 @Data
 @NoArgsConstructor(force = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -36,4 +35,5 @@ public class WishList {
         this.createDate = createDate;
         this.isActive = isActive;
     }
+
 }

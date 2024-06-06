@@ -1,12 +1,10 @@
 package com.adkp.fuexchange.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
+import org.springframework.validation.annotation.Validated;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -15,10 +13,13 @@ import java.util.List;
 @NoArgsConstructor(force = true)
 public class OrdersRequest {
 
+    @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
     private int registeredStudentId;
 
+    @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
     private List<PostProductRequest> postProductToBuyRequests;
 
+    @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
     private int paymentMethodId;
 
     private String description;

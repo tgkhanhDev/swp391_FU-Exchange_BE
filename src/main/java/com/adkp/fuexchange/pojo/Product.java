@@ -11,6 +11,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor(force = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+
 @Entity
 @Table(name = "Product")
 public class Product {
@@ -33,14 +34,17 @@ public class Product {
 
     private double price;
 
+    private boolean productStatus;
+
     @OneToMany(mappedBy = "productId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JsonBackReference
     private List<Variation> variationId;
 
-    public Product(ProductDetail productDetailId, Seller sellerId, Category categoryId, double price) {
+    public Product(ProductDetail productDetailId, Seller sellerId, Category categoryId, double price, boolean productStatus) {
         this.productDetailId = productDetailId;
         this.sellerId = sellerId;
         this.categoryId = categoryId;
         this.price = price;
+        this.productStatus = productStatus;
     }
 }
