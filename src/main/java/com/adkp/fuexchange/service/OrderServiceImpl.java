@@ -8,6 +8,7 @@ import com.adkp.fuexchange.repository.OrdersRepository;
 import com.adkp.fuexchange.repository.OrdersStatusRepository;
 import com.adkp.fuexchange.request.OrderUpdateRequest;
 import com.adkp.fuexchange.response.ResponseObject;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrdersDTO updateOrder(OrderUpdateRequest orderUpdateRequest) {
 
         if (
@@ -60,4 +62,15 @@ public class OrderServiceImpl implements OrderService {
         return ordersMapper.toOrdersDTO(orders);
     }
 
+    @Override
+    @Transactional
+    public OrdersDTO deleteOrder(Integer orderId) {
+        Orders orderDeleted = ordersRepository.findById(orderId)
+                .orElseThrow(() -> null);
+        if (orderDeleted == null) {
+            return null;
+        }
+        ordersRepository.delete(orderDeleted);
+        return ordersMapper.toOrdersDTO(orderDeleted);
+    }
 }

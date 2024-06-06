@@ -4,6 +4,7 @@ import com.adkp.fuexchange.request.LoginRequest;
 import com.adkp.fuexchange.request.RegisterRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.AuthenticationService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ public class AuthenticateController {
         this.authenticationService = authenticationService;
     }
 
+    @Operation(summary = "Login into website")
     @PostMapping("/login")
     public ResponseObject<Object> loginStudent(@RequestBody LoginRequest loginRequest) {
         if (
@@ -37,6 +39,7 @@ public class AuthenticateController {
                 .build();
     }
 
+    @Operation(summary = "Register to become user in website")
     @PostMapping("/register")
     public ResponseObject<Object> registerStudent(@RequestBody RegisterRequest registerRequest) {
         if (
@@ -54,6 +57,8 @@ public class AuthenticateController {
                 .build();
     }
 
+
+    @Operation(summary = "Check information by registeredStudentId and identity")
     @GetMapping("/check-information")
     public ResponseObject<Object> checkInformationRegister(
             @RequestParam("studentId") String studentId,
@@ -62,6 +67,7 @@ public class AuthenticateController {
         return authenticationService.checkInformationRegister(studentId, identity);
     }
 
+    @Operation(summary = "Check registered by studentId")
     @GetMapping("/isRegistered/{studentId}")
     public ResponseObject<Object> IsRegistered(@PathVariable String studentId) {
         return authenticationService.isRegistered(studentId);

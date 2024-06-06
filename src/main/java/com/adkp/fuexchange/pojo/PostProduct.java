@@ -1,10 +1,12 @@
 package com.adkp.fuexchange.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor(force = true)
@@ -42,6 +44,9 @@ public class PostProduct {
 
     private String content;
 
+    @OneToMany(mappedBy = "postProductId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JsonBackReference
+    private List<CartPost> cartPostId;
     public PostProduct(Product productId, PostType postTypeId, Campus campusId, PostStatus postStatusId, int quantity, LocalDate createDate) {
         this.productId = productId;
         this.postTypeId = postTypeId;

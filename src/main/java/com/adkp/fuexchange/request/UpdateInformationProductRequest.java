@@ -10,8 +10,12 @@ import java.util.List;
 @Data
 public class UpdateInformationProductRequest {
     private Integer productID;
+
     private ProductDetail productDetailId;
-    private Category categoryId;
+
+    private Integer categoryId;
+
     private double price;
+
     private List<Variation> variationId;
 }

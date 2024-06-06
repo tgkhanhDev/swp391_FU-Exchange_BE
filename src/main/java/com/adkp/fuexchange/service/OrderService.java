@@ -8,4 +8,6 @@ public interface OrderService {
     ResponseObject<Object> getOrderByRegisterId(Integer registeredStudentId);
 
     OrdersDTO updateOrder(OrderUpdateRequest orderUpdateRequest);
+
+    OrdersDTO deleteOrder(Integer orderId);
 }
