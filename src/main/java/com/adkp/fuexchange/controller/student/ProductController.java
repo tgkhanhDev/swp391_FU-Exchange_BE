@@ -1,5 +1,6 @@
 package com.adkp.fuexchange.controller.student;
 
+import com.adkp.fuexchange.dto.ProductDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,6 +10,8 @@ import com.adkp.fuexchange.service.ProductServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/product")
@@ -52,6 +55,18 @@ public class ProductController {
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message(HttpStatus.BAD_REQUEST.name())
                 .content("Vui lòng nhập đầy đủ thông tin cập nhật sản phẩm ")
+                .build();
+    }
+
+    @GetMapping("/get-by-variation/{variationDetailId}")
+    @Operation(summary = "Get product by variation detail")
+    public ResponseObject<Object> GetProductVariationId(@PathVariable("variationDetailId") int variationDetailId){
+        ProductDTO prd = productService.getProductByVariationDetailId(variationDetailId);
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .data(prd)
+                .content("Lấy sản phẩm thành công")
                 .build();
     }
 }

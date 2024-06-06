@@ -4,6 +4,7 @@ import com.adkp.fuexchange.dto.ProductDTO;
 import com.adkp.fuexchange.mapper.ProductMapper;
 import com.adkp.fuexchange.pojo.Product;
 import com.adkp.fuexchange.repository.ProductRepository;
+import com.adkp.fuexchange.repository.VariationDetailRepository;
 import com.adkp.fuexchange.request.UpdateInformationProductRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import jakarta.transaction.Transactional;
@@ -20,11 +21,13 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final VariationDetailRepository variationDetailRepository;
     private final ProductMapper productMapper;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper) {
+    public ProductServiceImpl(ProductRepository productRepository, VariationDetailRepository variationDetailRepository, ProductMapper productMapper) {
         this.productRepository = productRepository;
+        this.variationDetailRepository = variationDetailRepository;
         this.productMapper = productMapper;
     }
 
@@ -107,4 +110,12 @@ public class ProductServiceImpl implements ProductService {
         }
         return productDTOList.size();
     }
+
+    @Override
+    public ProductDTO getProductByVariationDetailId(int variationDetailId) {
+        ProductDTO prd =  productMapper.toProductDTO(variationDetailRepository.getProductByVariationDetail(variationDetailId));
+        return prd;
+    }
+
+
 }
