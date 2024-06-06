@@ -18,4 +18,6 @@ public interface ProductService {
     long countTotalPostProduct();
 
     long countProduct(String name, List<ProductDTO> productDTOList);
+
+    ProductDTO getProductByVariationDetailId(int variationDetailId);
 }
