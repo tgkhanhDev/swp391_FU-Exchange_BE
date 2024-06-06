@@ -5,11 +5,13 @@ import com.adkp.fuexchange.request.PostProductRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class VnPayService {
@@ -48,7 +50,7 @@ public class VnPayService {
         if (vnp_ResponseCode.equals("00")) {
             OrdersRequest ordersRequest = (OrdersRequest) session.getAttribute("ordersRequest");
             session.removeAttribute("ordersRequest");
-            navigationToSaveOrder(ordersRequest);
+            navigationToSaveOrderAsync(ordersRequest);
             return true;
         }
         session.removeAttribute("ordersRequest");
@@ -72,17 +74,20 @@ public class VnPayService {
         return totalPrice;
     }
 
-    public void navigationToSaveOrder(OrdersRequest ordersRequest) {
+    @Async
+    public void navigationToSaveOrderAsync(OrdersRequest ordersRequest) {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-        HttpEntity<OrdersRequest> ordersRequest1 = new HttpEntity<OrdersRequest>(ordersRequest, headers);
+        HttpEntity<OrdersRequest> ordersRequest1 = new HttpEntity<>(ordersRequest, headers);
 
-        restTemplate
+        String response = restTemplate
                 .exchange(
                         "http://localhost:8080/order/payment/pay-order",
                         HttpMethod.POST,
                         ordersRequest1,
                         String.class)
                 .getBody();
+
+        CompletableFuture.completedFuture(response);
     }
 }

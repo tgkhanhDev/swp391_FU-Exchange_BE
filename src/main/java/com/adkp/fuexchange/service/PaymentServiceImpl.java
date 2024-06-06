@@ -5,6 +5,7 @@ import com.adkp.fuexchange.repository.*;
 import com.adkp.fuexchange.request.OrdersRequest;
 import com.adkp.fuexchange.request.PostProductRequest;
 import com.adkp.fuexchange.response.ResponseObject;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    @Transactional
     public ResponseObject<Object> payOrders(OrdersRequest ordersRequest) {
         boolean paymentStatus = false;
         Orders ordersSaved = saveOrderAndOrderPostProduct(ordersRequest);
@@ -108,7 +110,6 @@ public class PaymentServiceImpl implements PaymentService {
                 )
         );
     }
-
     private Orders saveOrderAndOrderPostProduct(OrdersRequest ordersRequest) {
         Orders ordersSaved = ordersRepository.save(
                 new Orders(

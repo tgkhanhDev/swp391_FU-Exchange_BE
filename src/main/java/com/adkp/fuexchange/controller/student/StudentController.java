@@ -6,6 +6,7 @@ import com.adkp.fuexchange.repository.StudentRepository;
 import com.adkp.fuexchange.request.StudentRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.StudentService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ public class StudentController {
         this.studentService = studentService;
     }
 
+    @Operation(summary = "Get all student")
     @GetMapping("/view-all")
     public ResponseObject<Object> getAllStudent() {
         return ResponseObject.builder()
@@ -33,6 +35,7 @@ public class StudentController {
                 .build();
     }
 
+    @Operation(summary = "View student by studentId")
     @GetMapping("/view-student")
     public ResponseObject<Object> getStudentById(@RequestParam("studentId") String studentId) {
         return ResponseObject.builder()
@@ -45,6 +48,7 @@ public class StudentController {
                 .build();
     }
 
+    @Operation(summary = "Create student")
     @PostMapping("/create-student")
     public ResponseObject<Object> createStudent(@RequestBody StudentRequest studentRequest) {
         Student createdStudent = studentService.createStudent(studentRequest);
@@ -59,10 +63,11 @@ public class StudentController {
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
                 .content("Tạo thành công")
-                .data(createdStudent)
+                .data(studentRequest)
                 .build();
     }
 
+    @Operation(summary = "Update student")
     @PutMapping("/{studentId}/update-student")
     public ResponseObject<Object> updateStudentById(
             @RequestBody StudentRequest studentRequest
@@ -76,6 +81,7 @@ public class StudentController {
                 .build();
     }
 
+    @Operation(summary = "Delete student")
     @DeleteMapping("/{studentId}")
     public ResponseObject<Object> deleteStudentById(
             @PathVariable("studentId") String studentId

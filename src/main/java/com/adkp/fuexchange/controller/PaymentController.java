@@ -6,6 +6,7 @@ import com.adkp.fuexchange.service.PaymentService;
 import com.adkp.fuexchange.service.thirdparty.vnpay.VnPayResponse;
 import com.adkp.fuexchange.service.thirdparty.vnpay.VnPayService;
 import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -43,6 +44,7 @@ public class PaymentController {
                     gmail: nguyenhoangan060703@gmail.com |\s
                     password: Kaka1342""", content = @Content)
     })
+    @Operation(summary = "Payment of VnPay")
     @PostMapping("/vn-pay")
     public VnPayResponse payment(
             @RequestBody OrdersRequest ordersRequest,
@@ -74,6 +76,7 @@ public class PaymentController {
                     content = @Content
             )
     })
+    @Operation(summary = "Pay order for all")
     @PostMapping(value = "/pay-order", consumes = "application/json")
     public ResponseObject<Object> payOrders(@RequestBody OrdersRequest ordersRequest) {
         if (

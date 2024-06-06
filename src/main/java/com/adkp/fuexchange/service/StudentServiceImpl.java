@@ -5,6 +5,7 @@ import com.adkp.fuexchange.mapper.StudentMapper;
 import com.adkp.fuexchange.pojo.Student;
 import com.adkp.fuexchange.repository.StudentRepository;
 import com.adkp.fuexchange.request.StudentRequest;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,11 +27,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional
     public Student createStudent(StudentRequest studentRequest) {
-        Student studentCheck = studentRepository.getReferenceById(studentRequest.getStudentId());
         if (
-                studentCheck.getStudentId().equals(studentRequest.getStudentId()) ||
-                        studentCheck.getIdentityCard().equals(studentRequest.getIdentityCard())
+                studentRepository.existsById(studentRequest.getStudentId()) &&
+                        studentRepository.getReferenceById(studentRequest.getStudentId()).getIdentityCard().equals(studentRequest.getIdentityCard())
         ) {
             return null;
         }
@@ -48,6 +49,7 @@ public class StudentServiceImpl implements StudentService {
         );
     }
 
+    @Transactional
     @Override
     public Student updateStudentByStudentId(StudentRequest studentRequest) {
         Student studentToUpdate = studentRepository.getReferenceById(studentRequest.getStudentId());
@@ -63,6 +65,7 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.save(studentToUpdate);
     }
 
+    @Transactional
     @Override
     public void deleteStudentByStudentId(String studentId) {
         studentRepository.deleteById(studentId);
