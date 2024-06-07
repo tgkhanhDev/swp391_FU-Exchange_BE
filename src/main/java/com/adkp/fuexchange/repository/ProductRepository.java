@@ -1,6 +1,7 @@
 package com.adkp.fuexchange.repository;
 
 import com.adkp.fuexchange.pojo.Product;
+import com.adkp.fuexchange.pojo.Variation;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +18,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("SELECT prd FROM Product prd WHERE prd.productId = :productId ")
     List<Product>getProductByProductID(@Param("productId") int productID );
 
+    @Query("SELECT vrat.productId FROM Variation vrat WHERE vrat.variationId In :variationId ")
+    Product getProductByVariationId(@Param("variationId") List<Integer> variationId);
 }

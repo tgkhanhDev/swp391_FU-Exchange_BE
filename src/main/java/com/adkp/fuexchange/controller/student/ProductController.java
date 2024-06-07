@@ -58,14 +58,14 @@ public class ProductController {
                 .build();
     }
 
-    @GetMapping("/get-by-variation/{variationDetailId}")
+    @GetMapping("/get-by-variation")
     @Operation(summary = "Get product by variation detail")
-    public ResponseObject<Object> GetProductVariationId(@PathVariable("variationDetailId") int variationDetailId){
-        ProductDTO prd = productService.getProductByVariationDetailId(variationDetailId);
+    public ResponseObject<Object> getProductVariationId(@RequestParam List<Integer> variationDetailId) {
+
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
-                .data(prd)
+                .data(productService.getProductByVariationDetailId(variationDetailId))
                 .content("Lấy sản phẩm thành công")
                 .build();
     }

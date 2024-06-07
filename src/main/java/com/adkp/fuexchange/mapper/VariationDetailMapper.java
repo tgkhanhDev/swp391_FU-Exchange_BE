@@ -15,9 +15,9 @@ public interface VariationDetailMapper {
     @Mapping(source = "variationDetailId", target = "variationDetailId")
     @Mapping(source = "variationId", target = "variationId")
     @Mapping(source = "description", target = "description")
-    VariationDetailDTO toVariationDetailTO(VariationDetail variationDetail);
+    VariationDetailDTO toVariationDetailDTO(VariationDetail variationDetail);
 
-    @InheritInverseConfiguration(name = "toVariationDetailTO")
+    @InheritInverseConfiguration(name = "toVariationDetailDTO")
     VariationDetail toVariationDetail(VariationDetailDTO variationDetailDTO);
 
     List<VariationDetailDTO> toVariationDetailTOList(List<VariationDetail> variationDetailList);

@@ -1,6 +1,7 @@
 package com.adkp.fuexchange.service;
 
 import com.adkp.fuexchange.dto.ProductDTO;
+import com.adkp.fuexchange.response.ProductResponse;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.request.UpdateInformationProductRequest;
 import java.util.List;
@@ -19,5 +20,5 @@ public interface ProductService {
 
     long countProduct(String name, List<ProductDTO> productDTOList);
 
-    ProductDTO getProductByVariationDetailId(int variationDetailId);
+    ProductResponse getProductByVariationDetailId(List<Integer> variationDetailId);
 }

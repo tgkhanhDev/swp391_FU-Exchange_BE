@@ -2,11 +2,17 @@ package com.adkp.fuexchange.service;
 
 import com.adkp.fuexchange.dto.ProductDTO;
 import com.adkp.fuexchange.mapper.ProductMapper;
+import com.adkp.fuexchange.mapper.VariationDetailMapper;
+import com.adkp.fuexchange.mapper.VariationMapper;
 import com.adkp.fuexchange.pojo.Product;
+import com.adkp.fuexchange.pojo.VariationDetail;
 import com.adkp.fuexchange.repository.ProductRepository;
 import com.adkp.fuexchange.repository.VariationDetailRepository;
+import com.adkp.fuexchange.repository.VariationRepository;
 import com.adkp.fuexchange.request.UpdateInformationProductRequest;
+import com.adkp.fuexchange.response.ProductResponse;
 import com.adkp.fuexchange.response.ResponseObject;
+import com.adkp.fuexchange.response.VariationResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,14 +28,22 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final VariationDetailRepository variationDetailRepository;
+    private final VariationRepository variationRepository;
     private final ProductMapper productMapper;
+    private final VariationMapper variationMapper;
+
+    private final VariationDetailMapper variationDetailMapper;
+
+    private final VariationDetailRepository variationDetailRepository;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, VariationDetailRepository variationDetailRepository, ProductMapper productMapper) {
+    public ProductServiceImpl(ProductRepository productRepository, VariationRepository variationRepository, ProductMapper productMapper, VariationMapper variationMapper, VariationDetailMapper variationDetailMapper, VariationDetailRepository variationDetailRepository) {
         this.productRepository = productRepository;
-        this.variationDetailRepository = variationDetailRepository;
+        this.variationRepository = variationRepository;
         this.productMapper = productMapper;
+        this.variationMapper = variationMapper;
+        this.variationDetailMapper = variationDetailMapper;
+        this.variationDetailRepository = variationDetailRepository;
     }
 
     @Override
@@ -112,10 +127,43 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO getProductByVariationDetailId(int variationDetailId) {
-        ProductDTO prd =  productMapper.toProductDTO(variationDetailRepository.getProductByVariationDetail(variationDetailId));
-        return prd;
+    public ProductResponse getProductByVariationDetailId(List<Integer> variationDetailId) {
+
+        List<VariationDetail> variationDetails = variationDetailRepository.getVariationDetailByVariationId(variationDetailId);
+
+        List<Integer> variationIds = new ArrayList<>();
+
+        List<VariationResponse> variations = getVariation(variationDetails, variationIds);
+
+        ProductDTO product = productMapper.toProductDTO(productRepository.getProductByVariationId(variationIds));
+
+        product.setVariation(null);
+        product.setSeller(null);
+
+        return ProductResponse.builder()
+                .variation(variations)
+                .product(product)
+                .build();
     }
 
+    private List<VariationResponse> getVariation(List<VariationDetail> variationDetails, List<Integer> variationIds) {
 
+        List<VariationResponse> variations = new ArrayList<>();
+
+        for (VariationDetail detail : variationDetails) {
+            variationIds.add(detail.getVariationId().getVariationId());
+
+            VariationResponse variation = VariationResponse.builder()
+                    .variationId(detail.getVariationId().getVariationId())
+                    .variationName(detail.getVariationId().getVariationName())
+                    .variationDetail(detail)
+                    .build();
+
+            detail.getVariationId().setProductId(null);
+            detail.setVariationId(null);
+
+            variations.add(variation);
+        }
+        return variations;
+    }
 }

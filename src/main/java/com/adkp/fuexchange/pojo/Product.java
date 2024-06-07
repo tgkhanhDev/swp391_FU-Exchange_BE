@@ -11,7 +11,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor(force = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-
 @Entity
 @Table(name = "Product")
 public class Product {
