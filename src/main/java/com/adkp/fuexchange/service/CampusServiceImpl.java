@@ -1,7 +1,9 @@
 package com.adkp.fuexchange.service;
 
 import com.adkp.fuexchange.mapper.CampusMapper;
+import com.adkp.fuexchange.pojo.Campus;
 import com.adkp.fuexchange.repository.CampusRepository;
+import com.adkp.fuexchange.request.CampusRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,5 +31,10 @@ public class CampusServiceImpl implements CampusService {
                         campusMapper.toCampusDTOList(campusRepository.findAllCampus())
                 )
                 .build();
+    }
+
+    @Override
+    public Campus addCampus(CampusRequest campusRequest) {
+        return campusRepository.save(new Campus(campusRequest.getCampusName(), campusRequest.getImgUrl()));
     }
 }

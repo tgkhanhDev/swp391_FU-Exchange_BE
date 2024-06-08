@@ -34,7 +34,7 @@ public class PostProductServiceImpl implements PostProductService {
         String campus = Optional.ofNullable(campusId).map(String::valueOf).orElse("");
         String postType = Optional.ofNullable(postTypeId).map(String::valueOf).orElse("");
         String nameProduct = Optional.ofNullable(name).map(String::valueOf).orElse("");
-        String category = Optional.ofNullable(name).map(String::valueOf).orElse("");
+        String category = Optional.ofNullable(categoryId).map(String::valueOf).orElse("");
 
         List<PostProductDTO> postProductDTO = postProductMapper.toPostProductDTOList(
                 postProductRepository.filterPostProduct(currentProduct, campus, postType, nameProduct, category)
