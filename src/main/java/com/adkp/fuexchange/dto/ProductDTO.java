@@ -1,6 +1,5 @@
 package com.adkp.fuexchange.dto;
 
-import com.adkp.fuexchange.pojo.ProductDetail;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
@@ -27,8 +26,6 @@ public class ProductDTO {
     private List<VariationDTO> variation;
 
     private String price;
-
-    private ProductDetail productDetailId;
 
     private boolean productStatus;
 }

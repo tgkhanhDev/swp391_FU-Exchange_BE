@@ -8,7 +8,7 @@ public class ChatRoomDTO {
 
     private int chatRoomId;
 
-    private int isActive;
+    private boolean active;
 
     private List<ChatMessageDTO> chatMessage;
 }

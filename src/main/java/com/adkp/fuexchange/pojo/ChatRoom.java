@@ -19,12 +19,14 @@ public class ChatRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int chatRoomId;
 
-    private int isActive;
+    @Column(name = "isActive")
+    private boolean active;
 
     @OneToMany(mappedBy = "chatRoomId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JsonBackReference
     private List<ChatMessage> chatMessageId;
-    public ChatRoom(int isActive) {
-        this.isActive = isActive;
+
+    public ChatRoom(boolean isActive) {
+        this.active = isActive;
     }
 }

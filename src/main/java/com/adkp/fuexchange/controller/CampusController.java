@@ -1,6 +1,5 @@
 package com.adkp.fuexchange.controller;
 
-import com.adkp.fuexchange.dto.CampusDTO;
 import com.adkp.fuexchange.pojo.Campus;
 import com.adkp.fuexchange.request.CampusRequest;
 import com.adkp.fuexchange.response.ResponseObject;

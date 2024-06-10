@@ -2,7 +2,6 @@ package com.adkp.fuexchange.mapper;
 
 import com.adkp.fuexchange.dto.CategoryDTO;
 import com.adkp.fuexchange.pojo.Category;
-import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -17,10 +16,6 @@ public interface CategoryMapper {
     @Mapping(source = "imageUrl", target = "imageUrl")
     CategoryDTO toCategoryDTO(Category category);
 
-    @InheritInverseConfiguration(name = "toCategoryDTO")
-    Category toCategory(CategoryDTO categoryDTO);
-
     List<CategoryDTO>  toCategoryDTOList(List<Category> categoryList);
 
-    List<Category> toCategoryList(List<CategoryDTO> categoryDTOList);
 }

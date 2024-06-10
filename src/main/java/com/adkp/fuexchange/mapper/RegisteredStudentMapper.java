@@ -2,7 +2,6 @@ package com.adkp.fuexchange.mapper;
 
 import com.adkp.fuexchange.dto.RegisteredStudentDTO;
 import com.adkp.fuexchange.pojo.RegisteredStudent;
-import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -16,15 +15,9 @@ public interface RegisteredStudentMapper {
     @Mapping(source = "registeredStudentId", target = "registeredStudentId")
     @Mapping(source = "studentId", target = "student")
     @Mapping(source = "roleId", target = "role")
-    @Mapping(source = "orderId", target = "order")
     @Mapping(source = "active", target = "active")
-    @Mapping(source = "password", target = "password")
     RegisteredStudentDTO toRegisteredStudentDTO(RegisteredStudent registeredStudent);
-
-    @InheritInverseConfiguration(name = "toRegisteredStudentDTO")
-    RegisteredStudent toRegisteredStudent(RegisteredStudentDTO registeredStudentDTO);
 
     List<RegisteredStudentDTO> totoRegisteredStudentDTOList(List<RegisteredStudent> registeredStudentList);
 
-    List<RegisteredStudent> toRegisteredStudentList(List<RegisteredStudentDTO> registeredStudentDTO);
 }

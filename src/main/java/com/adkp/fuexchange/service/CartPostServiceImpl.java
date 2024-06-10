@@ -14,22 +14,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class CartPostServiceImpl implements CartPostService {
     private final CartPostRepository cartPostRepository;
-    private final CartRepository cartRepository;
+
     private final PostProductRepository postProductRepository;
+
     private final RegisteredStudentRepository registeredStudentRepository;
-    private final PostProductMapper postProductMapper;
 
     private final CartPostMapper cartPostMapper;
 
     private final VariationDetailRepository variationDetailRepository;
 
     @Autowired
-    public CartPostServiceImpl(CartPostRepository cartPostRepository, CartRepository cartRepository, PostProductRepository postProductRepository, RegisteredStudentRepository registeredStudentRepository, PostProductMapper postProductMapper, CartPostMapper cartPostMapper, VariationDetailRepository variationDetailRepository) {
+    public CartPostServiceImpl(CartPostRepository cartPostRepository, PostProductRepository postProductRepository, RegisteredStudentRepository registeredStudentRepository, CartPostMapper cartPostMapper, VariationDetailRepository variationDetailRepository) {
         this.cartPostRepository = cartPostRepository;
-        this.cartRepository = cartRepository;
         this.postProductRepository = postProductRepository;
         this.registeredStudentRepository = registeredStudentRepository;
-        this.postProductMapper = postProductMapper;
         this.cartPostMapper = cartPostMapper;
         this.variationDetailRepository = variationDetailRepository;
     }

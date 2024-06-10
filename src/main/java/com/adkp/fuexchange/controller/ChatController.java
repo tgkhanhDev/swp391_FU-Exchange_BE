@@ -1,18 +1,21 @@
 package com.adkp.fuexchange.controller;
 
-import com.adkp.fuexchange.repository.ChatRoomRepository;
+import com.adkp.fuexchange.dto.ChatMessageDTO;
+import com.adkp.fuexchange.pojo.ChatMessage;
+import com.adkp.fuexchange.request.ChatRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.ChatService;
-import com.adkp.fuexchange.service.ChatServiceImpl;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/chat")
 @Tag(name = "Chat")
+@Validated
 public class ChatController {
 
     private final ChatService chatService;
@@ -22,10 +25,16 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    @GetMapping("/{registeredStudentId}")
+    @GetMapping("/chat-room/{registeredStudentId}")
     public ResponseObject<Object> getChatRoomByRegisteredStudentId(@PathVariable int registeredStudentId) {
+
         if (registeredStudentId != 0) {
-            return chatService.getChatRoomByRegisteredStudentId(registeredStudentId);
+            return ResponseObject.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .message(HttpStatus.BAD_REQUEST.name())
+                    .content("Xem thông tin thành công!")
+                    .data(chatService.getChatRoomByRegisteredStudentId(registeredStudentId))
+                    .build();
         }
         return ResponseObject.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
@@ -34,11 +43,23 @@ public class ChatController {
                 .build();
     }
 
-    @GetMapping("/get-chat-message")
-    @Hidden
-    public ResponseObject<Object> getChatMessageByChatRoomId(@RequestParam Integer chatRoomId) {
-
-        return null;
-
+    @PostMapping("/send-message")
+    public ResponseObject<Object> sendMessage(@RequestBody @Valid ChatRequest chatRequest) {
+        ChatMessage chatMessage = chatService.sendChatMessage(chatRequest);
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Gửi tin nhắn thành công!")
+                .data(
+                        ChatMessageDTO.builder()
+                                .chatMessageId(chatMessage.getChatMessageId())
+                                .chatRoom(chatMessage.getChatRoomId().getChatRoomId())
+                                .studentSendId(chatMessage.getStudentSendId().getRegisteredStudentId())
+                                .studentReceiveId(chatMessage.getStudentReceiveId().getRegisteredStudentId())
+                                .content(chatMessage.getContent())
+                                .timeSend(chatMessage.getTimeSend())
+                                .build()
+                )
+                .build();
     }
 }

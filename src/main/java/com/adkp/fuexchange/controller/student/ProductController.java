@@ -1,12 +1,9 @@
 package com.adkp.fuexchange.controller.student;
 
-import com.adkp.fuexchange.dto.ProductDTO;
-import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.adkp.fuexchange.request.UpdateInformationProductRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.ProductServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

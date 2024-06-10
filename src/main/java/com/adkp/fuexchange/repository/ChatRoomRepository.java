@@ -9,7 +9,11 @@ import java.util.List;
 
 public interface ChatRoomRepository extends JpaRepository<ChatRoom, Integer> {
 
-    @Query("Select cr From ChatRoom cr where cr.chatRoomId = :registeredStudentId And " +
-            "cr.chatRoomId = :registeredStudentId")
+    @Query(value = "Select DISTINCT cr.* from ChatRoom cr Join ChatMessage cms " +
+            "On cr.chatRoomId = cms.chatRoomId " +
+            "Where cms.studentSendId = :registeredStudentId or cms.studentReceiveId = :registeredStudentId " +
+            "Order By cms.timeSend ASC",
+            nativeQuery = true
+    )
     List<ChatRoom> getChatRoomByRegisteredStudentId(@Param("registeredStudentId") Integer registeredStudentId);
 }

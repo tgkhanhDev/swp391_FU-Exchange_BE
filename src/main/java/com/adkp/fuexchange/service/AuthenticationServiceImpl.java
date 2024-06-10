@@ -96,7 +96,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                         .studentId(studentRepository.getReferenceById(registerRequest.getStudentId()))
                         .password(passwordEncoder.encode(registerRequest.getPassword()))
                         .roleId(roleRepository.getReferenceById(1))
-                        .isActive(true)
+                        .active(true)
                         .build()
         );
         //Đăng ký tk mới xong là phải thêm record vào giỏ hàng

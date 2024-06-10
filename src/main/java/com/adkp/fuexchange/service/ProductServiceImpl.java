@@ -28,21 +28,15 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final VariationRepository variationRepository;
-    private final ProductMapper productMapper;
-    private final VariationMapper variationMapper;
 
-    private final VariationDetailMapper variationDetailMapper;
+    private final ProductMapper productMapper;
 
     private final VariationDetailRepository variationDetailRepository;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, VariationRepository variationRepository, ProductMapper productMapper, VariationMapper variationMapper, VariationDetailMapper variationDetailMapper, VariationDetailRepository variationDetailRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper, VariationDetailRepository variationDetailRepository) {
         this.productRepository = productRepository;
-        this.variationRepository = variationRepository;
         this.productMapper = productMapper;
-        this.variationMapper = variationMapper;
-        this.variationDetailMapper = variationDetailMapper;
         this.variationDetailRepository = variationDetailRepository;
     }
 
