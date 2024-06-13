@@ -37,12 +37,12 @@ public class CartController {
         return cartPostService.addToCart(cartRequest);
     }
 
-    @PutMapping("/cart-update")
+    @PutMapping("/cart/cart-update")
     public ResponseObject<Object> updatePostProduct(@RequestBody CartRequest cartRequest){
         return cartPostService.updateCart(cartRequest);
     }
 
-    @DeleteMapping("cart-delete")
+    @DeleteMapping("/cart/cart-delete")
     public ResponseObject<Object> deletePostProduct(@RequestBody CartPostEmbeddable cartPostEmbeddable){
         return cartPostService.removeFromCart(cartPostEmbeddable);
     }
