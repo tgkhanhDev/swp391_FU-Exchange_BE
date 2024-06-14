@@ -19,11 +19,11 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int paymentId;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE})
     @JoinColumn(name = "orderId", referencedColumnName = "orderId")
     private Orders orderId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE})
     @JoinColumn(name = "paymentMethodId", referencedColumnName = "paymentMethodId")
     private PaymentMethod paymentMethodId;
 

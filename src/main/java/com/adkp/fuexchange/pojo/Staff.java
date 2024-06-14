@@ -17,7 +17,7 @@ public class Staff {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String staffId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH,CascadeType.REMOVE})
     @JoinColumn(name = "roleId", referencedColumnName = "roleId")
     private Roles roleId;
 

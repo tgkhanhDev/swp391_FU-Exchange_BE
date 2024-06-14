@@ -16,7 +16,7 @@ public class Seller {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String sellerId;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "registeredStudentId", referencedColumnName = "registeredStudentId")
     private RegisteredStudent registeredStudentId;
 

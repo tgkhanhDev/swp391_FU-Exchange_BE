@@ -16,11 +16,11 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int reviewId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE})
     @JoinColumn(name = "postProductId", referencedColumnName = "postProductId")
     private PostProduct postProductId;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE})
     @JoinColumn(name = "orderId", referencedColumnName = "orderId")
     private Orders orderId;
 

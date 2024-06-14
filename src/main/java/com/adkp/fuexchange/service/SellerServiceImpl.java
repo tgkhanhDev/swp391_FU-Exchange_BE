@@ -126,4 +126,9 @@ public class SellerServiceImpl implements SellerService {
                 sellerRepository.getInformationSellerByStudentId(studentId)
         );
     }
+
+    @Override
+    public void deleteSellerByID(int sellerID) {
+        sellerRepository.deleteById(sellerID);
+    }
 }
