@@ -7,6 +7,7 @@ import com.adkp.fuexchange.service.VariationDetailService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,5 +27,17 @@ public class VariationDetailController {
     public ResponseObject<Object>createNewVariationDetail(@Valid @RequestBody VariationDetailRequest variationDetailRequest){
 
         return variationDetailService.CreateNewVariationByVariationID(variationDetailRequest);
+    }
+    @DeleteMapping("/{variationDetailId}")
+    public ResponseObject<Object> deleteVariationDetailByID(
+            @PathVariable("variationDetailId") int variationDetailId
+
+    ){
+        variationDetailService.deleteVariationDetailByID(variationDetailId);
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Xóa thành công")
+                .build();
     }
 }

@@ -14,4 +14,5 @@ public interface SellerService {
     ResponseObject<Object> updateInformationSeller(UpdateInformationSellerRequest updateInformationSellerRequest);
 
     ResponseObject<Object> updateStatusSeller(UpdateStatusRequest updateStatusRequest);
+    void deleteSellerByID(int sellerID);
 }

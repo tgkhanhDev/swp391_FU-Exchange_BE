@@ -34,4 +34,11 @@ public class VariationDetailServiceImpl implements  VariationDetailService{
                 content("tạo thông tin  variation detail  thành công")
                 .data(new RegisterVariationDetailResponse(variationDetail.getVariationDetailId(),variationDetail.getVariationId().getVariationId(),variationDetail.getDescription())).build();
     }
+
+    @Override
+    public void deleteVariationDetailByID(int variationDetailId) {
+
+        variationDetailRepository.deleteById(variationDetailId);
+
+    }
 }

@@ -22,12 +22,12 @@ public class OrderPostProduct {
     @JoinColumn(name = "orderId", referencedColumnName = "orderId")
     private Orders orderId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE})
     @MapsId("postProductId")
     @JoinColumn(name = "postProductId", referencedColumnName = "postProductId")
     private PostProduct postProductId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE})
     @MapsId("variationDetailId")
     @JoinColumn(name = "variationDetailId", referencedColumnName = "variationDetailId")
     private VariationDetail variationDetailId;

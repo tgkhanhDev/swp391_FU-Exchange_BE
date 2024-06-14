@@ -117,4 +117,10 @@ public class SellerServiceImpl implements SellerService {
                 .content("Thông tin người dùng không chính xác!")
                 .build();
     }
+
+    @Override
+    public void deleteSellerByID(int sellerID) {
+        sellerRepository.deleteById(sellerID);
+
+    }
 }

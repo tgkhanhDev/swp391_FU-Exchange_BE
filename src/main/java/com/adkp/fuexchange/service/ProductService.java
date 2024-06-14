@@ -21,6 +21,7 @@ public interface ProductService {
 
     ResponseObject<Object> updateStatus(UpdateProductStatusRequest updateProductStatusRequest);
 
+    void deleteProductByID(int productID);
     long countTotalPostProduct();
 
     long countProduct(String name, List<ProductDTO> productDTOList);

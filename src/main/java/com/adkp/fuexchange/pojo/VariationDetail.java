@@ -21,7 +21,7 @@ public class VariationDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int variationDetailId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE})
     @JoinColumn(name = "variationId", referencedColumnName = "variationId")
     private Variation variationId;
 

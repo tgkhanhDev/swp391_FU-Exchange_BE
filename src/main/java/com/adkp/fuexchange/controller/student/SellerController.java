@@ -76,4 +76,17 @@ public class SellerController {
                 .build();
     }
 
+    @Operation(summary = "delete of seller")
+    @DeleteMapping("/{sellerId}")
+    public ResponseObject<Object>deleteSellerByID(
+            @PathVariable("sellerId") int sellerId
+    ){
+        sellerService.deleteSellerByID(sellerId);
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Xóa thành công")
+                .build();
+    }
+
 }

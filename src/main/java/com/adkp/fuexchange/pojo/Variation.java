@@ -20,7 +20,7 @@ public class Variation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int variationId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE})
     @JoinColumn(name = "productId", referencedColumnName = "productId")
     private Product productId;
 

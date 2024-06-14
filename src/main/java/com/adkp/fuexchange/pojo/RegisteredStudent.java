@@ -20,11 +20,11 @@ public class RegisteredStudent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int registeredStudentId;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE})
     @JoinColumn(name = "studentId", referencedColumnName = "studentId")
     private Student studentId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE})
     @JoinColumn(name = "roleId", referencedColumnName = "roleId")
     private Roles roleId;
 

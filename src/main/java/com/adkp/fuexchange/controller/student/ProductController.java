@@ -84,4 +84,19 @@ public class ProductController {
                 .content("Không tìm thấy thông tin sản phẩm ")
                 .build();
     }
+
+    @Operation(summary = "delete a product")
+    @DeleteMapping("/{productId}")
+    public ResponseObject<Object> deteleProduct(
+            @PathVariable("productId") int productId
+
+    ) {
+        productService.deleteProductByID(productId);
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Xóa thành công")
+                .build();
+    }
+
 }

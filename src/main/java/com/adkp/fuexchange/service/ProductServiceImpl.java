@@ -170,6 +170,11 @@ public class ProductServiceImpl implements ProductService {
                 .build();
     }
 
+    @Override
+    public void deleteProductByID(int productID) {
+       productRepository.deleteById(productID);
+    }
+
 
     @Override
     public long countTotalPostProduct() {
