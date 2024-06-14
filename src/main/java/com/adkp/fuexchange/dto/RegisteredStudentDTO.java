@@ -13,4 +13,5 @@ public class RegisteredStudentDTO {
 
     private boolean active;
 
+    private String deliveryAddress;
 }

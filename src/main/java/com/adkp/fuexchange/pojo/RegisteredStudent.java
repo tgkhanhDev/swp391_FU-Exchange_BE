@@ -33,6 +33,9 @@ public class RegisteredStudent {
     @Column(name = "isActive")
     private boolean active;
 
+
+    private String deliveryAddress;
+
     @OneToMany(mappedBy = "registeredStudentId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JsonBackReference
     private List<Orders> orderId;
@@ -49,10 +52,11 @@ public class RegisteredStudent {
     @JsonBackReference
     private List<ChatMessage> studentReceiveId;
 
-    public RegisteredStudent(Student studentId, Roles roleId, String password, boolean isActive) {
+    public RegisteredStudent(Student studentId, Roles roleId, String password, boolean active, String deliveryAddress) {
         this.studentId = studentId;
         this.roleId = roleId;
         this.password = password;
-        this.active = isActive;
+        this.active = active;
+        this.deliveryAddress = deliveryAddress;
     }
 }

@@ -33,16 +33,4 @@ public class Utils {
 
         CompletableFuture.completedFuture(response);
     }
-
-    @Async
-    public void navigationDataAsyncForGetMethod(String apiUrl, Object data, HttpMethod httpMethod) {
-
-        apiUrl += "?data=" + data;
-        ResponseEntity<String> responseEntity = restTemplate.exchange(
-                apiUrl,
-                HttpMethod.GET,
-                null,
-                String.class
-        );
-    }
 }

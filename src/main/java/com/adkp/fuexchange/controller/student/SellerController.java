@@ -34,6 +34,28 @@ public class SellerController {
         return sellerService.viewInformationSellerById(sellerId);
     }
 
+    @Operation(summary = "View profile of seller by studentId")
+    @GetMapping("/information/{studentId}")
+    public ResponseObject<Object> viewInformationSellerByStudentId(
+            @PathVariable("studentId") String studentId
+    ) {
+        if (sellerService.getInformationSellerByStudentId(studentId) == null) {
+            return ResponseObject.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .message(HttpStatus.BAD_REQUEST.name())
+                    .content("Sinh viên chưa đăng ký trở thành người bán!")
+                    .build();
+        }
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Xem thông tin thành công!")
+                .data(
+                        sellerService.getInformationSellerByStudentId(studentId)
+                )
+                .build();
+    }
+
     @Operation(summary = "Register to seller")
     @PostMapping("/register-to-seller")
     public ResponseObject<Object> registerToSeller(

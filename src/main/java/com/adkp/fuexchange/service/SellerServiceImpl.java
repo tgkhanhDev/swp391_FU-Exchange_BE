@@ -1,5 +1,6 @@
 package com.adkp.fuexchange.service;
 
+import com.adkp.fuexchange.dto.SellerDTO;
 import com.adkp.fuexchange.mapper.SellerMapper;
 import com.adkp.fuexchange.pojo.RegisteredStudent;
 import com.adkp.fuexchange.pojo.Roles;
@@ -116,5 +117,13 @@ public class SellerServiceImpl implements SellerService {
                 .message(HttpStatus.BAD_REQUEST.name())
                 .content("Thông tin người dùng không chính xác!")
                 .build();
+    }
+
+    @Override
+    public SellerDTO getInformationSellerByStudentId(String studentId) {
+
+        return sellerMapper.toSellerDTO(
+                sellerRepository.getInformationSellerByStudentId(studentId)
+        );
     }
 }

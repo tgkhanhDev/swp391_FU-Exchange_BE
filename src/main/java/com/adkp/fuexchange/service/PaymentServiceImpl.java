@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
@@ -55,6 +56,13 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     public ResponseObject<Object> payOrders(OrdersRequest ordersRequest) {
         boolean paymentStatus = false;
+        if(registeredStudentRepository.getReferenceById(ordersRequest.getRegisteredStudentId()).getDeliveryAddress() == null){
+            return ResponseObject.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .message(HttpStatus.BAD_REQUEST.name())
+                    .content("Chưa có địa chỉ nhận hàng. Vui lòng điền đầy đủ thông tin trước khi mua hàng!")
+                    .build();
+        }
         Orders ordersSaved = saveOrderAndOrderPostProduct(ordersRequest);
 
         if (ordersRequest.getPaymentMethodId() == 2) {
@@ -62,7 +70,6 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         savePaymentAndTransaction(ordersRequest, ordersSaved, paymentStatus);
-
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
@@ -86,7 +93,6 @@ public class PaymentServiceImpl implements PaymentService {
         }
         return totalPrice;
     }
-
     private void savePaymentAndTransaction(OrdersRequest ordersRequest, Orders ordersSaved, boolean paymentStatus) {
 
         double totalPrice = totalPrice(ordersRequest.getPostProductToBuyRequests());

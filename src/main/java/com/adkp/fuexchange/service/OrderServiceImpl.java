@@ -4,8 +4,8 @@ package com.adkp.fuexchange.service;
 import com.adkp.fuexchange.dto.OrdersDTO;
 import com.adkp.fuexchange.mapper.OrdersMapper;
 import com.adkp.fuexchange.pojo.Orders;
-import com.adkp.fuexchange.repository.OrdersRepository;
-import com.adkp.fuexchange.repository.OrdersStatusRepository;
+import com.adkp.fuexchange.pojo.Transactions;
+import com.adkp.fuexchange.repository.*;
 import com.adkp.fuexchange.request.OrderUpdateRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import jakarta.transaction.Transactional;
@@ -22,11 +22,17 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrdersStatusRepository ordersStatusRepository;
 
+    private final TransactionsRepository transactionsRepository;
+
+    private final TransactionsStatusRepository transactionsStatusRepository;
+
     @Autowired
-    public OrderServiceImpl(OrdersRepository ordersRepository, OrdersMapper ordersMapper, OrdersStatusRepository ordersStatusRepository) {
+    public OrderServiceImpl(OrdersRepository ordersRepository, OrdersMapper ordersMapper, OrdersStatusRepository ordersStatusRepository, TransactionsRepository transactionsRepository, TransactionsStatusRepository transactionsStatusRepository) {
         this.ordersRepository = ordersRepository;
         this.ordersMapper = ordersMapper;
         this.ordersStatusRepository = ordersStatusRepository;
+        this.transactionsRepository = transactionsRepository;
+        this.transactionsStatusRepository = transactionsStatusRepository;
     }
 
     @Override
@@ -52,13 +58,25 @@ public class OrderServiceImpl implements OrderService {
 
         orders.setOrderStatusId(ordersStatusRepository.getReferenceById(orderUpdateRequest.getOrderStatusId()));
 
-        if (orderUpdateRequest.getCompleteDate() != null) {
+        if (orderUpdateRequest.getCompleteDate() != null && orderUpdateRequest.getOrderStatusId() == 1) {
             orders.setCompleteDate(orderUpdateRequest.getCompleteDate());
         }
 
         orders.setDescription(orderUpdateRequest.getDescription());
-
+        updateStatusTransaction(orderUpdateRequest.getOrderStatusId(), orders.getPaymentId().getPaymentId());
         return ordersMapper.toOrdersDTO(orders);
+    }
+
+    private void updateStatusTransaction(int orderStatus, int paymentId) {
+        Transactions transactions = transactionsRepository.getTransactionByPaymentId(paymentId);
+        if (orderStatus == 1) {
+            transactions.setTransactionsStatusId(transactionsStatusRepository.getReferenceById(1));
+        } else if (orderStatus == 2) {
+            transactions.setTransactionsStatusId(transactionsStatusRepository.getReferenceById(2));
+        } else {
+            transactions.setTransactionsStatusId(transactionsStatusRepository.getReferenceById(3));
+        }
+        transactionsRepository.save(transactions);
     }
 
     @Override

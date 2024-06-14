@@ -1,5 +1,6 @@
 package com.adkp.fuexchange.service;
 
+import com.adkp.fuexchange.dto.SellerDTO;
 import com.adkp.fuexchange.request.RegisterToSellerRequest;
 import com.adkp.fuexchange.request.UpdateInformationSellerRequest;
 import com.adkp.fuexchange.request.UpdateStatusRequest;
@@ -14,4 +15,6 @@ public interface SellerService {
     ResponseObject<Object> updateInformationSeller(UpdateInformationSellerRequest updateInformationSellerRequest);
 
     ResponseObject<Object> updateStatusSeller(UpdateStatusRequest updateStatusRequest);
+
+    SellerDTO getInformationSellerByStudentId(String studentId);
 }
