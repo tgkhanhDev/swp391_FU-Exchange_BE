@@ -19,6 +19,12 @@ public interface PostProductRepository extends JpaRepository<PostProduct, Intege
     PostProduct getPostProductByPostId(@Param("postProductId") Integer postProductId);
 
     @Query(
+            "SELECT pprd FROM PostProduct pprd " +
+                    "WHERE pprd.postProductId In :postProductId"
+    )
+    List<PostProduct> getListPostProductById(@Param("postProductId") List<Integer> postProductId);
+
+    @Query(
             value = "SELECT pprd.* FROM PostProduct pprd " +
                     "JOIN Product p ON pprd.productId = p.productId " +
                     "JOIN ProductDetail pd ON p.productDetailId = pd.productDetailId " +
