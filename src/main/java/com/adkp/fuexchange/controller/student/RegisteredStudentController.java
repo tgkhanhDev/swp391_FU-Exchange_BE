@@ -5,13 +5,16 @@ import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.RegisteredStudentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/student")
 @Tag(name = "Impact on registered student")
+@Validated
 public class RegisteredStudentController {
 
     private final RegisteredStudentService registeredStudentService;
@@ -36,18 +39,8 @@ public class RegisteredStudentController {
 
     @Operation(summary = "Update of registered student")
     @PutMapping("/update-password")
-    public ResponseObject<Object> updatePassword(@RequestBody UpdatePasswordRequest updatePasswordRequest) {
-        if (
-                updatePasswordRequest.getPassword() != null
-                        && updatePasswordRequest.getConfirmPassword() != null
-                        && updatePasswordRequest.getIdWantUpdate() != null
-        ) {
-            return registeredStudentService.updatePassword(updatePasswordRequest);
-        }
-        return ResponseObject.builder()
-                .status(HttpStatus.BAD_REQUEST.value())
-                .message(HttpStatus.BAD_REQUEST.name())
-                .content("Vui lòng nhập đầy đủ thông tin")
-                .build();
+    public ResponseObject<Object> updatePassword(@RequestBody @Valid UpdatePasswordRequest updatePasswordRequest) {
+
+        return registeredStudentService.updatePassword(updatePasswordRequest);
     }
 }
