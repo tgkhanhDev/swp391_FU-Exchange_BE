@@ -13,7 +13,7 @@ import java.util.List;
 )
 public interface CartPostMapper {
     @Mapping(source = "cartPostId", target = "cartPostId")
-    @Mapping(source = "cartId", target = "cart")
+//    @Mapping(source = "cartId", target = "cart")
     @Mapping(source = "postProductId", target = "postProduct")
     @Mapping(source = "variationDetailId", target = "variationDetail")
     @Mapping(source = "quantity", target = "quantity")

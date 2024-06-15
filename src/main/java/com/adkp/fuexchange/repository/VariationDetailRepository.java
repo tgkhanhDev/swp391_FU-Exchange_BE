@@ -11,4 +11,6 @@ public interface VariationDetailRepository extends JpaRepository<VariationDetail
 
     @Query("Select vratdt From VariationDetail vratdt Where vratdt.variationDetailId In :variationId")
     List<VariationDetail> getVariationDetailByVariationId(@Param("variationId") List<Integer> variationId);
+
+//    VariationDetail getVariationDetailById()
 }
