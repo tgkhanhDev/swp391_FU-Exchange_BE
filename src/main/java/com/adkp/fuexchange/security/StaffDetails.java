@@ -1,6 +1,7 @@
 package com.adkp.fuexchange.security;
 
-import com.adkp.fuexchange.pojo.RegisteredStudent;
+import com.adkp.fuexchange.pojo.Staff;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,27 +9,27 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.Collections;
 
-public class RegisteredStudentDetails implements UserDetails {
+public class StaffDetails implements UserDetails {
+    private final Staff staff;
 
-    private final RegisteredStudent registeredStudent;
-
-    public RegisteredStudentDetails(RegisteredStudent registeredStudent) {
-        this.registeredStudent = registeredStudent;
+    @Autowired
+    public StaffDetails(Staff staff) {
+        this.staff = staff;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority(registeredStudent.getRoleId().getRoleName()));
+        return Collections.singleton(new SimpleGrantedAuthority(staff.getRoleId().getRoleName()));
     }
 
     @Override
     public String getPassword() {
-        return registeredStudent.getPassword();
+        return staff.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return registeredStudent.getStudentId().getStudentId();
+        return staff.getPhoneNumber();
     }
 
     @Override
@@ -38,7 +39,7 @@ public class RegisteredStudentDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return registeredStudent.isActive();
+        return staff.isActive();
     }
 
     @Override

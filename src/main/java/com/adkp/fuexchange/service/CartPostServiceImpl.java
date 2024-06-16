@@ -2,9 +2,11 @@ package com.adkp.fuexchange.service;
 
 import com.adkp.fuexchange.dto.CartPostDTO;
 import com.adkp.fuexchange.mapper.CartPostMapper;
-import com.adkp.fuexchange.mapper.PostProductMapper;
 import com.adkp.fuexchange.pojo.*;
-import com.adkp.fuexchange.repository.*;
+import com.adkp.fuexchange.repository.CartPostRepository;
+import com.adkp.fuexchange.repository.PostProductRepository;
+import com.adkp.fuexchange.repository.RegisteredStudentRepository;
+import com.adkp.fuexchange.repository.VariationDetailRepository;
 import com.adkp.fuexchange.request.CartRequest;
 import com.adkp.fuexchange.response.CartPostResponse;
 import com.adkp.fuexchange.response.ResponseObject;
