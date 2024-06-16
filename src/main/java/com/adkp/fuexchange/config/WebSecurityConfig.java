@@ -1,6 +1,7 @@
 package com.adkp.fuexchange.config;
 
 import com.adkp.fuexchange.security.RegisteredStudentDetailService;
+import com.adkp.fuexchange.security.StaffDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,11 +37,15 @@ public class WebSecurityConfig {
     public UserDetailsService userDetailsService(){
         return new RegisteredStudentDetailService();
     }
+    @Bean
+    public UserDetailsService staffDetailsService(){
+        return new StaffDetailService();
+    }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(userDetailsService());
+        daoAuthenticationProvider.setUserDetailsService(staffDetailsService());
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         return daoAuthenticationProvider;
     }

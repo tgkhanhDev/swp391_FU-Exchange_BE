@@ -3,15 +3,15 @@ package com.adkp.fuexchange.service;
 import com.adkp.fuexchange.pojo.Cart;
 import com.adkp.fuexchange.pojo.RegisteredStudent;
 import com.adkp.fuexchange.pojo.Student;
-import com.adkp.fuexchange.repository.CartRepository;
-import com.adkp.fuexchange.repository.RegisteredStudentRepository;
-import com.adkp.fuexchange.repository.RoleRepository;
-import com.adkp.fuexchange.repository.StudentRepository;
+import com.adkp.fuexchange.repository.*;
 import com.adkp.fuexchange.request.LoginRequest;
 import com.adkp.fuexchange.request.RegisterRequest;
+import com.adkp.fuexchange.request.StaffLoginRequest;
 import com.adkp.fuexchange.response.InforLoginResponse;
 import com.adkp.fuexchange.response.ResponseObject;
+import com.adkp.fuexchange.response.StaffInformationLoginResponse;
 import com.adkp.fuexchange.security.RegisteredStudentDetailService;
+import com.adkp.fuexchange.security.StaffDetailService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,22 +26,26 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final RegisteredStudentDetailService registeredStudentDetailService;
+    private final StaffDetailService staffDetailService;
     private final RegisteredStudentRepository registeredStudentRepository;
     private final AuthenticationManager authenticationManager;
     private final StudentRepository studentRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final CartRepository cartRepository;
+    private final StaffRepository staffRepository;
 
     @Autowired
-    public AuthenticationServiceImpl(RegisteredStudentDetailService registeredStudentDetailService, RegisteredStudentRepository registeredStudentRepository, AuthenticationManager authenticationManager, StudentRepository studentRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, CartRepository cartRepository) {
+    public AuthenticationServiceImpl(RegisteredStudentDetailService registeredStudentDetailService, StaffDetailService staffDetailService, RegisteredStudentRepository registeredStudentRepository, AuthenticationManager authenticationManager, StudentRepository studentRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, CartRepository cartRepository, StaffRepository staffRepository) {
         this.registeredStudentDetailService = registeredStudentDetailService;
+        this.staffDetailService = staffDetailService;
         this.registeredStudentRepository = registeredStudentRepository;
         this.authenticationManager = authenticationManager;
         this.studentRepository = studentRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.cartRepository = cartRepository;
+        this.staffRepository = staffRepository;
     }
 
     @Override
@@ -150,6 +154,47 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name().toLowerCase())
                 .content("Tài khoản đã được đăng ký")
+                .build();
+    }
+
+    @Override
+    public ResponseObject<Object> staffLogin(StaffLoginRequest staffLoginRequest) {
+        UserDetails staff = staffDetailService.loadUserByUsername(staffLoginRequest.getNumberPhone());
+        if (!passwordEncoder.matches(staffLoginRequest.getPassword(), staff.getPassword())) {
+            return ResponseObject.builder()
+                    .status(HttpStatus.UNAUTHORIZED.value())
+                    .message(HttpStatus.UNAUTHORIZED.name().toLowerCase())
+                    .content("Sai tài khoản hoặc mật khẩu")
+                    .build();
+        }
+        else if (!staff.isAccountNonLocked()) {
+            return ResponseObject.builder()
+                    .status(HttpStatus.UNAUTHORIZED.value())
+                    .message(HttpStatus.UNAUTHORIZED.name().toLowerCase())
+                    .content("Tài khoản bị vô hiệu hóa")
+                    .build();
+        }
+        Authentication authentication = authenticationManager
+                .authenticate(
+                        new UsernamePasswordAuthenticationToken(staffLoginRequest.getNumberPhone(),
+                                staffLoginRequest.getPassword())
+                );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name().toLowerCase())
+                .content("Đăng nhập thành công")
+                .data(StaffInformationLoginResponse
+                        .builder()
+                        .staffId(staffRepository.findStaffByNumberPhone(staffLoginRequest.getNumberPhone()).getStaffId())
+                        .username(staffRepository.findStaffByNumberPhone(staffLoginRequest.getNumberPhone()).getFirstName()+" "+staffRepository.findStaffByNumberPhone(staffLoginRequest.getNumberPhone()).getLastName())
+                        .gender(staffRepository.findStaffByNumberPhone(staffLoginRequest.getNumberPhone()).getGender())
+                        .identityCard(staffRepository.findStaffByNumberPhone(staffLoginRequest.getNumberPhone()).getIdentityCard())
+                        .phoneNumber(staffLoginRequest.getNumberPhone())
+                        .role(staffRepository.findStaffByNumberPhone(staffLoginRequest.getNumberPhone()).getRoleId().getRoleName())
+                        .dob(staffRepository.findStaffByNumberPhone(staffLoginRequest.getNumberPhone()).getDob())
+                        .accessToken("123")
+                        .build())
                 .build();
     }
 }
