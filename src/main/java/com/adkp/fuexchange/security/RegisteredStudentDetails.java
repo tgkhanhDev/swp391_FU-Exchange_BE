@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 public class RegisteredStudentDetails implements UserDetails {
+
     private final RegisteredStudent registeredStudent;
 
     public RegisteredStudentDetails(RegisteredStudent registeredStudent) {

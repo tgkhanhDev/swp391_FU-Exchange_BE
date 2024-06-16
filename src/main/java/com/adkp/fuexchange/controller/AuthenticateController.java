@@ -66,20 +66,9 @@ public class AuthenticateController {
     public ResponseObject<Object> IsRegistered(@PathVariable String studentId) {
         return authenticationService.isRegistered(studentId);
     }
+
     @PostMapping("/staff/login")
-    public ResponseObject<Object> loginStaff(@RequestBody StaffLoginRequest staffLoginRequest) {
-        if (
-
-                staffLoginRequest.getPassword() != null && staffLoginRequest.getNumberPhone()!=null
-
-        ) {
-            return authenticationService.staffLogin(staffLoginRequest);
-        }
-        return ResponseObject.builder()
-
-                .status(HttpStatus.BAD_REQUEST.value())
-                .message(HttpStatus.BAD_REQUEST.name())
-                .content("Vui lòng nhập đầy đủ thông tin")
-                .build();
+    public ResponseObject<Object> loginStaff(@RequestBody @Valid StaffLoginRequest staffLoginRequest) {
+        return authenticationService.staffLogin(staffLoginRequest);
     }
 }

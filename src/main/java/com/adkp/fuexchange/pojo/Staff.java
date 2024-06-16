@@ -15,7 +15,7 @@ import java.time.LocalDate;
 public class Staff {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String staffId;
+    private int staffId;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH,CascadeType.REMOVE})
     @JoinColumn(name = "roleId", referencedColumnName = "roleId")

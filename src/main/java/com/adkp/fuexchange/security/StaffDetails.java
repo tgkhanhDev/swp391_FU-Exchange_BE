@@ -3,10 +3,11 @@ package com.adkp.fuexchange.security;
 import com.adkp.fuexchange.pojo.Staff;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 
 public class StaffDetails implements UserDetails {
     private final Staff staff;
@@ -18,7 +19,7 @@ public class StaffDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return Collections.singleton(new SimpleGrantedAuthority(staff.getRoleId().getRoleName()));
     }
 
     @Override
