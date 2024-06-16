@@ -2,6 +2,7 @@ package com.adkp.fuexchange.controller;
 
 import com.adkp.fuexchange.request.LoginRequest;
 import com.adkp.fuexchange.request.RegisterRequest;
+import com.adkp.fuexchange.request.StaffLoginRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -64,5 +65,21 @@ public class AuthenticateController {
     @GetMapping("/isRegistered/{studentId}")
     public ResponseObject<Object> IsRegistered(@PathVariable String studentId) {
         return authenticationService.isRegistered(studentId);
+    }
+    @PostMapping("/staff/login")
+    public ResponseObject<Object> loginStaff(@RequestBody StaffLoginRequest staffLoginRequest) {
+        if (
+
+                staffLoginRequest.getPassword() != null && staffLoginRequest.getNumberPhone()!=null
+
+        ) {
+            return authenticationService.staffLogin(staffLoginRequest);
+        }
+        return ResponseObject.builder()
+
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message(HttpStatus.BAD_REQUEST.name())
+                .content("Vui lòng nhập đầy đủ thông tin")
+                .build();
     }
 }

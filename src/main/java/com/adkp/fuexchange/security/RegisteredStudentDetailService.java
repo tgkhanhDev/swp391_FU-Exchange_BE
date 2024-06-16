@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 @Configuration
 public class RegisteredStudentDetailService implements UserDetailsService {
 
-    @Autowired
+
     private RegisteredStudentRepository registeredStudentRepository;
 
     @Override
