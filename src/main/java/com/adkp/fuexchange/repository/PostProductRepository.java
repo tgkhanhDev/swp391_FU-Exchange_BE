@@ -29,7 +29,7 @@ public interface PostProductRepository extends JpaRepository<PostProduct, Intege
                     "JOIN Product p ON pprd.productId = p.productId " +
                     "JOIN ProductDetail pd ON p.productDetailId = pd.productDetailId " +
                     "WHERE pprd.postStatusId = 4 " +
-                    "pprd.campusId LIKE CONCAT('%', :campus, '%') " +
+                    "AND pprd.campusId LIKE CONCAT('%', :campus, '%') " +
                     "AND pprd.postTypeId LIKE CONCAT('%', :postType, '%') " +
                     "AND pd.productName LIKE CONCAT('%', :name, '%') " +
                     "AND p.categoryId LIKE CONCAT('%', :category, '%')",
