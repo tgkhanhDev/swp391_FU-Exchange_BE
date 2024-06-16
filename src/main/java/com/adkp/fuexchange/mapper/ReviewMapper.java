@@ -18,6 +18,7 @@ public interface ReviewMapper {
     @Mapping(source = "orderId.orderId", target = "orderId")
     @Mapping(source = "ratingNumber", target = "rating")
     @Mapping(source = "description", target = "description")
+    @Mapping(source = "createTime", target = "createTime")
     ReviewDTO toReviewDTO(Review review);
 
     List<ReviewDTO> toReviewDTOList(List<Review> reviewList);

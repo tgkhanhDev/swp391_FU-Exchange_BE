@@ -57,7 +57,7 @@ public class GlobalExceptionHandler {
         return ResponseObject.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message(HttpStatus.BAD_REQUEST.name())
-                .content("Lỗi không toàn vẹn dữ liệu!")
+                .content(exception.getMessage())
                 .build();
     }
 

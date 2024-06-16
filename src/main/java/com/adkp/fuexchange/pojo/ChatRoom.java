@@ -22,7 +22,7 @@ public class ChatRoom {
     @Column(name = "isActive")
     private boolean active;
 
-    @OneToMany(mappedBy = "chatRoomId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "chatRoomId", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     @JsonBackReference
     private List<ChatMessage> chatMessageId;
 

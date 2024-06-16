@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor(force = true)
@@ -17,28 +17,28 @@ public class ReportSeller {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int reportSellerId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE})
     @JoinColumn(name = "buyerId", referencedColumnName = "registeredStudentId")
     private RegisteredStudent buyerId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE})
     @JoinColumn(name = "sellerId", referencedColumnName = "sellerId")
     private Seller sellerId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE})
     @JoinColumn(name = "reportSellerTypeId", referencedColumnName = "reportSellerTypeId")
     private ReportSellerType reportSellerTypeId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE})
     @JoinColumn(name = "reportStatusId", referencedColumnName = "reportStatusId")
     private ReportStatus reportStatusId;
 
-    private LocalDate createTime;
+    private LocalDateTime createTime;
 
     @Column(nullable = true)
     private String content;
 
-    public ReportSeller(RegisteredStudent buyerId, Seller sellerId, ReportSellerType reportSellerTypeId, ReportStatus reportStatusId, LocalDate createTime, String content) {
+    public ReportSeller(RegisteredStudent buyerId, Seller sellerId, ReportSellerType reportSellerTypeId, ReportStatus reportStatusId, LocalDateTime createTime, String content) {
         this.buyerId = buyerId;
         this.sellerId = sellerId;
         this.reportSellerTypeId = reportSellerTypeId;

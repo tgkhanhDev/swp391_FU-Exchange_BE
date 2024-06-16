@@ -2,13 +2,10 @@ package com.adkp.fuexchange.service;
 
 import com.adkp.fuexchange.dto.ProductDTO;
 import com.adkp.fuexchange.mapper.ProductMapper;
-import com.adkp.fuexchange.mapper.VariationDetailMapper;
-import com.adkp.fuexchange.mapper.VariationMapper;
 import com.adkp.fuexchange.pojo.Product;
 import com.adkp.fuexchange.pojo.VariationDetail;
 import com.adkp.fuexchange.repository.ProductRepository;
 import com.adkp.fuexchange.repository.VariationDetailRepository;
-import com.adkp.fuexchange.repository.VariationRepository;
 import com.adkp.fuexchange.request.UpdateInformationProductRequest;
 import com.adkp.fuexchange.response.ProductResponse;
 import com.adkp.fuexchange.response.ResponseObject;
@@ -90,8 +87,8 @@ public class ProductServiceImpl implements ProductService {
 //               }
 //           }
             updatedProduct.setPrice(updateInformationProductRequest.getPrice());
-            updatedProduct.getProductDetailId().setProductName(updateInformationProductRequest.getProductDetailId().getProductName());
-            updatedProduct.getProductDetailId().setDescription(updateInformationProductRequest.getProductDetailId().getDescription());
+            updatedProduct.getProductDetailId().setProductName(updateInformationProductRequest.getProductDetailIdProductName());
+            updatedProduct.getProductDetailId().setDescription(updateInformationProductRequest.getProductDetailIdDescription());
             productRepository.save(updatedProduct);
             return ResponseObject.builder()
                     .status(HttpStatus.OK.value())

@@ -18,7 +18,7 @@ public class WebConfig {
                 registry.addMapping("/**")
                         .allowedOrigins("http://localhost:3005")
                         .allowedMethods(HttpMethod.GET.name(),
-                                HttpMethod.POST.name(),
+                                HttpMethod.POST.name(),HttpMethod.PUT.name(),
                                 HttpMethod.DELETE.name() )
                         .allowedHeaders(HttpHeaders.CONTENT_TYPE, HttpHeaders.AUTHORIZATION);
             }

@@ -21,7 +21,7 @@ public class TransactionsStatus {
 
     private String transactionsStatusName;
 
-    @OneToMany(mappedBy = "transactionsStatusId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "transactionsStatusId", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     @JsonBackReference
     private List<Transactions> transactionId;
 
