@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -15,9 +15,9 @@ public class OrdersDTO {
 
     OrderStatusDTO orderStatus;
 
-    LocalDate createDate;
+    LocalDateTime createDate;
 
-    LocalDate completeDate;
+    LocalDateTime completeDate;
 
     String description;
 

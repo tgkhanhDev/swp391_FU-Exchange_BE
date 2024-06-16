@@ -26,6 +26,30 @@ public class SellerController {
         this.sellerService = sellerService;
     }
 
+    @Operation(summary = "view order for seller by seller id")
+    @GetMapping("/order/{sellerId}")
+    public ResponseObject<Object> getOrderBySellerId(@PathVariable("sellerId") Integer sellerId) {
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .data(sellerService.getOrderBySellerId(sellerId))
+                .content("Xem thành công!")
+                .build();
+    }
+
+    @Operation(summary = "view order for seller by seller id")
+    @GetMapping("/order/{sellerId}/{orderId}")
+    public ResponseObject<Object> getOrderDetailBySellerIdAndOrderId(
+            @PathVariable("sellerId") Integer sellerId, @PathVariable("orderId") Integer orderId
+    ) {
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .data(sellerService.getOrderDetailBySellerIdAndOrderId(sellerId, orderId))
+                .content("Xem thành công!")
+                .build();
+    }
+
     @Operation(summary = "View profile of seller by sellerId")
     @GetMapping("/{sellerId}")
     public ResponseObject<Object> viewInformationSellerById(

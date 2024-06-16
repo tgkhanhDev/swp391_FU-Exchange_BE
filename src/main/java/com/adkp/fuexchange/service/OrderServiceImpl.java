@@ -4,6 +4,7 @@ package com.adkp.fuexchange.service;
 import com.adkp.fuexchange.dto.OrdersDTO;
 import com.adkp.fuexchange.mapper.OrdersMapper;
 import com.adkp.fuexchange.pojo.Orders;
+import com.adkp.fuexchange.pojo.Payment;
 import com.adkp.fuexchange.pojo.Transactions;
 import com.adkp.fuexchange.repository.*;
 import com.adkp.fuexchange.request.OrderUpdateRequest;
@@ -12,6 +13,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -26,13 +30,16 @@ public class OrderServiceImpl implements OrderService {
 
     private final TransactionsStatusRepository transactionsStatusRepository;
 
+    private final PaymentRepository paymentRepository;
+
     @Autowired
-    public OrderServiceImpl(OrdersRepository ordersRepository, OrdersMapper ordersMapper, OrdersStatusRepository ordersStatusRepository, TransactionsRepository transactionsRepository, TransactionsStatusRepository transactionsStatusRepository) {
+    public OrderServiceImpl(OrdersRepository ordersRepository, OrdersMapper ordersMapper, OrdersStatusRepository ordersStatusRepository, TransactionsRepository transactionsRepository, TransactionsStatusRepository transactionsStatusRepository, PaymentRepository paymentRepository) {
         this.ordersRepository = ordersRepository;
         this.ordersMapper = ordersMapper;
         this.ordersStatusRepository = ordersStatusRepository;
         this.transactionsRepository = transactionsRepository;
         this.transactionsStatusRepository = transactionsStatusRepository;
+        this.paymentRepository = paymentRepository;
     }
 
     @Override
@@ -69,14 +76,20 @@ public class OrderServiceImpl implements OrderService {
 
     private void updateStatusTransaction(int orderStatus, int paymentId) {
         Transactions transactions = transactionsRepository.getTransactionByPaymentId(paymentId);
-        if (orderStatus == 1) {
-            transactions.setTransactionsStatusId(transactionsStatusRepository.getReferenceById(1));
-        } else if (orderStatus == 2) {
-            transactions.setTransactionsStatusId(transactionsStatusRepository.getReferenceById(2));
-        } else {
-            transactions.setTransactionsStatusId(transactionsStatusRepository.getReferenceById(3));
+
+        Payment payment = paymentRepository.getReferenceById(transactions.getPaymentId().getPaymentId());
+        Map<Integer, Integer> statusMap = new HashMap<>();
+        statusMap.put(2, 2);
+        statusMap.put(3, 2);
+        statusMap.put(4, 3);
+
+        int statusId = statusMap.getOrDefault(orderStatus, 4);
+
+        if(orderStatus == 5){
+            payment.setPaymentStatus(true);
         }
-        transactionsRepository.save(transactions);
+
+        transactions.setTransactionsStatusId(transactionsStatusRepository.getReferenceById(statusId));
     }
 
     @Override

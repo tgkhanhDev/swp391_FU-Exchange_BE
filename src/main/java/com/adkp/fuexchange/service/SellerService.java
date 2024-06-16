@@ -1,10 +1,15 @@
 package com.adkp.fuexchange.service;
 
+import com.adkp.fuexchange.dto.OrderPostProductDTO;
+import com.adkp.fuexchange.dto.OrdersDTO;
 import com.adkp.fuexchange.dto.SellerDTO;
 import com.adkp.fuexchange.request.RegisterToSellerRequest;
 import com.adkp.fuexchange.request.UpdateInformationSellerRequest;
 import com.adkp.fuexchange.request.UpdateStatusRequest;
+import com.adkp.fuexchange.response.OrderDetailResponse;
 import com.adkp.fuexchange.response.ResponseObject;
+
+import java.util.List;
 
 public interface SellerService {
 
@@ -19,4 +24,8 @@ public interface SellerService {
     SellerDTO getInformationSellerByStudentId(String studentId);
 
     void deleteSellerByID(int sellerID);
+
+    List<OrdersDTO> getOrderBySellerId(Integer sellerId);
+
+    List<OrderDetailResponse> getOrderDetailBySellerIdAndOrderId(Integer sellerId, Integer orderId);
 }
