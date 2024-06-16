@@ -1,11 +1,6 @@
 package com.adkp.fuexchange.controller.student;
 
-import com.adkp.fuexchange.request.RegisterProductRequest;
-import com.adkp.fuexchange.request.UpdateProductStatusRequest;
-import com.adkp.fuexchange.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.Valid;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.adkp.fuexchange.request.UpdateInformationProductRequest;
@@ -18,11 +13,10 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/product")
 @Tag(name = "Product")
-@Validated
 public class ProductController {
-    private final ProductService productService;
+    private final ProductServiceImpl productService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductServiceImpl productService) {
         this.productService = productService;
     }
 
@@ -45,24 +39,14 @@ public class ProductController {
         return productService.getProductByProductID(productID);
     }
 
-    @Operation(summary = "Create a product")
-    @PostMapping("/create-product")
-    public ResponseObject<Object> createAProduct(
-            @Valid @RequestBody RegisterProductRequest registerProductRequest
-            ) {
-        return productService.createProduct(registerProductRequest);
-    }
+    @PutMapping("/update-information")
+    public ResponseObject<Object> UpdateInformation(@RequestBody UpdateInformationProductRequest updateInformationProductRequest
+    ) {
 
-
-
-    @Operation(summary = "Update a product")
-    @PutMapping(value = "/update-information", consumes = "application/json;charset=UTF-8")
-    public ResponseObject<Object> UpdateInformation(@Valid @RequestBody UpdateInformationProductRequest updateInformationProductRequest) {
-
-        if (updateInformationProductRequest.getProductID() != null
-
+        if (updateInformationProductRequest.getProductDetailIdProductName() != null
+                && updateInformationProductRequest.getPrice() >= 0
         ) {
-           return productService.updateProductInformation(updateInformationProductRequest);
+            return productService.updateProductInformation(updateInformationProductRequest);
         }
         return ResponseObject.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
@@ -70,33 +54,4 @@ public class ProductController {
                 .content("Vui lòng nhập đầy đủ thông tin cập nhật sản phẩm ")
                 .build();
     }
-
-    @Operation(summary = "Delete a product")
-    @PutMapping(value = "/update-status")
-    public ResponseObject<Object> UpdateStatus(@RequestBody UpdateProductStatusRequest updateProductStatusRequest ){
-       if(updateProductStatusRequest!=null){
-
-           return productService.updateStatus(updateProductStatusRequest);
-       }
-        return ResponseObject.builder()
-                .status(HttpStatus.BAD_REQUEST.value())
-                .message(HttpStatus.BAD_REQUEST.name())
-                .content("Không tìm thấy thông tin sản phẩm ")
-                .build();
-    }
-
-    @Operation(summary = "delete a product")
-    @DeleteMapping("/{productId}")
-    public ResponseObject<Object> deteleProduct(
-            @PathVariable("productId") int productId
-
-    ) {
-        productService.deleteProductByID(productId);
-        return ResponseObject.builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.name())
-                .content("Xóa thành công")
-                .build();
-    }
-
 }

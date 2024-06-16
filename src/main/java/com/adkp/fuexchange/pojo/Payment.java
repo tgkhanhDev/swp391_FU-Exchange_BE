@@ -31,7 +31,7 @@ public class Payment {
 
     private LocalDateTime createTime;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "paymentId")
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "paymentId")
     @JsonBackReference
     private Transactions transactionId;
 

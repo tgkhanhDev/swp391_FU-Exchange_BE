@@ -1,8 +1,6 @@
 package com.adkp.fuexchange.controller.student;
 
-import com.adkp.fuexchange.dto.StudentDTO;
 import com.adkp.fuexchange.pojo.Student;
-import com.adkp.fuexchange.repository.StudentRepository;
 import com.adkp.fuexchange.request.StudentRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.StudentService;

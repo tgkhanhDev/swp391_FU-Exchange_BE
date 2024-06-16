@@ -2,9 +2,12 @@ package com.adkp.fuexchange.service;
 
 import com.adkp.fuexchange.dto.PostProductDTO;
 import com.adkp.fuexchange.mapper.PostProductMapper;
-import com.adkp.fuexchange.repository.PostProductRepository;
+import com.adkp.fuexchange.pojo.PostProduct;
+import com.adkp.fuexchange.repository.*;
+import com.adkp.fuexchange.request.UpdatePostProductRequest;
 import com.adkp.fuexchange.response.MetaResponse;
 import com.adkp.fuexchange.response.ResponseObject;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,10 +24,22 @@ public class PostProductServiceImpl implements PostProductService {
 
     private final PostProductMapper postProductMapper;
 
+    private final ProductRepository productRepository;
+
+    private final PostTypeRepository postTypeRepository;
+
+    private final PostStatusRepository postStatusRepository;
+
+    private final CampusRepository campusRepository;
+
     @Autowired
-    public PostProductServiceImpl(PostProductRepository postProductRepository, PostProductMapper postProductMapper) {
+    public PostProductServiceImpl(PostProductRepository postProductRepository, PostProductMapper postProductMapper, ProductRepository productRepository, PostTypeRepository postTypeRepository, PostStatusRepository postStatusRepository, CampusRepository campusRepository) {
         this.postProductRepository = postProductRepository;
         this.postProductMapper = postProductMapper;
+        this.productRepository = productRepository;
+        this.postTypeRepository = postTypeRepository;
+        this.postStatusRepository = postStatusRepository;
+        this.campusRepository = campusRepository;
     }
 
     @Override
@@ -34,7 +49,7 @@ public class PostProductServiceImpl implements PostProductService {
         String campus = Optional.ofNullable(campusId).map(String::valueOf).orElse("");
         String postType = Optional.ofNullable(postTypeId).map(String::valueOf).orElse("");
         String nameProduct = Optional.ofNullable(name).map(String::valueOf).orElse("");
-        String category = Optional.ofNullable(name).map(String::valueOf).orElse("");
+        String category = Optional.ofNullable(categoryId).map(String::valueOf).orElse("");
 
         List<PostProductDTO> postProductDTO = postProductMapper.toPostProductDTOList(
                 postProductRepository.filterPostProduct(currentProduct, campus, postType, nameProduct, category)
@@ -58,6 +73,26 @@ public class PostProductServiceImpl implements PostProductService {
                         postProductMapper.toPostProductDTO(postProductRepository.getPostProductByPostId(postProductId))
                 )
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public PostProductDTO updatePostProduct(UpdatePostProductRequest updatePostProductRequest) {
+        PostProduct postProduct = postProductRepository.getReferenceById(updatePostProductRequest.getPostProductId());
+
+        return postProductMapper.toPostProductDTO(
+                postProductRepository.save(
+                        PostProduct.builder()
+                                .productId(productRepository.getReferenceById(updatePostProductRequest.getProductId()))
+                                .postTypeId(postTypeRepository.getReferenceById(updatePostProductRequest.getPostTypeId()))
+                                .campusId(campusRepository.getReferenceById(updatePostProductRequest.getCampusId()))
+                                .postStatusId(postStatusRepository.getReferenceById(updatePostProductRequest.getPostStatusId()))
+                                .createDate(updatePostProductRequest.getCreateDate())
+                                .quantity(updatePostProductRequest.getQuantity())
+                                .content(updatePostProductRequest.getContent())
+                                .build()
+                )
+        );
     }
 
     public long countPostProduct(Integer campusId, Integer postTypeId, String name, Integer categoryId, List<PostProductDTO> postProductDTOList) {

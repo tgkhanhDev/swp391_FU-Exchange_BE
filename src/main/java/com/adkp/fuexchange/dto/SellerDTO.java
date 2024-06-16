@@ -17,6 +17,4 @@ public class SellerDTO {
 
     private boolean active;
 
-    @JsonIgnore
-    private RegisteredStudent registeredStudentId;
 }

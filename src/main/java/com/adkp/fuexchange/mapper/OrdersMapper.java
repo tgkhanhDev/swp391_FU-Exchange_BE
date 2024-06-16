@@ -2,7 +2,6 @@ package com.adkp.fuexchange.mapper;
 
 import com.adkp.fuexchange.dto.OrdersDTO;
 import com.adkp.fuexchange.pojo.Orders;
-import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -22,10 +21,6 @@ public interface OrdersMapper {
     @Mapping(source = "description", target = "description")
     OrdersDTO toOrdersDTO(Orders orders);
 
-    @InheritInverseConfiguration(name = "toOrdersDTO")
-    Orders toOrders(OrdersDTO ordersDTO);
-
     List<OrdersDTO> toOrdersDTOList(List<Orders> orders);
 
-    List<Orders> toOrdersList(List<OrdersDTO> ordersDTO);
 }

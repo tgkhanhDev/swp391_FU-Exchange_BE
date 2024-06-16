@@ -7,12 +7,13 @@ import com.adkp.fuexchange.request.PostProductRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -52,16 +53,26 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackOn = {DataIntegrityViolationException.class})
     public ResponseObject<Object> payOrders(OrdersRequest ordersRequest) {
         boolean paymentStatus = false;
+        if (registeredStudentRepository.getReferenceById(ordersRequest.getRegisteredStudentId()).getDeliveryAddress() == null) {
+            return ResponseObject.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .message(HttpStatus.BAD_REQUEST.name())
+                    .content("Chưa có địa chỉ nhận hàng. Vui lòng điền đầy đủ thông tin trước khi mua hàng!")
+                    .build();
+        }
+
+        double totalPrice = totalPrice(ordersRequest.getPostProductToBuyRequests());
+
         Orders ordersSaved = saveOrderAndOrderPostProduct(ordersRequest);
 
         if (ordersRequest.getPaymentMethodId() == 2) {
             paymentStatus = true;
         }
 
-        savePaymentAndTransaction(ordersRequest, ordersSaved, paymentStatus);
+        savePaymentAndTransaction(ordersRequest.getPaymentMethodId(), ordersSaved, paymentStatus, totalPrice);
 
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
@@ -73,28 +84,60 @@ public class PaymentServiceImpl implements PaymentService {
     private double totalPrice(List<PostProductRequest> postProductRequestList) {
         double totalPrice = 0;
 
+        postProductRequestList.sort(new Comparator<PostProductRequest>() {
+            @Override
+            public int compare(PostProductRequest p1, PostProductRequest p2) {
+                return Integer.compare(p1.getVariationId(), p2.getVariationId());
+            }
+        });
+
+        Map<Integer, Integer> quantityEachPost = new HashMap<>();
+
         PostProductRequest previousProduct = null;
         for (PostProductRequest currentProduct : postProductRequestList) {
             if (previousProduct != null &&
-                    currentProduct.getPostProductId() == previousProduct.getPostProductId() &&
-                    currentProduct.getVariationDetailId() != previousProduct.getVariationDetailId()) {
-                continue;
+                    currentProduct.getPostProductId() == previousProduct.getPostProductId()) {
+                if (currentProduct.getVariationId() == previousProduct.getVariationId()) {
+                    quantityEachPost.merge(currentProduct.getPostProductId(), currentProduct.getQuantity(), Integer::sum);
+                    totalPrice += currentProduct.getPrice() * currentProduct.getQuantity();
+                }
+                currentProduct = previousProduct;
             } else {
+                quantityEachPost.merge(currentProduct.getPostProductId(), currentProduct.getQuantity(), Integer::sum);
                 totalPrice += currentProduct.getPrice() * currentProduct.getQuantity();
             }
             previousProduct = currentProduct;
         }
+
+        calcQuantityPostProduct(quantityEachPost);
+
         return totalPrice;
     }
 
-    private void savePaymentAndTransaction(OrdersRequest ordersRequest, Orders ordersSaved, boolean paymentStatus) {
+    private void calcQuantityPostProduct(Map<Integer, Integer> quantityEachPost) {
+        List<Integer> postProductId = new ArrayList<>();
+        quantityEachPost.forEach((key, value) -> {
+            postProductId.add(key);
+        });
 
-        double totalPrice = totalPrice(ordersRequest.getPostProductToBuyRequests());
+        List<PostProduct> postProductList = postProductRepository.getListPostProductById(postProductId);
+        for (PostProduct postProduct : postProductList) {
+            int quantity = quantityEachPost.get(postProduct.getPostProductId());
+            if ((postProduct.getQuantity() - quantity) < 0) {
+                throw new DataIntegrityViolationException("Số lượng mà bạn muốn mua đã vượt quá giới hạn mà sản phẩm hiện có!");
+            }
+            postProduct.setQuantity(postProduct.getQuantity() - quantity);
+        }
+
+        postProductRepository.saveAll(postProductList);
+    }
+
+    private void savePaymentAndTransaction(int getPaymentMethod, Orders ordersSaved, boolean paymentStatus, double totalPrice) {
 
         Payment paymentSaved = paymentRepository.save(
                 new Payment(
                         ordersSaved,
-                        paymentMethodRepository.getReferenceById(ordersRequest.getPaymentMethodId()),
+                        paymentMethodRepository.getReferenceById(getPaymentMethod),
                         paymentStatus,
                         LocalDateTime.now()
                 )

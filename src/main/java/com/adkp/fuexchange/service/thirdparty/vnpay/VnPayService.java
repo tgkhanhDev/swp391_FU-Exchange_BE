@@ -1,11 +1,14 @@
 package com.adkp.fuexchange.service.thirdparty.vnpay;
 
+import com.adkp.fuexchange.repository.RegisteredStudentRepository;
 import com.adkp.fuexchange.request.OrdersRequest;
 import com.adkp.fuexchange.request.PostProductRequest;
+import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.utils.Utils;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +20,24 @@ public class VnPayService {
 
     private final HttpSession session;
 
+    private final RegisteredStudentRepository registeredStudentRepository;
+
     private final Utils utils;
     @Autowired
-    public VnPayService(HttpSession session, Utils utils) {
+    public VnPayService(HttpSession session, RegisteredStudentRepository registeredStudentRepository, Utils utils) {
         this.session = session;
+        this.registeredStudentRepository = registeredStudentRepository;
         this.utils = utils;
     }
 
     public VnPayResponse vnPayPayment(OrdersRequest ordersRequest, HttpHeaders headers) {
+        if(registeredStudentRepository.getReferenceById(ordersRequest.getRegisteredStudentId()).getDeliveryAddress() == null){
+            return VnPayResponse.builder()
+                    .status(HttpStatus.OK.value())
+                    .message(HttpStatus.OK.name())
+                    .content("Chưa có địa chỉ nhận hàng. Vui lòng điền đầy đủ thông tin trước khi mua hàng!")
+                    .build();
+        }
         long amount = totalPrice(ordersRequest.getPostProductToBuyRequests()) * 100L;
         String bankCode = "NCB";
         Map<String, String> vnpParamsMap = VnPayConfig.getVNPayConfig();
@@ -48,7 +61,7 @@ public class VnPayService {
         if (vnp_ResponseCode.equals("00")) {
             OrdersRequest ordersRequest = (OrdersRequest) session.getAttribute("ordersRequest");
             session.removeAttribute("ordersRequest");
-            utils.navigationToSaveOrderAsync("http://localhost:8080/order/payment/pay-order", ordersRequest);
+            utils.navigationDataAsyncForAnotherMethod("http://localhost:8080/order/payment/pay-order", ordersRequest, HttpMethod.POST);
             return true;
         }
         session.removeAttribute("ordersRequest");

@@ -1,5 +1,6 @@
 package com.adkp.fuexchange.service;
 
+import com.adkp.fuexchange.dto.RegisteredStudentDTO;
 import com.adkp.fuexchange.mapper.RegisteredStudentMapper;
 import com.adkp.fuexchange.pojo.RegisteredStudent;
 import com.adkp.fuexchange.repository.RegisteredStudentRepository;
@@ -29,26 +30,20 @@ public class RegisteredStudentServiceImpl implements RegisteredStudentService {
     }
 
     @Override
-    public ResponseObject<Object> viewProfile(Integer registeredStudentId) {
-
-        return ResponseObject.builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.name())
-                .content("Xem thông tin thành công!")
-                .data(registeredStudentMapper.toRegisteredStudentDTO(
-                        registeredStudentRepository.getReferenceById(registeredStudentId)
-                ))
-                .build();
+    public RegisteredStudentDTO viewProfile(Integer registeredStudentId) {
+        return registeredStudentMapper.toRegisteredStudentDTO(
+                registeredStudentRepository.getReferenceById(registeredStudentId)
+        );
     }
 
     @Override
     @Transactional
     public ResponseObject<Object> updatePassword(UpdatePasswordRequest updatePasswordRequest) {
-        boolean isExist = registeredStudentRepository.existsById(updatePasswordRequest.getIdWantUpdate());
-        if (isExist) {
-            if (updatePasswordRequest.getPassword().equals(updatePasswordRequest.getConfirmPassword())) {
-                RegisteredStudent registeredStudentUpdate = registeredStudentRepository.getReferenceById(updatePasswordRequest.getIdWantUpdate());
-                registeredStudentUpdate.setPassword(passwordEncoder.encode(updatePasswordRequest.getPassword()));
+        RegisteredStudent registeredStudentUpdate = registeredStudentRepository.getReferenceById(updatePasswordRequest.getIdWantUpdate());
+        if (passwordEncoder.matches(updatePasswordRequest.getOldPassword(), registeredStudentUpdate.getPassword())) {
+            if (updatePasswordRequest.getNewPassword().equals(updatePasswordRequest.getConfirmNewPassword())
+            ) {
+                registeredStudentUpdate.setPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
                 registeredStudentRepository.save(registeredStudentUpdate);
                 return ResponseObject.builder()
                         .status(HttpStatus.OK.value())
@@ -59,13 +54,13 @@ public class RegisteredStudentServiceImpl implements RegisteredStudentService {
             return ResponseObject.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
                     .message(HttpStatus.BAD_REQUEST.name())
-                    .content("Mật khẩu không trùng khớp")
+                    .content("Mật khẩu mới và xác nhận mật khẩu không trùng khớp!")
                     .build();
         }
         return ResponseObject.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message(HttpStatus.BAD_REQUEST.name())
-                .content("Thông tin không tồn tại!")
+                .content("Mật khẩu cũ không chính xác!")
                 .build();
 
     }

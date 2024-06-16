@@ -13,7 +13,6 @@ public interface ProductDetailMapper {
     @Mapping(source = "productDetailId", target = "productDetailId")
     @Mapping(source = "productName", target = "productName")
     @Mapping(source = "description", target = "description")
-    @Mapping(source = "productImageId", target = "image", ignore = true)
     ProductDetailDTO toProductDetailDTO(ProductDetail productDetail);
 
     @InheritInverseConfiguration(name = "toProductDetailDTO")
