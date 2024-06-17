@@ -22,12 +22,7 @@ public class VariationDetailController {
         this.variationDetailService = variationDetailService;
     }
 
-    @Operation(summary = "Create a variation detail")
-    @PostMapping("/create-variation-detail")
-    public ResponseObject<Object>createNewVariationDetail(@Valid @RequestBody VariationDetailRequest variationDetailRequest){
 
-        return variationDetailService.CreateNewVariationByVariationID(variationDetailRequest);
-    }
     @DeleteMapping("/{variationDetailId}")
     public ResponseObject<Object> deleteVariationDetailByID(
             @PathVariable("variationDetailId") int variationDetailId
