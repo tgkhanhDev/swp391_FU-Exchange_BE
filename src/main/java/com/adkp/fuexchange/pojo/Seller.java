@@ -2,6 +2,8 @@ package com.adkp.fuexchange.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +12,8 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "Seller")
+@Builder
+@AllArgsConstructor
 public class Seller {
 
     @Id
@@ -24,9 +28,9 @@ public class Seller {
 
     private String bankingName;
 
-    private boolean isActive;
+    private int isActive;
 
-    public Seller(RegisteredStudent registeredStudentId, String bankingNumber, String bankingName, boolean isActive) {
+    public Seller(RegisteredStudent registeredStudentId, String bankingNumber, String bankingName, int isActive) {
         this.registeredStudentId = registeredStudentId;
         this.bankingNumber = bankingNumber;
         this.bankingName = bankingName;

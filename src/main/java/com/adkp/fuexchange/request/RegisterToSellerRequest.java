@@ -8,7 +8,7 @@ import lombok.Data;
 public class RegisterToSellerRequest {
 
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
-    private Integer registeredStudentId;
+    private int registeredStudentId;
 
     @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
     private String password;

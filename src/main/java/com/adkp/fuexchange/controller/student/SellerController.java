@@ -108,18 +108,9 @@ public class SellerController {
 
     @Operation(summary = "Update status of seller")
     @PutMapping("/update-status")
-    public ResponseObject<Object> updateStatusSeller(@RequestBody UpdateStatusRequest updateStatusRequest) {
+    public ResponseObject<Object> updateStatusSeller(@RequestBody @Valid UpdateStatusRequest updateStatusRequest) {
 
-        if (
-                updateStatusRequest.getIsActive() != null && updateStatusRequest.getSellerId() != null
-        ) {
             return sellerService.updateStatusSeller(updateStatusRequest);
-        }
-        return ResponseObject.builder()
-                .status(HttpStatus.BAD_REQUEST.value())
-                .message(HttpStatus.BAD_REQUEST.name())
-                .content("Vui lòng nhập đầy đủ thông tin")
-                .build();
     }
 
     @Operation(summary = "delete of seller")
