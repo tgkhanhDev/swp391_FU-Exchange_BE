@@ -11,7 +11,6 @@ import com.adkp.fuexchange.response.InforLoginResponse;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.response.StaffInformationLoginResponse;
 import com.adkp.fuexchange.security.RegisteredStudentDetailService;
-import com.adkp.fuexchange.security.StaffDetailService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
