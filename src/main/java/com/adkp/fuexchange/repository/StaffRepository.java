@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface StaffRepository extends JpaRepository<Staff, Integer> {
-    @Query("Select sff From Staff sff " +
-            "Where sff.phoneNumber = :phoneNumber")
+    @Query("Select stf From Staff stf " +
+            "Where stf.phoneNumber = :phoneNumber")
     Staff findStaffByNumberPhone(@Param("phoneNumber") String phoneNumber);
 }

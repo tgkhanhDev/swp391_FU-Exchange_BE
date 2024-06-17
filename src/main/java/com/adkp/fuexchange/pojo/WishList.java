@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor(force = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -25,11 +27,11 @@ public class WishList {
     @JoinColumn(name = "registeredStudentId", referencedColumnName = "registeredStudentId")
     private RegisteredStudent registeredStudentId;
 
-    private LocalDate createDate;
+    private LocalDateTime createDate;
 
     private boolean isActive;
 
-    public WishList(PostProduct postProductId, RegisteredStudent registeredStudentId, LocalDate createDate, boolean isActive) {
+    public WishList(PostProduct postProductId, RegisteredStudent registeredStudentId, LocalDateTime createDate, boolean isActive) {
         this.postProductId = postProductId;
         this.registeredStudentId = registeredStudentId;
         this.createDate = createDate;

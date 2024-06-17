@@ -16,17 +16,9 @@ import java.time.LocalDate;
 public class StaffInformationLoginResponse {
     private String username;
 
-    private String staffId;
-
-    private String gender;
-
-    private String identityCard;
-
-    private String phoneNumber;
+    private int staffId;
 
     private String role;
-
-    private LocalDate dob;
 
     private String accessToken;
 }

@@ -25,4 +25,6 @@ public class ProductResponse {
     private ProductDTO product;
 
     private List<VariationResponse> variation;
+
+    private int postProductId;
 }

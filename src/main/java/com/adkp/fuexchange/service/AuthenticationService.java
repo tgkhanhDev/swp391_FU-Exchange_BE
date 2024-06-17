@@ -11,8 +11,9 @@ public interface AuthenticationService {
 
     ResponseObject<Object> register(RegisterRequest registerRequest);
 
-    ResponseObject<Object> checkInformationRegister(String studentId,String identity);
+    ResponseObject<Object> checkInformationRegister(String studentId, String identity);
 
     ResponseObject<Object> isRegistered(String studentId);
- ResponseObject<Object>staffLogin(StaffLoginRequest staffLoginRequest);
+
+    ResponseObject<Object> staffLogin(StaffLoginRequest staffLoginRequest);
 }

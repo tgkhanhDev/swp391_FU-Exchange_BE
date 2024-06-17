@@ -1,14 +1,14 @@
 package com.adkp.fuexchange.controller.student;
 
-import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.adkp.fuexchange.request.UpdateInformationProductRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.ProductServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/product")
@@ -40,7 +40,7 @@ public class ProductController {
     }
 
     @PutMapping("/update-information")
-    public ResponseObject<Object> UpdateInformation(@RequestBody UpdateInformationProductRequest updateInformationProductRequest
+    public ResponseObject<Object> updateInformation(@RequestBody UpdateInformationProductRequest updateInformationProductRequest
     ) {
 
         if (updateInformationProductRequest.getProductDetailIdProductName() != null
@@ -52,6 +52,18 @@ public class ProductController {
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message(HttpStatus.BAD_REQUEST.name())
                 .content("Vui lòng nhập đầy đủ thông tin cập nhật sản phẩm ")
+                .build();
+    }
+
+    @PostMapping("/get-by-variation")
+    @Operation(summary = "Get product by variation detail")
+    public ResponseObject<Object> getProductVariationId(@RequestBody List<Integer> variationDetailId) {
+
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .data(productService.getProductByVariationDetailId(variationDetailId))
+                .content("Lấy sản phẩm thành công")
                 .build();
     }
 }

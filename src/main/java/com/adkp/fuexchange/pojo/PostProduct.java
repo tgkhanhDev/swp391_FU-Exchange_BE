@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -40,14 +40,14 @@ public class PostProduct {
 
     private int quantity;
 
-    private LocalDate createDate;
+    private LocalDateTime createDate;
 
     private String content;
 
     @OneToMany(mappedBy = "postProductId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JsonBackReference
     private List<CartPost> cartPostId;
-    public PostProduct(Product productId, PostType postTypeId, Campus campusId, PostStatus postStatusId, int quantity, LocalDate createDate) {
+    public PostProduct(Product productId, PostType postTypeId, Campus campusId, PostStatus postStatusId, int quantity, LocalDateTime createDate) {
         this.productId = productId;
         this.postTypeId = postTypeId;
         this.campusId = campusId;

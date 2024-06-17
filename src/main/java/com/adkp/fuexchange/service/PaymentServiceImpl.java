@@ -146,7 +146,7 @@ public class PaymentServiceImpl implements PaymentService {
         transactionsRepository.save(
                 new Transactions(
                         paymentSaved,
-                        transactionsStatusRepository.getReferenceById(3),
+                        transactionsStatusRepository.getReferenceById(1),
                         Double.parseDouble(new DecimalFormat("#.###").format(totalPrice / 1000)),
                         LocalDateTime.now(),
                         LocalDateTime.now().plusDays(3)
@@ -158,7 +158,7 @@ public class PaymentServiceImpl implements PaymentService {
         Orders ordersSaved = ordersRepository.save(
                 new Orders(
                         registeredStudentRepository.getReferenceById(ordersRequest.getRegisteredStudentId()),
-                        ordersStatusRepository.getReferenceById(4),
+                        ordersStatusRepository.getReferenceById(1),
                         LocalDateTime.now(),
                         LocalDateTime.now().plusDays(3),
                         ordersRequest.getDescription()

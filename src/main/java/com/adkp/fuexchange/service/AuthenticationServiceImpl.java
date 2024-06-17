@@ -10,7 +10,7 @@ import com.adkp.fuexchange.request.StaffLoginRequest;
 import com.adkp.fuexchange.response.InforLoginResponse;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.response.StaffInformationLoginResponse;
-import com.adkp.fuexchange.security.RegisteredStudentDetailService;
+
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,13 +19,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
-    private final RegisteredStudentDetailService registeredStudentDetailService;
-    private final StaffDetailService staffDetailService;
+
     private final RegisteredStudentRepository registeredStudentRepository;
     private final AuthenticationManager authenticationManager;
     private final StudentRepository studentRepository;
@@ -33,11 +33,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final RoleRepository roleRepository;
     private final CartRepository cartRepository;
     private final StaffRepository staffRepository;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    public AuthenticationServiceImpl(RegisteredStudentDetailService registeredStudentDetailService, StaffDetailService staffDetailService, RegisteredStudentRepository registeredStudentRepository, AuthenticationManager authenticationManager, StudentRepository studentRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, CartRepository cartRepository, StaffRepository staffRepository) {
-        this.registeredStudentDetailService = registeredStudentDetailService;
-        this.staffDetailService = staffDetailService;
+    public AuthenticationServiceImpl(RegisteredStudentRepository registeredStudentRepository, AuthenticationManager authenticationManager, StudentRepository studentRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, CartRepository cartRepository, StaffRepository staffRepository, UserDetailsService userDetailsService) {
+
         this.registeredStudentRepository = registeredStudentRepository;
         this.authenticationManager = authenticationManager;
         this.studentRepository = studentRepository;
@@ -45,11 +45,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.roleRepository = roleRepository;
         this.cartRepository = cartRepository;
         this.staffRepository = staffRepository;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
     public ResponseObject<Object> login(LoginRequest loginRequest) {
-        UserDetails registeredStudent = registeredStudentDetailService.loadUserByUsername(loginRequest.getUsername());
+        UserDetails registeredStudent = userDetailsService.loadUserByUsername(loginRequest.getUsername());
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), registeredStudent.getPassword())) {
             return ResponseObject.builder()
@@ -148,7 +149,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public ResponseObject<Object> isRegistered(String studentId) {
-        UserDetails registeredStudent = registeredStudentDetailService.loadUserByUsername(studentId);
+        UserDetails registeredStudent = userDetailsService.loadUserByUsername(studentId);
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name().toLowerCase())
@@ -158,7 +159,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public ResponseObject<Object> staffLogin(StaffLoginRequest staffLoginRequest) {
-        UserDetails staff = staffDetailService.loadUserByUsername(staffLoginRequest.getNumberPhone());
+        UserDetails staff = userDetailsService.loadUserByUsername(staffLoginRequest.getNumberPhone());
         if (!passwordEncoder.matches(staffLoginRequest.getPassword(), staff.getPassword())) {
             return ResponseObject.builder()
                     .status(HttpStatus.UNAUTHORIZED.value())
@@ -186,12 +187,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .data(StaffInformationLoginResponse
                         .builder()
                         .staffId(staffRepository.findStaffByNumberPhone(staffLoginRequest.getNumberPhone()).getStaffId())
-                        .username(staffRepository.findStaffByNumberPhone(staffLoginRequest.getNumberPhone()).getFirstName()+" "+staffRepository.findStaffByNumberPhone(staffLoginRequest.getNumberPhone()).getLastName())
-                        .gender(staffRepository.findStaffByNumberPhone(staffLoginRequest.getNumberPhone()).getGender())
-                        .identityCard(staffRepository.findStaffByNumberPhone(staffLoginRequest.getNumberPhone()).getIdentityCard())
-                        .phoneNumber(staffLoginRequest.getNumberPhone())
-                        .role(staffRepository.findStaffByNumberPhone(staffLoginRequest.getNumberPhone()).getRoleId().getRoleName())
-                        .dob(staffRepository.findStaffByNumberPhone(staffLoginRequest.getNumberPhone()).getDob())
+                        .username(staff.getUsername())
+                        .role(staff.getAuthorities().toArray()[0].toString())
                         .accessToken("123")
                         .build())
                 .build();
