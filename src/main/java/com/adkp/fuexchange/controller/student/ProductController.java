@@ -1,10 +1,12 @@
 package com.adkp.fuexchange.controller.student;
 
+import com.adkp.fuexchange.request.RegisterProductRequest;
 import com.adkp.fuexchange.request.UpdateInformationProductRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.ProductServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +39,13 @@ public class ProductController {
             @PathVariable("productId") int productID
     ) {
         return productService.getProductByProductID(productID);
+    }
+    @Operation(summary = "Create a product")
+    @PostMapping("/create-product")
+    public ResponseObject<Object> createAProduct(
+            @Valid @RequestBody RegisterProductRequest registerProductRequest
+    ) {
+        return productService.createProduct(registerProductRequest);
     }
 
     @PutMapping("/update-information")

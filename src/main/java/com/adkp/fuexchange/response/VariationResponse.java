@@ -13,4 +13,5 @@ public class VariationResponse {
     private String variationName;
 
     private VariationDetail variationDetail;
+
 }
