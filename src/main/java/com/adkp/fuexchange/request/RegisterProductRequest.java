@@ -31,8 +31,8 @@ public class RegisterProductRequest {
 
 
 
-   List<VariationRequest> variationList;
+    List<VariationRequest> variationList;
 
-   List<ProductImageRequest> productImageRequestsList;
+    List<ProductImageRequest> productImageRequestsList;
 
 }
