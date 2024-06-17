@@ -23,17 +23,7 @@ public class VariationDetailServiceImpl implements  VariationDetailService{
 }
 
 
-    @Override
-    @Transactional
-    public ResponseObject<Object> CreateNewVariationByVariationID(VariationDetailRequest variationDetailRequest) {
-        VariationDetail variationDetail = new VariationDetail(variationRepository.getReferenceById(variationDetailRequest.getVariationId()),variationDetailRequest.getDescription());
-        variationDetailRepository.save(variationDetail);
-        return ResponseObject.builder()
-                .status(HttpStatus.OK.value()).
-                message(HttpStatus.OK.name()).
-                content("tạo thông tin  variation detail  thành công")
-                .data(new RegisterVariationDetailResponse(variationDetail.getVariationDetailId(),variationDetail.getVariationId().getVariationId(),variationDetail.getDescription())).build();
-    }
+
 
     @Override
     public void deleteVariationDetailByID(int variationDetailId) {

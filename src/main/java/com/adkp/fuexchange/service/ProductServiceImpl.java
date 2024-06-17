@@ -5,10 +5,7 @@ import com.adkp.fuexchange.mapper.ProductMapper;
 import com.adkp.fuexchange.mapper.VariationMapper;
 import com.adkp.fuexchange.pojo.*;
 import com.adkp.fuexchange.repository.*;
-import com.adkp.fuexchange.request.ProductImageRequest;
-import com.adkp.fuexchange.request.RegisterProductRequest;
-import com.adkp.fuexchange.request.UpdateInformationProductRequest;
-import com.adkp.fuexchange.request.VariationRequest;
+import com.adkp.fuexchange.request.*;
 import com.adkp.fuexchange.response.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,11 +96,22 @@ public class ProductServiceImpl implements ProductService {
         productRepository.save(product);
 
         List<RegisterVariationResponse> variationList = new ArrayList<>();
+        List<RegisterVariationDetailResponse>variationDetailResponseList = new ArrayList<>();
         for(VariationRequest variationRequest : registerProductRequest.getVariationList()){
             Variation variation = new Variation(variationRequest.getVariationName(),product);
             variationRepository.save(variation);
-            variationList.add(new RegisterVariationResponse(variation.getVariationId(),variation.getVariationName()));
+
+
+            for(VariationDetailRequest variationDetailRequest: variationRequest.getVariationDetailRequestList()){
+                variationDetailRepository.save(new VariationDetail(variation,variationDetailRequest.getDescription()));
+                variationDetailResponseList.add(new RegisterVariationDetailResponse(variationDetailRequest.getDescription()));
+                variationList.add(new RegisterVariationResponse(variation.getVariationId(),variation.getVariationName(),variationDetailResponseList));
+            }
+
+
+
         }
+
 
 
 
