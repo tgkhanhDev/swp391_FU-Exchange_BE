@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/order")
 @Tag(name = "Order")
@@ -29,11 +31,20 @@ public class OrdersController {
     @Operation(summary = "Get information by registeredStudentId")
     @GetMapping("/{registeredStudentId}")
     public ResponseObject<Object> getOrderByRegisterId(@PathVariable("registeredStudentId") Integer registeredStudentId) {
+
+        List<OrdersDTO> ordersDTOList = orderService.getOrderByRegisterId(registeredStudentId);
+        if (ordersDTOList == null) {
+            return ResponseObject.builder()
+                    .status(HttpStatus.OK.value())
+                    .message(HttpStatus.OK.name())
+                    .content("Bạn Chưa có đơn hàng nào!")
+                    .build();
+        }
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
                 .content("Xem thành công!")
-                .data(orderService.getOrderByRegisterId(registeredStudentId))
+                .data(ordersDTOList)
                 .build();
     }
 
@@ -58,7 +69,7 @@ public class OrdersController {
     @DeleteMapping("/delete/{orderId}")
     public ResponseObject<Object> deleteOrder(@PathVariable("orderId") Integer orderId) {
         OrdersDTO orderDeleted = orderService.deleteOrder(orderId);
-        if(orderDeleted == null){
+        if (orderDeleted == null) {
             return ResponseObject.builder()
                     .status(HttpStatus.OK.value())
                     .message(HttpStatus.OK.name())
@@ -73,5 +84,5 @@ public class OrdersController {
                 .build();
     }
 
-    
+
 }

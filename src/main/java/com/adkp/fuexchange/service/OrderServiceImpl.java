@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -43,13 +44,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseObject<Object> getOrderByRegisterId(Integer registeredStudentId) {
-        return ResponseObject.builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.name())
-                .message("Xem thông tin thành công")
-                .data(ordersMapper.toOrdersDTOList(ordersRepository.getOrderByRegisterId(registeredStudentId)))
-                .build();
+    public List<OrdersDTO> getOrderByRegisterId(Integer registeredStudentId) {
+        return ordersMapper.toOrdersDTOList(ordersRepository.getOrderByRegisterId(registeredStudentId));
     }
 
     @Override
