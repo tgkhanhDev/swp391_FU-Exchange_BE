@@ -22,6 +22,4 @@ public class OrderDetailResponse {
 
     private double priceBought;
 
-    private boolean orderPostProductStatus;
-
 }

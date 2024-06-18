@@ -9,6 +9,7 @@ import com.adkp.fuexchange.mapper.OrdersMapper;
 import com.adkp.fuexchange.mapper.SellerMapper;
 import com.adkp.fuexchange.pojo.RegisteredStudent;
 import com.adkp.fuexchange.pojo.Seller;
+import com.adkp.fuexchange.pojo.VariationDetail;
 import com.adkp.fuexchange.repository.OrderPostProductRepository;
 import com.adkp.fuexchange.repository.RegisteredStudentRepository;
 import com.adkp.fuexchange.repository.RoleRepository;
@@ -25,7 +26,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SellerServiceImpl implements SellerService {
@@ -181,46 +184,57 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public List<OrderDetailResponse> getOrderDetailBySellerIdAndOrderId(Integer sellerId, Integer orderId) {
+    public List<OrderDetailResponse> getOrderDetailBySellerIdAndOrderId(Integer sellerId, Integer orderId, Integer orderStatusId) {
 
         List<OrderPostProductDTO> orderPostProductList =
-                orderPostProductMapper.toOrderPostProductDTOList(orderPostProductRepository.getOrdersDetailBySellerIdAndOrderId(sellerId, orderId));
+                orderPostProductMapper.toOrderPostProductDTOList(orderPostProductRepository.getOrdersDetailBySellerIdAndOrderId(sellerId, orderId, orderStatusId));
 
         OrderPostProductDTO previousOrderPostProduct = null;
 
         List<OrderDetailResponse> orderDetailResponse = new ArrayList<>();
 
-        List<VariationDetailDTO> variationDetailDTO = new ArrayList<>();
+        List<VariationDetailDTO> variationDetailDTOList = new ArrayList<>();
+
+        Map<Integer, List<VariationDetailDTO>> mapPostToVariationDetail = new HashMap<>();
+
         for (OrderPostProductDTO currentOrderPostProduct : orderPostProductList) {
 
-            variationDetailDTO.add(currentOrderPostProduct.getVariationDetail());
+            currentOrderPostProduct.getVariationDetail().getVariation().setVariationDetail(null);
 
             if (previousOrderPostProduct != null &&
                     currentOrderPostProduct.getOrder().getOrderId() == previousOrderPostProduct.getOrder().getOrderId() &&
                     currentOrderPostProduct.getPostProduct().getPostProductId() == previousOrderPostProduct.getPostProduct().getPostProductId() &&
                     currentOrderPostProduct.getVariationDetail().getVariationDetailId() != previousOrderPostProduct.getVariationDetail().getVariationDetailId()
             ) {
-                variationDetailDTO.clear();
 
-                variationDetailDTO.add(currentOrderPostProduct.getVariationDetail());
+                mapPostToVariationDetail.get(currentOrderPostProduct.getPostProduct().getPostProductId()).add(currentOrderPostProduct.getVariationDetail());
 
-                variationDetailDTO.add(previousOrderPostProduct.getVariationDetail());
                 continue;
-            } else if (previousOrderPostProduct != null &&
-                    currentOrderPostProduct.getOrder().getOrderId() != previousOrderPostProduct.getOrder().getOrderId() &&
-                    currentOrderPostProduct.getPostProduct().getPostProductId() != previousOrderPostProduct.getPostProduct().getPostProductId()
+            } else if (
+                    previousOrderPostProduct != null &&
+                            currentOrderPostProduct.getOrder().getOrderId() != previousOrderPostProduct.getOrder().getOrderId() &&
+                            currentOrderPostProduct.getPostProduct().getPostProductId() != previousOrderPostProduct.getPostProduct().getPostProductId()
             ) {
-                variationDetailDTO.clear();
-                variationDetailDTO.add(currentOrderPostProduct.getVariationDetail());
+
+                mapPostToVariationDetail.get(previousOrderPostProduct.getPostProduct().getPostProductId()).add(currentOrderPostProduct.getVariationDetail());
+
+            } else {
+
+                mapPostToVariationDetail.put(currentOrderPostProduct.getPostProduct().getPostProductId(), new ArrayList<>());
+
+                mapPostToVariationDetail.get(currentOrderPostProduct.getPostProduct().getPostProductId()).add(currentOrderPostProduct.getVariationDetail());
+            }
+
+            if (mapPostToVariationDetail.containsKey(currentOrderPostProduct.getPostProduct().getPostProductId())) {
+                variationDetailDTOList = mapPostToVariationDetail.get(currentOrderPostProduct.getPostProduct().getPostProductId());
             }
 
             orderDetailResponse.add(OrderDetailResponse.builder()
                     .order(currentOrderPostProduct.getOrder())
                     .postProduct(currentOrderPostProduct.getPostProduct())
-                    .priceBought(currentOrderPostProduct.getPriceBought())
+                    .priceBought(currentOrderPostProduct.getPriceBought() * 1000)
                     .quantity(currentOrderPostProduct.getQuantity())
-                    .orderPostProductStatus(currentOrderPostProduct.isOrderPostProductStatus())
-                    .variationDetail(variationDetailDTO)
+                    .variationDetail(variationDetailDTOList)
                     .build());
 
             previousOrderPostProduct = currentOrderPostProduct;

@@ -9,6 +9,8 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OrderPostProductDTO {
 
+    private int orderPostProductId;
+
     private OrdersDTO order;
 
     private PostProductDTO postProduct;
@@ -19,5 +21,4 @@ public class OrderPostProductDTO {
 
     private double priceBought;
 
-    private boolean orderPostProductStatus;
 }

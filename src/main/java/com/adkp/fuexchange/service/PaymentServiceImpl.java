@@ -167,13 +167,11 @@ public class PaymentServiceImpl implements PaymentService {
         for (PostProductRequest postProductRequest : ordersRequest.getPostProductToBuyRequests()) {
             orderPostProductRepository.save(
                     new OrderPostProduct(
-                            new OrderPostProductEmbeddable(ordersSaved.getOrderId(), postProductRequest.getPostProductId(), postProductRequest.getVariationDetailId()),
                             ordersSaved,
                             postProductRepository.getReferenceById(postProductRequest.getPostProductId()),
                             variationDetailRepository.getReferenceById(postProductRequest.getVariationDetailId()),
                             postProductRequest.getQuantity(),
-                            Double.parseDouble(new DecimalFormat("#.###").format(postProductRequest.getPrice() / 1000)),
-                            false
+                            Double.parseDouble(new DecimalFormat("#.###").format(postProductRequest.getPrice() / 1000))
                     )
             );
         }

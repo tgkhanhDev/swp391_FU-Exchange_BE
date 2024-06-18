@@ -37,15 +37,15 @@ public class SellerController {
                 .build();
     }
 
-    @Operation(summary = "view order for seller by seller id")
+    @Operation(summary = "view order detail for seller by seller id")
     @GetMapping("/order/{sellerId}/{orderId}")
     public ResponseObject<Object> getOrderDetailBySellerIdAndOrderId(
-            @PathVariable("sellerId") Integer sellerId, @PathVariable("orderId") Integer orderId
+            @PathVariable("sellerId") Integer sellerId, @PathVariable("orderId") Integer orderId, @RequestParam("orderStatusId") Integer orderStatusId
     ) {
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
-                .data(sellerService.getOrderDetailBySellerIdAndOrderId(sellerId, orderId))
+                .data(sellerService.getOrderDetailBySellerIdAndOrderId(sellerId, orderId, orderStatusId))
                 .content("Xem thành công!")
                 .build();
     }

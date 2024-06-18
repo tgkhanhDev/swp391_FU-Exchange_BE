@@ -2,6 +2,7 @@ package com.adkp.fuexchange.service;
 
 import com.adkp.fuexchange.dto.SellerDTO;
 import com.adkp.fuexchange.mapper.SellerMapper;
+import com.adkp.fuexchange.pojo.Seller;
 import com.adkp.fuexchange.repository.SellerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ModeratorServiceImpl implements ModeratorService{
+public class ModeratorServiceImpl implements ModeratorService {
 
     private final SellerRepository sellerRepository;
 
@@ -23,8 +24,7 @@ public class ModeratorServiceImpl implements ModeratorService{
 
     @Override
     public List<SellerDTO> viewRegisterToSellerRequest() {
-        return sellerMapper.toSellerDTOList(
-                sellerRepository.viewRegisterToSellerRequest()
-        );
+        List<Seller> sellers = sellerRepository.viewRegisterToSellerRequest();
+        return sellerMapper.toSellerDTOList(sellers);
     }
 }

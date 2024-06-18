@@ -28,26 +28,6 @@ public class OrdersController {
         this.orderService = orderService;
     }
 
-    @Operation(summary = "Get information by registeredStudentId")
-    @GetMapping("/{registeredStudentId}")
-    public ResponseObject<Object> getOrderByRegisterId(@PathVariable("registeredStudentId") Integer registeredStudentId) {
-
-        List<OrdersDTO> ordersDTOList = orderService.getOrderByRegisterId(registeredStudentId);
-        if (ordersDTOList == null) {
-            return ResponseObject.builder()
-                    .status(HttpStatus.OK.value())
-                    .message(HttpStatus.OK.name())
-                    .content("Bạn Chưa có đơn hàng nào!")
-                    .build();
-        }
-        return ResponseObject.builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.name())
-                .content("Xem thành công!")
-                .data(ordersDTOList)
-                .build();
-    }
-
     @Operation(summary = "Update order")
     @PutMapping("/update")
     public ResponseObject<Object> updateOrder(@Valid @RequestBody OrderUpdateRequest orderUpdateRequest) {
@@ -83,6 +63,5 @@ public class OrdersController {
                 .data(orderDeleted)
                 .build();
     }
-
 
 }

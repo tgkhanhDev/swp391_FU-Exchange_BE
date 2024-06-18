@@ -14,21 +14,19 @@ import lombok.NoArgsConstructor;
 @Table(name = "OrderPostProduct")
 public class OrderPostProduct {
 
-    @EmbeddedId
-    private OrderPostProductEmbeddable orderPostProductId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int orderPostProductId;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
-    @MapsId("orderId")
     @JoinColumn(name = "orderId", referencedColumnName = "orderId")
     private Orders orderId;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
-    @MapsId("postProductId")
     @JoinColumn(name = "postProductId", referencedColumnName = "postProductId")
     private PostProduct postProductId;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
-    @MapsId("variationDetailId")
     @JoinColumn(name = "variationDetailId", referencedColumnName = "variationDetailId")
     private VariationDetail variationDetailId;
 
@@ -36,14 +34,11 @@ public class OrderPostProduct {
 
     private double priceBought;
 
-    private boolean orderPostProductStatus;
-
-    public OrderPostProduct(Orders orderId, PostProduct postProductId, VariationDetail variationDetailId, int quantity, double priceBought, boolean orderPostProductStatus) {
+    public OrderPostProduct(Orders orderId, PostProduct postProductId, VariationDetail variationDetailId, int quantity, double priceBought) {
         this.orderId = orderId;
         this.postProductId = postProductId;
         this.variationDetailId = variationDetailId;
         this.quantity = quantity;
         this.priceBought = priceBought;
-        this.orderPostProductStatus = orderPostProductStatus;
     }
 }

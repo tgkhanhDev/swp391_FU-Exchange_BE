@@ -15,12 +15,12 @@ import java.util.List;
 )
 public interface OrderPostProductMapper {
 
+    @Mapping(source = "orderPostProductId", target = "orderPostProductId")
     @Mapping(source = "orderId", target = "order")
     @Mapping(source = "postProductId", target = "postProduct")
     @Mapping(source = "variationDetailId", target = "variationDetail")
     @Mapping(source = "quantity", target = "quantity")
     @Mapping(source = "priceBought", target = "priceBought")
-    @Mapping(source = "orderPostProductStatus", target = "orderPostProductStatus")
     OrderPostProductDTO toOrderPostProductDTO(OrderPostProduct orderPostProduct);
 
     List<OrderPostProductDTO> toOrderPostProductDTOList(List<OrderPostProduct> orderPostProductList);
