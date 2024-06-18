@@ -90,7 +90,9 @@ public class ProductServiceImpl implements ProductService {
             productImageRepository.save(new ProductImage(productDetail,productImageRequest.getImageUrl()));
         }
 
-        Product product = new Product(productDetail,sellerRepository.getReferenceById(registerProductRequest.getSellerId())
+        Seller seller = sellerRepository.getInformationSellerByStudentId(registerProductRequest.getStudentId());
+
+        Product product = new Product(productDetail,sellerRepository.getReferenceById(seller.getSellerId())
                 ,categoryRepository.getReferenceById(registerProductRequest.getCategoryId()),registerProductRequest.getPrice()
                 ,true);
         productRepository.save(product);
