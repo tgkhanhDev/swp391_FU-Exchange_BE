@@ -24,6 +24,7 @@ public class StaffController {
     public StaffController(StaffService staffService) {
         this.staffService = staffService;
     }
+    @Operation(summary = "Get all Moderator staff ")
     @GetMapping("/{current}")
     public ResponseObject<Object>viewAllStaffs(
             @PathVariable("current") int current,
