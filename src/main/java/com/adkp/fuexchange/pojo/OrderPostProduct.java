@@ -3,6 +3,7 @@ package com.adkp.fuexchange.pojo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,12 +12,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
+@Builder
 @Table(name = "OrderPostProduct")
+@IdClass(OrderPostProduct.class)
 public class OrderPostProduct {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int orderPostProductId;
+    private int sttOrder;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "orderId", referencedColumnName = "orderId")
@@ -32,13 +34,6 @@ public class OrderPostProduct {
 
     private int quantity;
 
-    private double priceBought;
+    private long priceBought;
 
-    public OrderPostProduct(Orders orderId, PostProduct postProductId, VariationDetail variationDetailId, int quantity, double priceBought) {
-        this.orderId = orderId;
-        this.postProductId = postProductId;
-        this.variationDetailId = variationDetailId;
-        this.quantity = quantity;
-        this.priceBought = priceBought;
-    }
 }

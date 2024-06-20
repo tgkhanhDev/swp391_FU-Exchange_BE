@@ -8,10 +8,8 @@ import com.adkp.fuexchange.pojo.Payment;
 import com.adkp.fuexchange.pojo.Transactions;
 import com.adkp.fuexchange.repository.*;
 import com.adkp.fuexchange.request.OrderUpdateRequest;
-import com.adkp.fuexchange.response.ResponseObject;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -66,8 +64,20 @@ public class OrderServiceImpl implements OrderService {
         }
 
         orders.setDescription(orderUpdateRequest.getDescription());
+
+        updatePaymentStatus(orderUpdateRequest.getOrderStatusId(), orderUpdateRequest.getOrderId());
+
         updateStatusTransaction(orderUpdateRequest.getOrderStatusId(), orders.getPaymentId().getPaymentId());
+
         return ordersMapper.toOrdersDTO(orders);
+    }
+
+    private void updatePaymentStatus(int orderStatusId, int orderId) {
+
+        Orders orders = ordersRepository.getReferenceById(orderId);
+        if (orderStatusId == 4) {
+            paymentRepository.getReferenceById(orders.getPaymentId().getPaymentId()).setPaymentStatus(false);
+        }
     }
 
     private void updateStatusTransaction(int orderStatus, int paymentId) {
@@ -81,7 +91,7 @@ public class OrderServiceImpl implements OrderService {
 
         int statusId = statusMap.getOrDefault(orderStatus, 4);
 
-        if(orderStatus == 5){
+        if (orderStatus == 5) {
             payment.setPaymentStatus(true);
         }
 

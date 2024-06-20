@@ -19,23 +19,25 @@ public class WishList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int wishListId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "postProductId", referencedColumnName = "postProductId")
     private PostProduct postProductId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "registeredStudentId", referencedColumnName = "registeredStudentId")
     private RegisteredStudent registeredStudentId;
 
     private LocalDateTime createDate;
 
+    private int quantity;
+
     private boolean isActive;
 
-    public WishList(PostProduct postProductId, RegisteredStudent registeredStudentId, LocalDateTime createDate, boolean isActive) {
+    public WishList(PostProduct postProductId, RegisteredStudent registeredStudentId, LocalDateTime createDate, int quantity, boolean isActive) {
         this.postProductId = postProductId;
         this.registeredStudentId = registeredStudentId;
         this.createDate = createDate;
+        this.quantity = quantity;
         this.isActive = isActive;
     }
-
 }

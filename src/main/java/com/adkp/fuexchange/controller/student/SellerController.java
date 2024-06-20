@@ -38,9 +38,11 @@ public class SellerController {
     }
 
     @Operation(summary = "view order detail for seller by seller id")
-    @GetMapping("/order/{sellerId}/{orderId}")
+    @GetMapping("/order-detail/{sellerId}/{orderId}")
     public ResponseObject<Object> getOrderDetailBySellerIdAndOrderId(
-            @PathVariable("sellerId") Integer sellerId, @PathVariable("orderId") Integer orderId, @RequestParam("orderStatusId") Integer orderStatusId
+            @PathVariable("sellerId") Integer sellerId,
+            @PathVariable("orderId") Integer orderId,
+            @RequestParam("orderStatusId") Integer orderStatusId
     ) {
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())

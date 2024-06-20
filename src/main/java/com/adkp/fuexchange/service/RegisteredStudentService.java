@@ -5,13 +5,11 @@ import com.adkp.fuexchange.request.UpdatePasswordRequest;
 import com.adkp.fuexchange.response.OrderDetailResponse;
 import com.adkp.fuexchange.response.ResponseObject;
 
-import java.util.List;
-
 public interface RegisteredStudentService {
 
     RegisteredStudentDTO viewProfile(Integer registeredStudentId);
 
     ResponseObject<Object> updatePassword(UpdatePasswordRequest updatePasswordRequest);
 
-    List<OrderDetailResponse> getOrdersDetailByRegisteredStudentId(Integer registeredStudentId, Integer orderStatusId);
+    OrderDetailResponse getOrdersDetailByRegisteredStudentId(Integer registeredStudentId, Integer orderId, Integer orderStatusId);
 }

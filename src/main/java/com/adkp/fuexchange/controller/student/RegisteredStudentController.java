@@ -45,14 +45,16 @@ public class RegisteredStudentController {
     }
 
     @Operation(summary = "view order detail for student by registeredStudentId")
-    @GetMapping("/order-detail/{registeredStudentId}")
+    @GetMapping("/order-detail/{registeredStudentId}/{orderId}")
     public ResponseObject<Object> getOrderDetailBySellerIdAndOrderId(
-            @PathVariable("registeredStudentId") Integer registeredStudentId, @RequestParam("orderStatusId") Integer orderStatusId
+            @PathVariable("registeredStudentId") Integer registeredStudentId,
+            @PathVariable("orderId") Integer orderId,
+            @RequestParam("orderStatusId") Integer orderStatusId
     ) {
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
-                .data(registeredStudentService.getOrdersDetailByRegisteredStudentId(registeredStudentId, orderStatusId))
+                .data(registeredStudentService.getOrdersDetailByRegisteredStudentId(registeredStudentId, orderId, orderStatusId))
                 .content("Xem thành công!")
                 .build();
     }

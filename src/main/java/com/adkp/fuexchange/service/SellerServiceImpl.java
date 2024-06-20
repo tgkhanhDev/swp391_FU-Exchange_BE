@@ -3,17 +3,11 @@ package com.adkp.fuexchange.service;
 import com.adkp.fuexchange.dto.OrderPostProductDTO;
 import com.adkp.fuexchange.dto.OrdersDTO;
 import com.adkp.fuexchange.dto.SellerDTO;
-import com.adkp.fuexchange.dto.VariationDetailDTO;
 import com.adkp.fuexchange.mapper.OrderPostProductMapper;
 import com.adkp.fuexchange.mapper.OrdersMapper;
 import com.adkp.fuexchange.mapper.SellerMapper;
-import com.adkp.fuexchange.pojo.RegisteredStudent;
-import com.adkp.fuexchange.pojo.Seller;
-import com.adkp.fuexchange.pojo.VariationDetail;
-import com.adkp.fuexchange.repository.OrderPostProductRepository;
-import com.adkp.fuexchange.repository.RegisteredStudentRepository;
-import com.adkp.fuexchange.repository.RoleRepository;
-import com.adkp.fuexchange.repository.SellerRepository;
+import com.adkp.fuexchange.pojo.*;
+import com.adkp.fuexchange.repository.*;
 import com.adkp.fuexchange.request.RegisterToSellerRequest;
 import com.adkp.fuexchange.request.UpdateInformationSellerRequest;
 import com.adkp.fuexchange.request.UpdateStatusRequest;
@@ -26,9 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class SellerServiceImpl implements SellerService {
@@ -48,8 +40,14 @@ public class SellerServiceImpl implements SellerService {
 
     private final RoleRepository roleRepository;
 
+    private final OrdersRepository ordersRepository;
+
+    private final PaymentRepository paymentRepository;
+
+    private final TransactionsRepository transactionsRepository;
+
     @Autowired
-    public SellerServiceImpl(SellerRepository sellerRepository, SellerMapper sellerMapper, RegisteredStudentRepository registeredStudentRepository, PasswordEncoder passwordEncoder, OrderPostProductRepository orderPostProductRepository, OrdersMapper ordersMapper, OrderPostProductMapper orderPostProductMapper, RoleRepository roleRepository) {
+    public SellerServiceImpl(SellerRepository sellerRepository, SellerMapper sellerMapper, RegisteredStudentRepository registeredStudentRepository, PasswordEncoder passwordEncoder, OrderPostProductRepository orderPostProductRepository, OrdersMapper ordersMapper, OrderPostProductMapper orderPostProductMapper, RoleRepository roleRepository, OrdersRepository ordersRepository, PaymentRepository paymentRepository, TransactionsRepository transactionsRepository) {
         this.sellerRepository = sellerRepository;
         this.sellerMapper = sellerMapper;
         this.registeredStudentRepository = registeredStudentRepository;
@@ -58,6 +56,9 @@ public class SellerServiceImpl implements SellerService {
         this.ordersMapper = ordersMapper;
         this.orderPostProductMapper = orderPostProductMapper;
         this.roleRepository = roleRepository;
+        this.ordersRepository = ordersRepository;
+        this.paymentRepository = paymentRepository;
+        this.transactionsRepository = transactionsRepository;
     }
 
     @Override
@@ -184,63 +185,86 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public List<OrderDetailResponse> getOrderDetailBySellerIdAndOrderId(Integer sellerId, Integer orderId, Integer orderStatusId) {
+    public OrderDetailResponse getOrderDetailBySellerIdAndOrderId(Integer sellerId, Integer orderId, Integer orderStatusId) {
 
         List<OrderPostProductDTO> orderPostProductList =
                 orderPostProductMapper.toOrderPostProductDTOList(orderPostProductRepository.getOrdersDetailBySellerIdAndOrderId(sellerId, orderId, orderStatusId));
 
-        OrderPostProductDTO previousOrderPostProduct = null;
+        List<OrderDetailResponse> postProductInOrder = getPostProductInOrder(orderPostProductList);
 
-        List<OrderDetailResponse> orderDetailResponse = new ArrayList<>();
+        OrdersDTO orders = ordersMapper.toOrdersDTO(ordersRepository.getOrderByStatus(orderId, orderStatusId));
 
-        List<VariationDetailDTO> variationDetailDTOList = new ArrayList<>();
+        if (orders != null) {
 
-        Map<Integer, List<VariationDetailDTO>> mapPostToVariationDetail = new HashMap<>();
-
-        for (OrderPostProductDTO currentOrderPostProduct : orderPostProductList) {
-
-            currentOrderPostProduct.getVariationDetail().getVariation().setVariationDetail(null);
-
-            if (previousOrderPostProduct != null &&
-                    currentOrderPostProduct.getOrder().getOrderId() == previousOrderPostProduct.getOrder().getOrderId() &&
-                    currentOrderPostProduct.getPostProduct().getPostProductId() == previousOrderPostProduct.getPostProduct().getPostProductId() &&
-                    currentOrderPostProduct.getVariationDetail().getVariationDetailId() != previousOrderPostProduct.getVariationDetail().getVariationDetailId()
-            ) {
-
-                mapPostToVariationDetail.get(currentOrderPostProduct.getPostProduct().getPostProductId()).add(currentOrderPostProduct.getVariationDetail());
-
-                continue;
-            } else if (
-                    previousOrderPostProduct != null &&
-                            currentOrderPostProduct.getOrder().getOrderId() != previousOrderPostProduct.getOrder().getOrderId() &&
-                            currentOrderPostProduct.getPostProduct().getPostProductId() != previousOrderPostProduct.getPostProduct().getPostProductId()
-            ) {
-
-                mapPostToVariationDetail.get(previousOrderPostProduct.getPostProduct().getPostProductId()).add(currentOrderPostProduct.getVariationDetail());
-
-            } else {
-
-                mapPostToVariationDetail.put(currentOrderPostProduct.getPostProduct().getPostProductId(), new ArrayList<>());
-
-                mapPostToVariationDetail.get(currentOrderPostProduct.getPostProduct().getPostProductId()).add(currentOrderPostProduct.getVariationDetail());
-            }
-
-            if (mapPostToVariationDetail.containsKey(currentOrderPostProduct.getPostProduct().getPostProductId())) {
-                variationDetailDTOList = mapPostToVariationDetail.get(currentOrderPostProduct.getPostProduct().getPostProductId());
-            }
-
-            orderDetailResponse.add(OrderDetailResponse.builder()
-                    .order(currentOrderPostProduct.getOrder())
-                    .postProduct(currentOrderPostProduct.getPostProduct())
-                    .priceBought(currentOrderPostProduct.getPriceBought() * 1000)
-                    .quantity(currentOrderPostProduct.getQuantity())
-                    .variationDetail(variationDetailDTOList)
-                    .build());
-
-            previousOrderPostProduct = currentOrderPostProduct;
+            orders.setTotalPrice(totalPriceInOrder(orderId));
 
         }
 
-        return orderDetailResponse;
+        return OrderDetailResponse.builder()
+                .order(orders)
+                .postProductInOrder(postProductInOrder)
+                .build();
+    }
+
+    private List<OrderDetailResponse> getPostProductInOrder(List<OrderPostProductDTO> orderPostProductList) {
+
+        List<OrderDetailResponse> postProductInOrder = new ArrayList<>();
+
+        OrderPostProductDTO previousOrderProductDTO = null;
+
+        for (OrderPostProductDTO currentOrderProductDTO : orderPostProductList) {
+
+            currentOrderProductDTO.getPostProduct().setPriceBought(currentOrderProductDTO.getPriceBought() * 1000);
+
+            if (previousOrderProductDTO != null) {
+
+                if (currentOrderProductDTO.getSttOrder() == previousOrderProductDTO.getSttOrder() &&
+                        currentOrderProductDTO.getVariationDetail().getVariationDetailId() != previousOrderProductDTO.getVariationDetail().getVariationDetailId()
+                ) {
+
+                    postProductInOrder.remove(previousOrderProductDTO);
+
+                    postProductInOrder.add(
+                            OrderDetailResponse.builder()
+                                    .postProduct(currentOrderProductDTO.getPostProduct())
+                                    .firstVariation(
+                                            previousOrderProductDTO.getVariationDetail().getVariation().getVariationName() + ": "
+                                                    + previousOrderProductDTO.getVariationDetail().getDescription()
+                                    )
+                                    .secondVariation(
+                                            currentOrderProductDTO.getVariationDetail().getVariation().getVariationName() + ": "
+                                                    + currentOrderProductDTO.getVariationDetail().getDescription()
+                                    )
+                                    .quantity(currentOrderProductDTO.getQuantity())
+                                    .build());
+                }
+            } else {
+
+                postProductInOrder.add(
+                        OrderDetailResponse.builder()
+                                .postProduct(currentOrderProductDTO.getPostProduct())
+                                .firstVariation(
+                                        currentOrderProductDTO.getVariationDetail().getVariation().getVariationName() + ": "
+                                                + currentOrderProductDTO.getVariationDetail().getDescription()
+                                )
+                                .quantity(currentOrderProductDTO.getQuantity())
+                                .build());
+            }
+
+            previousOrderProductDTO = currentOrderProductDTO;
+        }
+
+        return postProductInOrder;
+    }
+
+    private long totalPriceInOrder(Integer orderId) {
+
+        Orders orders = ordersRepository.getReferenceById(orderId);
+
+        Payment payment = paymentRepository.getReferenceById(orders.getPaymentId().getPaymentId());
+
+        Transactions transactions = transactionsRepository.getReferenceById(payment.getTransactionId().getTransactionsId());
+
+        return transactions.getTotalPrice() * 1000;
     }
 }

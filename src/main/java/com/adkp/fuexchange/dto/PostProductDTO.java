@@ -22,4 +22,6 @@ public class PostProductDTO {
     private String createDate;
 
     private String content;
+
+    private double priceBought;
 }

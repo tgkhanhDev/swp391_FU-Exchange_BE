@@ -3,13 +3,11 @@ package com.adkp.fuexchange.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OrderPostProductDTO {
 
-    private int orderPostProductId;
+    private int sttOrder;
 
     private OrdersDTO order;
 
@@ -19,6 +17,6 @@ public class OrderPostProductDTO {
 
     private int quantity;
 
-    private double priceBought;
+    private long priceBought;
 
 }
