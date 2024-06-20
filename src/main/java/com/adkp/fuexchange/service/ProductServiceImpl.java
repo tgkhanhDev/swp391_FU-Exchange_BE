@@ -2,14 +2,11 @@ package com.adkp.fuexchange.service;
 
 import com.adkp.fuexchange.dto.ProductDTO;
 import com.adkp.fuexchange.mapper.ProductMapper;
-import com.adkp.fuexchange.pojo.Product;
-import com.adkp.fuexchange.pojo.VariationDetail;
-import com.adkp.fuexchange.repository.ProductRepository;
-import com.adkp.fuexchange.repository.VariationDetailRepository;
-import com.adkp.fuexchange.request.UpdateInformationProductRequest;
-import com.adkp.fuexchange.response.ProductResponse;
-import com.adkp.fuexchange.response.ResponseObject;
-import com.adkp.fuexchange.response.VariationResponse;
+import com.adkp.fuexchange.mapper.VariationMapper;
+import com.adkp.fuexchange.pojo.*;
+import com.adkp.fuexchange.repository.*;
+import com.adkp.fuexchange.request.*;
+import com.adkp.fuexchange.response.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -25,18 +22,27 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-
+    private  final CategoryRepository categoryRepository;
+    private  final ProductDetailRepository productDetailRepository;
+    private  final VariationDetailRepository variationDetailRepository;
+    private  final VariationRepository variationRepository;
+    private final SellerRepository sellerRepository;
+    private final ProductImageRepository productImageRepository;
     private final ProductMapper productMapper;
-
-    private final VariationDetailRepository variationDetailRepository;
+    private final VariationMapper variationMapper;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper, VariationDetailRepository variationDetailRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ProductDetailRepository productDetailRepository, VariationDetailRepository variationDetailRepository, VariationRepository variationRepository, SellerRepository sellerRepository, ProductImageRepository productImageRepository, ProductMapper productMapper, VariationMapper variationMapper) {
         this.productRepository = productRepository;
-        this.productMapper = productMapper;
+        this.categoryRepository = categoryRepository;
+        this.productDetailRepository = productDetailRepository;
         this.variationDetailRepository = variationDetailRepository;
+        this.variationRepository = variationRepository;
+        this.sellerRepository = sellerRepository;
+        this.productImageRepository = productImageRepository;
+        this.productMapper = productMapper;
+        this.variationMapper = variationMapper;
     }
-
     @Override
     public ResponseObject<Object> viewMoreProduct(int current) {
         Pageable currentProduct = PageRequest.of(0, current);
@@ -51,10 +57,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseObject<Object> topProductByUserIdAndName(int sellerID, String productName, int current) {
+    public ResponseObject<Object> topProductByUserIdAndName(String studentId, String productName, int current) {
         Pageable currentProduct = PageRequest.of(0, current);
         String newProductName = Optional.ofNullable(productName).map(String::valueOf).orElse("");
-        List<ProductDTO> productDTO = productMapper.toProductDTOList(productRepository.filterSellerProduct(sellerID, newProductName, currentProduct));
+        Seller seller = sellerRepository.getInformationSellerByStudentId(studentId);
+
+        List<ProductDTO> productDTO = productMapper.toProductDTOList(productRepository.filterSellerProduct(seller.getSellerId(), newProductName, currentProduct));
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
@@ -73,6 +81,54 @@ public class ProductServiceImpl implements ProductService {
                 )
                 .build();
     }
+
+    @Override
+    @Transactional
+    public ResponseObject<Object> createProduct(RegisterProductRequest registerProductRequest) {
+        ProductDetail productDetail = new ProductDetail(registerProductRequest.getProductName(),registerProductRequest.getProductDescription());
+        productDetailRepository.save(productDetail);
+
+        for (ProductImageRequest productImageRequest : registerProductRequest.getProductImageRequestsList()) {
+            productImageRepository.save(new ProductImage(productDetail,productImageRequest.getImageUrl()));
+        }
+
+        Seller seller = sellerRepository.getInformationSellerByStudentId(registerProductRequest.getStudentId());
+
+        Product product = new Product(productDetail,sellerRepository.getReferenceById(seller.getSellerId())
+                ,categoryRepository.getReferenceById(registerProductRequest.getCategoryId()),registerProductRequest.getPrice()
+                ,true);
+        productRepository.save(product);
+
+        List<RegisterVariationResponse> variationList = new ArrayList<>();
+        List<RegisterVariationDetailResponse>variationDetailResponseList = new ArrayList<>();
+        for(VariationRequest variationRequest : registerProductRequest.getVariationList()){
+            Variation variation = new Variation(variationRequest.getVariationName(),product);
+            variationRepository.save(variation);
+
+
+            for(VariationDetailRequest variationDetailRequest: variationRequest.getVariationDetailRequestList()){
+                variationDetailRepository.save(new VariationDetail(variation,variationDetailRequest.getDescription()));
+                variationDetailResponseList.add(new RegisterVariationDetailResponse(variationDetailRequest.getDescription()));
+                variationList.add(new RegisterVariationResponse(variation.getVariationId(),variation.getVariationName(),variationDetailResponseList));
+            }
+
+
+
+        }
+
+
+
+
+
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Tạo sản phẩm thành công!").data(new RegisterProductRespone(product.getProductId()
+                        ,product.getSellerId().getSellerId(),product.getCategoryId(),product.getPrice(),product.isProductStatus()
+                        ,variationList,productDetail))
+                .build();
+    }
+
 
     @Override
     @Transactional
