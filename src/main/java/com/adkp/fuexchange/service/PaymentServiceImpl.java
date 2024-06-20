@@ -111,7 +111,8 @@ public class PaymentServiceImpl implements PaymentService {
             postProductId.add(key);
         });
 
-        List<PostProduct> postProductList = postProductRepository.getListPostProductById(postProductId);
+        List<PostProduct> postProductList = postProductRepository.findAllById(postProductId);
+
         for (PostProduct postProduct : postProductList) {
             int quantity = quantityEachPost.get(postProduct.getPostProductId());
 

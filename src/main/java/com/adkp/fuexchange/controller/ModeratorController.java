@@ -1,5 +1,7 @@
 package com.adkp.fuexchange.controller;
 
+import com.adkp.fuexchange.dto.OrdersDTO;
+import com.adkp.fuexchange.dto.PostProductDTO;
 import com.adkp.fuexchange.dto.SellerDTO;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.ModeratorService;
@@ -27,7 +29,7 @@ public class ModeratorController {
     }
 
     @GetMapping("/view-register-to-seller-request")
-    public ResponseObject<Object> getRegisterToSellerRequest(){
+    public ResponseObject<Object> getRegisterToSellerRequest() {
         List<SellerDTO> sellerDTO = moderatorService.viewRegisterToSellerRequest();
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
@@ -36,4 +38,31 @@ public class ModeratorController {
                 .data(sellerDTO)
                 .build();
     }
+
+    @GetMapping("/view-create-order-request")
+    public ResponseObject<Object> viewCreateOrderRequest() {
+
+        List<OrdersDTO> ordersDTO = moderatorService.viewCreateOrderRequest();
+
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Xem thông tin thành công!")
+                .data(ordersDTO)
+                .build();
+    }
+
+    @GetMapping("/view-create-post-product")
+    public ResponseObject<Object> viewCreatePostProduct() {
+
+        List<PostProductDTO> postProductDTO = moderatorService.viewCreatePostProductRequest();
+
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Xem thông tin thành công!")
+                .data(postProductDTO)
+                .build();
+    }
+
 }

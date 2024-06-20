@@ -2,8 +2,10 @@ package com.adkp.fuexchange.service;
 
 import com.adkp.fuexchange.dto.PostProductDTO;
 import com.adkp.fuexchange.mapper.PostProductMapper;
-import com.adkp.fuexchange.pojo.PostProduct;
+import com.adkp.fuexchange.mapper.ProductMapper;
+import com.adkp.fuexchange.pojo.*;
 import com.adkp.fuexchange.repository.*;
+import com.adkp.fuexchange.request.CreatePostProductRequest;
 import com.adkp.fuexchange.request.UpdatePostProductRequest;
 import com.adkp.fuexchange.response.MetaResponse;
 import com.adkp.fuexchange.response.ResponseObject;
@@ -14,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,14 +35,20 @@ public class PostProductServiceImpl implements PostProductService {
 
     private final CampusRepository campusRepository;
 
+    private final ReviewRepository reviewRepository;
+
+    private final ProductMapper productMapper;
+
     @Autowired
-    public PostProductServiceImpl(PostProductRepository postProductRepository, PostProductMapper postProductMapper, ProductRepository productRepository, PostTypeRepository postTypeRepository, PostStatusRepository postStatusRepository, CampusRepository campusRepository) {
+    public PostProductServiceImpl(PostProductRepository postProductRepository, PostProductMapper postProductMapper, ProductRepository productRepository, PostTypeRepository postTypeRepository, PostStatusRepository postStatusRepository, CampusRepository campusRepository, ReviewRepository reviewRepository, ProductMapper productMapper) {
         this.postProductRepository = postProductRepository;
         this.postProductMapper = postProductMapper;
         this.productRepository = productRepository;
         this.postTypeRepository = postTypeRepository;
         this.postStatusRepository = postStatusRepository;
         this.campusRepository = campusRepository;
+        this.reviewRepository = reviewRepository;
+        this.productMapper = productMapper;
     }
 
     @Override
@@ -65,31 +74,79 @@ public class PostProductServiceImpl implements PostProductService {
 
     @Override
     public ResponseObject<Object> getPostProductById(int postProductId) {
+
+        PostProductDTO postProductDTO =
+                postProductMapper.toPostProductDTO(postProductRepository.getPostProductByPostId(postProductId));
+
+        Integer totalReview = reviewRepository.countReviewByPostProductId(postProductId);
+
+        Double totalRating = reviewRepository.calcAvgRatingByPostProductId(postProductId);
+
+        if (totalReview != null && totalRating != null) {
+
+            postProductDTO.setTotalReview(totalReview);
+
+            postProductDTO.setTotalRating(totalRating);
+
+        }
+
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
                 .content("Xem thông tin thành công!")
-                .data(
-                        postProductMapper.toPostProductDTO(postProductRepository.getPostProductByPostId(postProductId))
-                )
+                .data(postProductDTO)
                 .build();
     }
 
     @Override
     @Transactional
     public PostProductDTO updatePostProduct(UpdatePostProductRequest updatePostProductRequest) {
+
         PostProduct postProduct = postProductRepository.getReferenceById(updatePostProductRequest.getPostProductId());
+
+        Product product = productRepository.getReferenceById(updatePostProductRequest.getProductId());
+
+        PostType postType = postTypeRepository.getReferenceById(updatePostProductRequest.getPostTypeId());
+
+        Campus campus = campusRepository.getReferenceById(updatePostProductRequest.getCampusId());
+
+        postProduct.setProductId(product);
+
+        postProduct.setPostTypeId(postType);
+
+        postProduct.setCampusId(campus);
+
+        postProduct.setQuantity(updatePostProductRequest.getQuantity());
+
+        postProduct.setCreateDate(LocalDateTime.now());
+
+        postProduct.setContent(updatePostProductRequest.getContent());
+
+        return postProductMapper.toPostProductDTO(postProduct);
+    }
+
+    @Override
+    @Transactional
+    public PostProductDTO createPostProduct(CreatePostProductRequest createPostProductRequest) {
+
+        Product product = productRepository.getReferenceById(createPostProductRequest.getProductId());
+
+        PostType postType = postTypeRepository.getReferenceById(createPostProductRequest.getPostTypeId());
+
+        Campus campus = campusRepository.getReferenceById(createPostProductRequest.getCampusId());
+
+        PostStatus postStatus = postStatusRepository.getReferenceById(2);
 
         return postProductMapper.toPostProductDTO(
                 postProductRepository.save(
                         PostProduct.builder()
-                                .productId(productRepository.getReferenceById(updatePostProductRequest.getProductId()))
-                                .postTypeId(postTypeRepository.getReferenceById(updatePostProductRequest.getPostTypeId()))
-                                .campusId(campusRepository.getReferenceById(updatePostProductRequest.getCampusId()))
-                                .postStatusId(postStatusRepository.getReferenceById(updatePostProductRequest.getPostStatusId()))
-                                .createDate(updatePostProductRequest.getCreateDate())
-                                .quantity(updatePostProductRequest.getQuantity())
-                                .content(updatePostProductRequest.getContent())
+                                .productId(product)
+                                .postTypeId(postType)
+                                .campusId(campus)
+                                .postStatusId(postStatus)
+                                .quantity(createPostProductRequest.getQuantity())
+                                .createDate(LocalDateTime.now())
+                                .content(createPostProductRequest.getContent())
                                 .build()
                 )
         );
@@ -101,6 +158,4 @@ public class PostProductServiceImpl implements PostProductService {
         }
         return postProductDTOList.size();
     }
-
-
 }

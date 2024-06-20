@@ -1,10 +1,12 @@
 package com.adkp.fuexchange.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+@Builder
 public class PostProductDTO {
 
     private int postProductId;
@@ -24,4 +26,8 @@ public class PostProductDTO {
     private String content;
 
     private double priceBought;
+
+    private int totalReview;
+
+    private Double totalRating;
 }

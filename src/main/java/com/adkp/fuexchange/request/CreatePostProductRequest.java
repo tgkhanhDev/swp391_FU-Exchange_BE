@@ -4,11 +4,10 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-@Data
-public class UpdatePostProductRequest {
+import java.time.LocalDateTime;
 
-    @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
-    private int postProductId;
+@Data
+public class CreatePostProductRequest {
 
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
     private Integer productId;
@@ -24,4 +23,5 @@ public class UpdatePostProductRequest {
 
     @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
     private String content;
+
 }
