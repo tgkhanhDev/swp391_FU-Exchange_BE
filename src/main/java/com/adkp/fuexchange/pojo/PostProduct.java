@@ -40,6 +40,7 @@ public class PostProduct {
 
     private int quantity;
 
+
     private LocalDateTime createDate;
 
     private String content;

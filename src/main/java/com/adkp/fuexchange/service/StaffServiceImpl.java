@@ -2,7 +2,7 @@ package com.adkp.fuexchange.service;
 
 import com.adkp.fuexchange.dto.PostProductDTO;
 import com.adkp.fuexchange.dto.StaffDTO;
-import com.adkp.fuexchange.mapper.StaffMapper;
+
 import com.adkp.fuexchange.pojo.Roles;
 import com.adkp.fuexchange.pojo.Staff;
 import com.adkp.fuexchange.repository.RoleRepository;
@@ -29,13 +29,13 @@ import java.util.Optional;
 @Service
 public class StaffServiceImpl implements StaffService {
     private final StaffRepository staffRepository;
-    private final StaffMapper staffMapper;
+
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public StaffServiceImpl(StaffRepository staffRepository, StaffMapper staffMapper, PasswordEncoder passwordEncoder) {
+    public StaffServiceImpl(StaffRepository staffRepository, PasswordEncoder passwordEncoder) {
         this.staffRepository = staffRepository;
-        this.staffMapper = staffMapper;
+
         this.passwordEncoder = passwordEncoder;
     }
 
