@@ -57,10 +57,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseObject<Object> topProductByUserIdAndName(int sellerID, String productName, int current) {
+    public ResponseObject<Object> topProductByUserIdAndName(String studentId, String productName, int current) {
         Pageable currentProduct = PageRequest.of(0, current);
         String newProductName = Optional.ofNullable(productName).map(String::valueOf).orElse("");
-        List<ProductDTO> productDTO = productMapper.toProductDTOList(productRepository.filterSellerProduct(sellerID, newProductName, currentProduct));
+        Seller seller = sellerRepository.getInformationSellerByStudentId(studentId);
+
+        List<ProductDTO> productDTO = productMapper.toProductDTOList(productRepository.filterSellerProduct(seller.getSellerId(), newProductName, currentProduct));
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())

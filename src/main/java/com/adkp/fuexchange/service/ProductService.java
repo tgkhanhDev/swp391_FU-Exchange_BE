@@ -11,7 +11,7 @@ import java.util.List;
 public interface ProductService {
     ResponseObject<Object> viewMoreProduct(int current);
 
-    ResponseObject<Object> topProductByUserIdAndName(int sellerID, String productName, int current);
+    ResponseObject<Object> topProductByUserIdAndName(String studentId, String productName, int current);
 
     ResponseObject<Object> getProductByProductID(int productID);
     ResponseObject<Object> createProduct(RegisterProductRequest registerProductRequest);
