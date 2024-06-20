@@ -101,15 +101,7 @@ public class RegisteredStudentServiceImpl implements RegisteredStudentService {
 
         List<OrderDetailResponse> postProductInOrder = getPostProductInOrder(orderPostProductList);
 
-        OrdersDTO orders = ordersMapper.toOrdersDTO(ordersRepository.getOrderByStatus(orderId, orderStatusId));
-
-        if(orders != null){
-
-            orders.setTotalPrice(totalPriceInOrder(orderId));
-
-        }
         return OrderDetailResponse.builder()
-                .order(orders)
                 .postProductInOrder(postProductInOrder)
                 .build();
     }
