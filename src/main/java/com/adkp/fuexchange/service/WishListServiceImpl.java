@@ -141,15 +141,8 @@ public class WishListServiceImpl implements WishListService {
        WishList wishList = wishListRepository.getReferenceById(wishListID);
        PostProduct postProduct = postProductRepository.getReferenceById(wishList.getPostProductId().getPostProductId());
 
-       // check thu product la active false hay true
-        if(active==1&&(postProduct.getProductId().isProductStatus()==false)){
-            return ResponseObject.builder()
-                    .status(HttpStatus.BAD_REQUEST.value())
-                    .message(HttpStatus.BAD_REQUEST.name())
-                    .content("sản phẩm cần được đổi trạng thái khả dụng để giao dịch!")
-                    .data(WishListRespone.builder().isActive(wishList.isActive()).build())
-                    .build();
-        }
+
+
 
       // xem thu post product dang trang thai chap nhan giao dich ko và phai ve poststatus ==4 moi giao dich dc
        if(active==1&&(postProduct.getPostStatusId().getPostStatusId()!=4)){
