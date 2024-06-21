@@ -32,5 +32,8 @@ public interface OrderPostProductRepository extends JpaRepository<OrderPostProdu
     List<OrderPostProduct> getOrdersDetailByRegisteredStudentId(
             @Param("registeredStudentId") Integer registeredStudentId, @Param("orderId") Integer orderId
     );
+    @Query("SELECT odpprd From OrderPostProduct odpprd WHERE " +
+            "odpprd.postProductId.postProductId = :postProductId ")
+    List<OrderPostProduct> getOrdersPostProductId(@Param("postProductId") Integer postProductId);
 
 }
