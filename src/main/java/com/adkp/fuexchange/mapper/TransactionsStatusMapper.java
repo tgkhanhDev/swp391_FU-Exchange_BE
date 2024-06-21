@@ -3,7 +3,6 @@ package com.adkp.fuexchange.mapper;
 import com.adkp.fuexchange.dto.TransactionsStatusDTO;
 import com.adkp.fuexchange.pojo.Transactions;
 import com.adkp.fuexchange.pojo.TransactionsStatus;
-import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -18,10 +17,6 @@ public interface TransactionsStatusMapper {
     @Mapping(source = "transactionId", target = "transactionId")
     TransactionsStatusDTO toTransactionsStatusDTO(TransactionsStatus transactionsStatus);
 
-    @InheritInverseConfiguration(name = "toTransactionsStatusDTO")
-    TransactionsStatus toTransactionsStatus(TransactionsStatusDTO transactionsStatusDTO);
-
     List<TransactionsStatusDTO> toTransactionsStatusDTOList(List<TransactionsStatus> transactionsStatus);
 
-    List<TransactionsStatus> toTransactionsStatusList(List<TransactionsStatusDTO> transactionsStatusDTOList);
 }

@@ -13,8 +13,11 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     List<Product> topProduct(Pageable pageable);
     @Query("SELECT prd FROM Product prd WHERE prd.sellerId.sellerId = :sellerId " +
             "AND prd.productDetailId.productName LIKE %:productName%")
+
     List<Product>filterSellerProduct(@Param("sellerId") int sellerID,@Param("productName") String productName, Pageable pageable );
     @Query("SELECT prd FROM Product prd WHERE prd.productId = :productId ")
     List<Product>getProductByProductID(@Param("productId") int productID );
 
+    @Query("SELECT vrat.productId FROM Variation vrat WHERE vrat.variationId In :variationId ")
+    Product getProductByVariationId(@Param("variationId") List<Integer> variationId);
 }

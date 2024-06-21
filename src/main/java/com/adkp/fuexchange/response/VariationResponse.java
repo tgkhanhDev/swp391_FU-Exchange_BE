@@ -1,15 +1,17 @@
 package com.adkp.fuexchange.response;
 
+import com.adkp.fuexchange.pojo.VariationDetail;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class VariationResponse {
 
     private int variationId;
+
     private String variationName;
 
-    public VariationResponse(int variationId, String variationName) {
-        this.variationId = variationId;
-        this.variationName = variationName;
-    }
+    private VariationDetail variationDetail;
+
 }

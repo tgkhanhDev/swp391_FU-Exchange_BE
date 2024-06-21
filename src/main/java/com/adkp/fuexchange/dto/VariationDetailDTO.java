@@ -1,16 +1,15 @@
 package com.adkp.fuexchange.dto;
 
-import com.adkp.fuexchange.pojo.Variation;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class VariationDetailDTO {
 
-    private int variationDetailId;
+    private VariationDTO variation;
 
-    @JsonIgnore
-    private Variation variationId;
+    private int variationDetailId;
 
     private String description;
 }

@@ -2,7 +2,6 @@ package com.adkp.fuexchange.mapper;
 
 import com.adkp.fuexchange.dto.ReviewDTO;
 import com.adkp.fuexchange.pojo.Review;
-import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -19,12 +18,9 @@ public interface ReviewMapper {
     @Mapping(source = "orderId.orderId", target = "orderId")
     @Mapping(source = "ratingNumber", target = "rating")
     @Mapping(source = "description", target = "description")
+    @Mapping(source = "createTime", target = "createTime")
     ReviewDTO toReviewDTO(Review review);
-
-    @InheritInverseConfiguration(name = "toReviewDTO")
-    Review toReview(ReviewDTO reviewDTO);
 
     List<ReviewDTO> toReviewDTOList(List<Review> reviewList);
 
-    List<Review> toReviewList(List<ReviewDTO> reviewDTOList);
 }

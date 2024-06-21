@@ -1,10 +1,7 @@
 package com.adkp.fuexchange.response;
 
 import com.adkp.fuexchange.pojo.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -12,17 +9,17 @@ import java.util.List;
 
 public class RegisterProductRespone {
     private int productId;
-    private String sellerId;
+    private int sellerId;
     private Category categoryId;
     private double price;
     private boolean productStatus;
-    private List<VariationResponse> variationList;
+    private List<RegisterVariationResponse> variationList;
 
     private ProductDetail productDetail;
 
-    public RegisterProductRespone(int productId, String sellerId,
+    public RegisterProductRespone(int productId, int sellerId,
                                   Category categoryId, double price,
-                                  boolean productStatus, List<VariationResponse> variationList,
+                                  boolean productStatus, List<RegisterVariationResponse> variationList,
                                   ProductDetail productDetail) {
         this.productId = productId;
         this.sellerId = sellerId;

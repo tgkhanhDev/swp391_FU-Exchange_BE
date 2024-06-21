@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor(force = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -17,23 +19,25 @@ public class WishList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int wishListId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "postProductId", referencedColumnName = "postProductId")
     private PostProduct postProductId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "registeredStudentId", referencedColumnName = "registeredStudentId")
     private RegisteredStudent registeredStudentId;
 
-    private LocalDate createDate;
+    private LocalDateTime createDate;
+
+    private int quantity;
 
     private boolean isActive;
 
-    public WishList(PostProduct postProductId, RegisteredStudent registeredStudentId, LocalDate createDate, boolean isActive) {
+    public WishList(PostProduct postProductId, RegisteredStudent registeredStudentId, LocalDateTime createDate, int quantity, boolean isActive) {
         this.postProductId = postProductId;
         this.registeredStudentId = registeredStudentId;
         this.createDate = createDate;
+        this.quantity = quantity;
         this.isActive = isActive;
     }
-
 }

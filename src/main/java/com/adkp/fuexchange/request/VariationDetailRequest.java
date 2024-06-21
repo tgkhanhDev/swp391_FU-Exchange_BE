@@ -7,9 +7,6 @@ import lombok.Data;
 @Data
 public class VariationDetailRequest {
 
-
-   private int variationId;
-
     private String description;
 
 }

@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -25,25 +26,18 @@ public class UpdateInformationProductRequest {
 
     private Integer categoryId;
 
-
     private double price;
 
-
-    //product img
     private int productImageId;
-
 
     private String imageUrl;
 
-    // variation
     private int variationId;
 
     private String variationName;
 
-
-    //cariation detail
-
     private int variationDetailId;
+
     private String description;
 
 

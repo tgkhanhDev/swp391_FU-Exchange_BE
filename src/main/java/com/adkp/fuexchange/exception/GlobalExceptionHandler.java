@@ -6,6 +6,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,6 +35,15 @@ public class GlobalExceptionHandler {
                 .build();
     }
 
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseObject<Object> dataAccessException(BadCredentialsException badCredentialsException) {
+        return ResponseObject.builder()
+                .status(HttpStatus.FORBIDDEN.value())
+                .message(HttpStatus.FORBIDDEN.name())
+                .content("Không có quyền truy cập vào trang web!")
+                .build();
+    }
+
 //    @ExceptionHandler(Exception.class)
 //    public ResponseObject exception(Exception exception) {
 //        return ResponseObject.builder()
@@ -57,7 +67,7 @@ public class GlobalExceptionHandler {
         return ResponseObject.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
                 .message(HttpStatus.BAD_REQUEST.name())
-                .content("Lỗi không toàn vẹn dữ liệu!")
+                .content(exception.getMessage())
                 .build();
     }
 

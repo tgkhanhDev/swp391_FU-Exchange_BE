@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -16,5 +18,6 @@ public class VariationRequest {
 
     @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
     private String variationName;
+    private List<VariationDetailRequest> variationDetailRequestList;
 
 }

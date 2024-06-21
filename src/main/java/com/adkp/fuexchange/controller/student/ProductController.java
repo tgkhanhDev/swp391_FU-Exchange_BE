@@ -1,28 +1,24 @@
 package com.adkp.fuexchange.controller.student;
 
 import com.adkp.fuexchange.request.RegisterProductRequest;
-import com.adkp.fuexchange.request.UpdateProductStatusRequest;
-import com.adkp.fuexchange.service.ProductService;
-import io.swagger.v3.oas.annotations.Operation;
-import jakarta.validation.Valid;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.adkp.fuexchange.request.UpdateInformationProductRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.ProductServiceImpl;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/product")
 @Tag(name = "Product")
-@Validated
 public class ProductController {
-    private final ProductService productService;
+    private final ProductServiceImpl productService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductServiceImpl productService) {
         this.productService = productService;
     }
 
@@ -31,9 +27,9 @@ public class ProductController {
     public ResponseObject<Object> viewMoreProduct(
             @PathVariable("current") int current,
             @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "sellerID", required = true) int sellerID
+            @RequestParam(value = "studentId", required = true) String studentId
     ) {
-        return productService.topProductByUserIdAndName(sellerID, name, current);
+        return productService.topProductByUserIdAndName(studentId, name, current);
 
     }
 
@@ -44,25 +40,22 @@ public class ProductController {
     ) {
         return productService.getProductByProductID(productID);
     }
-
     @Operation(summary = "Create a product")
     @PostMapping("/create-product")
     public ResponseObject<Object> createAProduct(
             @Valid @RequestBody RegisterProductRequest registerProductRequest
-            ) {
+    ) {
         return productService.createProduct(registerProductRequest);
     }
 
+    @PutMapping("/update-information")
+    public ResponseObject<Object> updateInformation(@RequestBody UpdateInformationProductRequest updateInformationProductRequest
+    ) {
 
-
-    @Operation(summary = "Update a product")
-    @PutMapping(value = "/update-information", consumes = "application/json;charset=UTF-8")
-    public ResponseObject<Object> UpdateInformation(@Valid @RequestBody UpdateInformationProductRequest updateInformationProductRequest) {
-
-        if (updateInformationProductRequest.getProductID() != null
-
+        if (updateInformationProductRequest.getProductDetailIdProductName() != null
+                && updateInformationProductRequest.getPrice() >= 0
         ) {
-           return productService.updateProductInformation(updateInformationProductRequest);
+            return productService.updateProductInformation(updateInformationProductRequest);
         }
         return ResponseObject.builder()
                 .status(HttpStatus.BAD_REQUEST.value())
@@ -71,17 +64,15 @@ public class ProductController {
                 .build();
     }
 
-    @Operation(summary = "Delete a product")
-    @PutMapping(value = "/update-status")
-    public ResponseObject<Object> UpdateStatus(@RequestBody UpdateProductStatusRequest updateProductStatusRequest ){
-       if(updateProductStatusRequest!=null){
+    @PostMapping("/get-by-variation")
+    @Operation(summary = "Get product by variation detail")
+    public ResponseObject<Object> getProductVariationId(@RequestBody List<Integer> variationDetailId) {
 
-           return productService.updateStatus(updateProductStatusRequest);
-       }
         return ResponseObject.builder()
-                .status(HttpStatus.BAD_REQUEST.value())
-                .message(HttpStatus.BAD_REQUEST.name())
-                .content("Không tìm thấy thông tin sản phẩm ")
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .data(productService.getProductByVariationDetailId(variationDetailId))
+                .content("Lấy sản phẩm thành công")
                 .build();
     }
 }

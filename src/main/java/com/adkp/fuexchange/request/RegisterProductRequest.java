@@ -20,7 +20,7 @@ public class RegisterProductRequest {
 
 
 
-    private int sellerId;
+    private String studentId;
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
     private int categoryId;
     @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
@@ -31,8 +31,8 @@ public class RegisterProductRequest {
 
 
 
-   List<VariationRequest> variationList;
+    List<VariationRequest> variationList;
 
-   List<ProductImageRequest> productImageRequestsList;
+    List<ProductImageRequest> productImageRequestsList;
 
 }

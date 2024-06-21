@@ -2,6 +2,7 @@ package com.adkp.fuexchange.controller;
 
 import com.adkp.fuexchange.request.LoginRequest;
 import com.adkp.fuexchange.request.RegisterRequest;
+import com.adkp.fuexchange.request.StaffLoginRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -64,5 +65,10 @@ public class AuthenticateController {
     @GetMapping("/isRegistered/{studentId}")
     public ResponseObject<Object> IsRegistered(@PathVariable String studentId) {
         return authenticationService.isRegistered(studentId);
+    }
+
+    @PostMapping("/staff/login")
+    public ResponseObject<Object> loginStaff(@RequestBody @Valid StaffLoginRequest staffLoginRequest) {
+        return authenticationService.staffLogin(staffLoginRequest);
     }
 }

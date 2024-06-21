@@ -14,7 +14,8 @@ public interface PostProductRepository extends JpaRepository<PostProduct, Intege
 
     @Query(
             "SELECT pprd FROM PostProduct pprd " +
-                    "WHERE pprd.postProductId =  :postProductId"
+                    "WHERE pprd.postProductId =  :postProductId " +
+                    "AND pprd.postStatusId.postStatusId = 4"
     )
     PostProduct getPostProductByPostId(@Param("postProductId") Integer postProductId);
 
@@ -22,7 +23,8 @@ public interface PostProductRepository extends JpaRepository<PostProduct, Intege
             value = "SELECT pprd.* FROM PostProduct pprd " +
                     "JOIN Product p ON pprd.productId = p.productId " +
                     "JOIN ProductDetail pd ON p.productDetailId = pd.productDetailId " +
-                    "WHERE pprd.campusId LIKE CONCAT('%', :campus, '%') " +
+                    "WHERE pprd.postStatusId = 4 " +
+                    "AND pprd.campusId LIKE CONCAT('%', :campus, '%') " +
                     "AND pprd.postTypeId LIKE CONCAT('%', :postType, '%') " +
                     "AND pd.productName LIKE CONCAT('%', :name, '%') " +
                     "AND p.categoryId LIKE CONCAT('%', :category, '%')",
@@ -32,4 +34,7 @@ public interface PostProductRepository extends JpaRepository<PostProduct, Intege
             Pageable pageable, @Param("campus") String campus, @Param("postType") String postType,
             @Param("name") String name, @Param("category") String categoryId
     );
+
+    @Query("Select pprd From PostProduct pprd Where pprd.postStatusId.postStatusId = 2")
+    List<PostProduct> viewCreateOrderRequest();
 }

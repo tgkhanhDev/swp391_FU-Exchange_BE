@@ -6,13 +6,11 @@ import lombok.Data;
 
 @Data
 public class RegisterVariationDetailResponse {
-    private int variationDetailId;
-    private int variationId;
+
     private String description;
 
-    public RegisterVariationDetailResponse(int variationDetailId, int variationId, String description) {
-        this.variationDetailId = variationDetailId;
-        this.variationId = variationId;
+    public RegisterVariationDetailResponse( String description) {
+
         this.description = description;
     }
 }

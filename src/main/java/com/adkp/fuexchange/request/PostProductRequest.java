@@ -7,7 +7,13 @@ import lombok.Data;
 public class PostProductRequest {
 
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
+    private int sttOrder;
+
+    @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
     private int postProductId;
+
+    @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
+    private int variationId;
 
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
     private int variationDetailId;

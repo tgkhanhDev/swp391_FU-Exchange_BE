@@ -2,7 +2,6 @@ package com.adkp.fuexchange.mapper;
 
 import com.adkp.fuexchange.dto.PostProductDTO;
 import com.adkp.fuexchange.pojo.PostProduct;
-import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
@@ -24,10 +23,6 @@ public interface PostProductMapper {
     @Mapping(source = "content", target = "content")
     PostProductDTO toPostProductDTO(PostProduct postProduct);
 
-    @InheritInverseConfiguration(name = "toPostProductDTO")
-    PostProduct toPostProduct(PostProductDTO postProductDTO);
-
     List<PostProductDTO> toPostProductDTOList(List<PostProduct> postProductList);
 
-    List<PostProduct> toPostProductList(List<PostProductDTO> productDTOList);
 }

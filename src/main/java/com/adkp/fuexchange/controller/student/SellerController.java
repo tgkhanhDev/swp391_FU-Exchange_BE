@@ -26,12 +26,60 @@ public class SellerController {
         this.sellerService = sellerService;
     }
 
+    @Operation(summary = "view order for seller by seller id")
+    @GetMapping("/order/{sellerId}")
+    public ResponseObject<Object> getOrderBySellerId(@PathVariable("sellerId") Integer sellerId) {
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .data(sellerService.getOrderBySellerId(sellerId))
+                .content("Xem thành công!")
+                .build();
+    }
+
+    @Operation(summary = "view order detail for seller by seller id")
+    @GetMapping("/order-detail/{sellerId}/{orderId}")
+    public ResponseObject<Object> getOrderDetailBySellerIdAndOrderId(
+            @PathVariable("sellerId") Integer sellerId,
+            @PathVariable("orderId") Integer orderId,
+            @RequestParam("orderStatusId") Integer orderStatusId
+    ) {
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .data(sellerService.getOrderDetailBySellerIdAndOrderId(sellerId, orderId, orderStatusId))
+                .content("Xem thành công!")
+                .build();
+    }
+
     @Operation(summary = "View profile of seller by sellerId")
     @GetMapping("/{sellerId}")
     public ResponseObject<Object> viewInformationSellerById(
             @PathVariable int sellerId
     ) {
         return sellerService.viewInformationSellerById(sellerId);
+    }
+
+    @Operation(summary = "View profile of seller by studentId")
+    @GetMapping("/information/{studentId}")
+    public ResponseObject<Object> viewInformationSellerByStudentId(
+            @PathVariable("studentId") String studentId
+    ) {
+        if (sellerService.getInformationSellerByStudentId(studentId) == null) {
+            return ResponseObject.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .message(HttpStatus.BAD_REQUEST.name())
+                    .content("Sinh viên chưa đăng ký trở thành người bán!")
+                    .build();
+        }
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Xem thông tin thành công!")
+                .data(
+                        sellerService.getInformationSellerByStudentId(studentId)
+                )
+                .build();
     }
 
     @Operation(summary = "Register to seller")
@@ -62,17 +110,21 @@ public class SellerController {
 
     @Operation(summary = "Update status of seller")
     @PutMapping("/update-status")
-    public ResponseObject<Object> updateStatusSeller(@RequestBody UpdateStatusRequest updateStatusRequest) {
+    public ResponseObject<Object> updateStatusSeller(@RequestBody @Valid UpdateStatusRequest updateStatusRequest) {
 
-        if (
-                updateStatusRequest.getIsActive() != null && updateStatusRequest.getSellerId() != null
-        ) {
             return sellerService.updateStatusSeller(updateStatusRequest);
-        }
+    }
+
+    @Operation(summary = "delete of seller")
+    @DeleteMapping("/{sellerId}")
+    public ResponseObject<Object>deleteSellerByID(
+            @PathVariable("sellerId") int sellerId
+    ){
+        sellerService.deleteSellerByID(sellerId);
         return ResponseObject.builder()
-                .status(HttpStatus.BAD_REQUEST.value())
-                .message(HttpStatus.BAD_REQUEST.name())
-                .content("Vui lòng nhập đầy đủ thông tin")
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Xóa thành công")
                 .build();
     }
 

@@ -7,12 +7,16 @@ import com.adkp.fuexchange.request.PostProductRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -37,8 +41,10 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final TransactionsStatusRepository transactionsStatusRepository;
 
+    private final PostStatusRepository postStatusRepository;
+
     @Autowired
-    public PaymentServiceImpl(OrdersRepository ordersRepository, PaymentRepository paymentRepository, TransactionsRepository transactionsRepository, RegisteredStudentRepository registeredStudentRepository, OrdersStatusRepository ordersStatusRepository, PaymentMethodRepository paymentMethodRepository, OrderPostProductRepository orderPostProductRepository, PostProductRepository postProductRepository, VariationDetailRepository variationDetailRepository, TransactionsStatusRepository transactionsStatusRepository) {
+    public PaymentServiceImpl(OrdersRepository ordersRepository, PaymentRepository paymentRepository, TransactionsRepository transactionsRepository, RegisteredStudentRepository registeredStudentRepository, OrdersStatusRepository ordersStatusRepository, PaymentMethodRepository paymentMethodRepository, OrderPostProductRepository orderPostProductRepository, PostProductRepository postProductRepository, VariationDetailRepository variationDetailRepository, TransactionsStatusRepository transactionsStatusRepository, PostStatusRepository postStatusRepository) {
         this.ordersRepository = ordersRepository;
         this.paymentRepository = paymentRepository;
         this.transactionsRepository = transactionsRepository;
@@ -49,19 +55,25 @@ public class PaymentServiceImpl implements PaymentService {
         this.postProductRepository = postProductRepository;
         this.variationDetailRepository = variationDetailRepository;
         this.transactionsStatusRepository = transactionsStatusRepository;
+        this.postStatusRepository = postStatusRepository;
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackOn = {DataIntegrityViolationException.class})
     public ResponseObject<Object> payOrders(OrdersRequest ordersRequest) {
         boolean paymentStatus = false;
+
+        long totalPrice = totalPrice(ordersRequest.getPostProductToBuyRequests());
+
         Orders ordersSaved = saveOrderAndOrderPostProduct(ordersRequest);
 
         if (ordersRequest.getPaymentMethodId() == 2) {
+
             paymentStatus = true;
+
         }
 
-        savePaymentAndTransaction(ordersRequest, ordersSaved, paymentStatus);
+        savePaymentAndTransaction(ordersRequest.getPaymentMethodId(), ordersSaved, paymentStatus, totalPrice);
 
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
@@ -70,31 +82,60 @@ public class PaymentServiceImpl implements PaymentService {
                 .build();
     }
 
-    private double totalPrice(List<PostProductRequest> postProductRequestList) {
-        double totalPrice = 0;
+    private long totalPrice(List<PostProductRequest> postProductRequestList) {
+        long totalPrice = 0;
+
+        Map<Integer, Integer> quantityEachPost = new HashMap<>();
 
         PostProductRequest previousProduct = null;
         for (PostProductRequest currentProduct : postProductRequestList) {
             if (previousProduct != null &&
-                    currentProduct.getPostProductId() == previousProduct.getPostProductId() &&
-                    currentProduct.getVariationDetailId() != previousProduct.getVariationDetailId()) {
-                continue;
+                    currentProduct.getSttOrder() == previousProduct.getSttOrder()
+            ) {
+                if (currentProduct.getPostProductId() != previousProduct.getPostProductId()) {
+                    quantityEachPost.merge(currentProduct.getPostProductId(), currentProduct.getQuantity(), Integer::sum);
+                }
             } else {
+                quantityEachPost.merge(currentProduct.getPostProductId(), currentProduct.getQuantity(), Integer::sum);
                 totalPrice += currentProduct.getPrice() * currentProduct.getQuantity();
             }
             previousProduct = currentProduct;
         }
+        calcQuantityPostProduct(quantityEachPost);
         return totalPrice;
     }
 
-    private void savePaymentAndTransaction(OrdersRequest ordersRequest, Orders ordersSaved, boolean paymentStatus) {
+    private void calcQuantityPostProduct(Map<Integer, Integer> quantityEachPost) {
+        List<Integer> postProductId = new ArrayList<>();
+        quantityEachPost.forEach((key, value) -> {
+            postProductId.add(key);
+        });
 
-        double totalPrice = totalPrice(ordersRequest.getPostProductToBuyRequests());
+        List<PostProduct> postProductList = postProductRepository.findAllById(postProductId);
+
+        for (PostProduct postProduct : postProductList) {
+            int quantity = quantityEachPost.get(postProduct.getPostProductId());
+
+            if ((postProduct.getQuantity() - quantity) < 0) {
+                throw new DataIntegrityViolationException("Số lượng mà bạn muốn mua đã vượt quá giới hạn mà sản phẩm hiện có!");
+            }
+
+            if (postProduct.getQuantity() - quantity == 0) {
+                postProduct.setPostStatusId(postStatusRepository.getReferenceById(1));
+            }
+
+            postProduct.setQuantity(postProduct.getQuantity() - quantity);
+        }
+
+        postProductRepository.saveAll(postProductList);
+    }
+
+    private void savePaymentAndTransaction(int getPaymentMethod, Orders ordersSaved, boolean paymentStatus, double totalPrice) {
 
         Payment paymentSaved = paymentRepository.save(
                 new Payment(
                         ordersSaved,
-                        paymentMethodRepository.getReferenceById(ordersRequest.getPaymentMethodId()),
+                        paymentMethodRepository.getReferenceById(getPaymentMethod),
                         paymentStatus,
                         LocalDateTime.now()
                 )
@@ -103,8 +144,8 @@ public class PaymentServiceImpl implements PaymentService {
         transactionsRepository.save(
                 new Transactions(
                         paymentSaved,
-                        transactionsStatusRepository.getReferenceById(3),
-                        Double.parseDouble(new DecimalFormat("#.###").format(totalPrice / 1000)),
+                        transactionsStatusRepository.getReferenceById(1),
+                        Long.parseLong(new DecimalFormat("#.###").format(totalPrice / 1000)),
                         LocalDateTime.now(),
                         LocalDateTime.now().plusDays(3)
                 )
@@ -115,25 +156,30 @@ public class PaymentServiceImpl implements PaymentService {
         Orders ordersSaved = ordersRepository.save(
                 new Orders(
                         registeredStudentRepository.getReferenceById(ordersRequest.getRegisteredStudentId()),
-                        ordersStatusRepository.getReferenceById(4),
+                        ordersStatusRepository.getReferenceById(1),
                         LocalDateTime.now(),
                         LocalDateTime.now().plusDays(3),
                         ordersRequest.getDescription()
                 )
         );
+
+        List<OrderPostProduct> orderPostProductList = new ArrayList<>();
+
         for (PostProductRequest postProductRequest : ordersRequest.getPostProductToBuyRequests()) {
-            orderPostProductRepository.save(
-                    new OrderPostProduct(
-                            new OrderPostProductEmbeddable(ordersSaved.getOrderId(), postProductRequest.getPostProductId(), postProductRequest.getVariationDetailId()),
-                            ordersSaved,
-                            postProductRepository.getReferenceById(postProductRequest.getPostProductId()),
-                            variationDetailRepository.getReferenceById(postProductRequest.getVariationDetailId()),
-                            postProductRequest.getQuantity(),
-                            Double.parseDouble(new DecimalFormat("#.###").format(postProductRequest.getPrice() / 1000)),
-                            false
-                    )
+            orderPostProductList.add(
+                    OrderPostProduct.builder()
+                            .sttOrder(postProductRequest.getSttOrder())
+                            .orderId(ordersSaved)
+                            .postProductId(postProductRepository.getReferenceById(postProductRequest.getPostProductId()))
+                            .variationDetailId(variationDetailRepository.getReferenceById(postProductRequest.getVariationDetailId()))
+                            .quantity(postProductRequest.getQuantity())
+                            .priceBought(Long.parseLong(new DecimalFormat("#.###").format(postProductRequest.getPrice() / 1000)))
+                            .build()
             );
         }
+
+        orderPostProductRepository.saveAll(orderPostProductList);
+
         return ordersSaved;
     }
 }
