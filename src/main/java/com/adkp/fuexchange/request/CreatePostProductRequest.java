@@ -1,26 +1,27 @@
 package com.adkp.fuexchange.request;
 
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
-public class PostProductRequest {
+public class CreatePostProductRequest {
 
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
-    private int sttOrder;
+    private Integer productId;
 
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
-    private int postProductId;
+    private Integer postTypeId;
 
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
-    private int variationId;
-
-    @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
-    private int variationDetailId;
+    private Integer campusId;
 
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
     private int quantity;
 
-    @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
-    private long price;
+    @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
+    private String content;
+
 }

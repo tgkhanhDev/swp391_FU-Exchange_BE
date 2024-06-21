@@ -1,5 +1,6 @@
 package com.adkp.fuexchange.controller;
 
+import com.adkp.fuexchange.repository.RegisteredStudentRepository;
 import com.adkp.fuexchange.request.OrdersRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.PaymentService;
@@ -28,10 +29,14 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
+    private final RegisteredStudentRepository registeredStudentRepository;
+
+
     @Autowired
-    public PaymentController(VnPayService vnPayService, PaymentService paymentService) {
+    public PaymentController(VnPayService vnPayService, PaymentService paymentService, RegisteredStudentRepository registeredStudentRepository) {
         this.vnPayService = vnPayService;
         this.paymentService = paymentService;
+        this.registeredStudentRepository = registeredStudentRepository;
     }
 
     @ApiResponses(value = {
@@ -54,6 +59,14 @@ public class PaymentController {
             @RequestHeader HttpHeaders headers
     ) {
 
+        if (registeredStudentRepository.getReferenceById(ordersRequest.getRegisteredStudentId()).getDeliveryAddress() == null) {
+            return VnPayResponse.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .message(HttpStatus.BAD_REQUEST.name())
+                    .content("Chưa có địa chỉ nhận hàng. Vui lòng điền đầy đủ thông tin trước khi mua hàng!")
+                    .build();
+        }
+        vnPayService.validateQuantity(ordersRequest.getPostProductToBuyRequests());
         return vnPayService.vnPayPayment(ordersRequest, headers);
     }
 
@@ -61,17 +74,24 @@ public class PaymentController {
     @Hidden
     public ResponseObject<Object> paymentCallBack(@RequestParam("vnp_ResponseCode") String vnp_ResponseCode) {
 
+        int status = HttpStatus.BAD_REQUEST.value();
+
+        String message = HttpStatus.BAD_REQUEST.name();
+
+        String content = "Mua hàng thất bại!";
+
         if (vnPayService.vnPayPaymentCallBack(vnp_ResponseCode)) {
-            return ResponseObject.builder()
-                    .status(HttpStatus.OK.value())
-                    .message(HttpStatus.OK.name())
-                    .content("Mua hàng thành công!")
-                    .build();
+            status = HttpStatus.OK.value();
+
+            message = HttpStatus.BAD_REQUEST.name();
+
+            content = "Mua hàng thành công!";
         }
+
         return ResponseObject.builder()
-                .status(HttpStatus.BAD_REQUEST.value())
-                .message(HttpStatus.BAD_REQUEST.name())
-                .content("Mua hàng thất bại!")
+                .status(status)
+                .message(message)
+                .content(content)
                 .build();
     }
 
@@ -84,6 +104,13 @@ public class PaymentController {
     @PostMapping(value = "/pay-order", consumes = "application/json")
     public ResponseObject<Object> payOrders(@Valid @RequestBody OrdersRequest ordersRequest) {
 
+        if (registeredStudentRepository.getReferenceById(ordersRequest.getRegisteredStudentId()).getDeliveryAddress() == null) {
+            return ResponseObject.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .message(HttpStatus.BAD_REQUEST.name())
+                    .content("Chưa có địa chỉ nhận hàng. Vui lòng điền đầy đủ thông tin trước khi mua hàng!")
+                    .build();
+        }
         return paymentService.payOrders(ordersRequest);
     }
 

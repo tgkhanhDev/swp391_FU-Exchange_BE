@@ -2,19 +2,20 @@ package com.adkp.fuexchange.service;
 
 
 import com.adkp.fuexchange.dto.OrdersDTO;
+import com.adkp.fuexchange.mapper.OrderStatusMapper;
 import com.adkp.fuexchange.mapper.OrdersMapper;
 import com.adkp.fuexchange.pojo.Orders;
 import com.adkp.fuexchange.pojo.Payment;
 import com.adkp.fuexchange.pojo.Transactions;
 import com.adkp.fuexchange.repository.*;
 import com.adkp.fuexchange.request.OrderUpdateRequest;
-import com.adkp.fuexchange.response.ResponseObject;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -32,24 +33,45 @@ public class OrderServiceImpl implements OrderService {
 
     private final PaymentRepository paymentRepository;
 
+    private final OrderStatusMapper orderStatusMapper;
+
     @Autowired
-    public OrderServiceImpl(OrdersRepository ordersRepository, OrdersMapper ordersMapper, OrdersStatusRepository ordersStatusRepository, TransactionsRepository transactionsRepository, TransactionsStatusRepository transactionsStatusRepository, PaymentRepository paymentRepository) {
+    public OrderServiceImpl(OrdersRepository ordersRepository, OrdersMapper ordersMapper, OrdersStatusRepository ordersStatusRepository, TransactionsRepository transactionsRepository, TransactionsStatusRepository transactionsStatusRepository, PaymentRepository paymentRepository, OrderStatusMapper orderStatusMapper) {
         this.ordersRepository = ordersRepository;
         this.ordersMapper = ordersMapper;
         this.ordersStatusRepository = ordersStatusRepository;
         this.transactionsRepository = transactionsRepository;
         this.transactionsStatusRepository = transactionsStatusRepository;
         this.paymentRepository = paymentRepository;
+        this.orderStatusMapper = orderStatusMapper;
     }
 
     @Override
-    public ResponseObject<Object> getOrderByRegisterId(Integer registeredStudentId) {
-        return ResponseObject.builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.name())
-                .message("Xem thông tin thành công")
-                .data(ordersMapper.toOrdersDTOList(ordersRepository.getOrderByRegisterId(registeredStudentId)))
-                .build();
+    public List<OrdersDTO> getOrderByRegisterId(Integer registeredStudentId) {
+
+        List<Orders> ordersDTO = ordersRepository.getOrderByRegisterId(registeredStudentId);
+
+        List<OrdersDTO> ordersDTOS = new ArrayList<>();
+
+        if (ordersDTO == null) {
+            return null;
+        }
+
+        for (Orders orders : ordersDTO) {
+            ordersDTOS.add(
+                    OrdersDTO.builder()
+                            .orderId(orders.getOrderId())
+                            .registeredStudent(orders.getRegisteredStudentId().getRegisteredStudentId())
+                            .orderStatus(orderStatusMapper.toOrderStatusDTO(orders.getOrderStatusId()))
+                            .createDate(orders.getCreateDate())
+                            .completeDate(orders.getCompleteDate())
+                            .paymentId(orders.getPaymentId().getPaymentId())
+                            .totalPrice(orders.getPaymentId().getTransactionId().getTotalPrice() * 1000)
+                            .build()
+            );
+        }
+
+        return ordersDTOS;
     }
 
     @Override
@@ -70,8 +92,20 @@ public class OrderServiceImpl implements OrderService {
         }
 
         orders.setDescription(orderUpdateRequest.getDescription());
+
+        updatePaymentStatus(orderUpdateRequest.getOrderStatusId(), orderUpdateRequest.getOrderId());
+
         updateStatusTransaction(orderUpdateRequest.getOrderStatusId(), orders.getPaymentId().getPaymentId());
+
         return ordersMapper.toOrdersDTO(orders);
+    }
+
+    private void updatePaymentStatus(int orderStatusId, int orderId) {
+
+        Orders orders = ordersRepository.getReferenceById(orderId);
+        if (orderStatusId == 4) {
+            paymentRepository.getReferenceById(orders.getPaymentId().getPaymentId()).setPaymentStatus(false);
+        }
     }
 
     private void updateStatusTransaction(int orderStatus, int paymentId) {
@@ -85,7 +119,7 @@ public class OrderServiceImpl implements OrderService {
 
         int statusId = statusMap.getOrDefault(orderStatus, 4);
 
-        if(orderStatus == 5){
+        if (orderStatus == 5) {
             payment.setPaymentStatus(true);
         }
 

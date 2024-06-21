@@ -8,7 +8,6 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor(force = true)
-@ToString
 @AllArgsConstructor
 @Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -32,7 +31,6 @@ public class RegisteredStudent {
 
     @Column(name = "isActive")
     private boolean active;
-
 
     private String deliveryAddress;
 

@@ -8,10 +8,13 @@ import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,
+        uses = {VariationMapper.class}
+)
 public interface VariationDetailMapper {
 
     @Mapping(source = "variationDetailId", target = "variationDetailId")
+    @Mapping(source = "variationId", target = "variation")
     @Mapping(source = "description", target = "description")
     VariationDetailDTO toVariationDetailDTO(VariationDetail variationDetail);
 

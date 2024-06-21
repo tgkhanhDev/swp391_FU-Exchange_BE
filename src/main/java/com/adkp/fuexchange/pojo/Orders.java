@@ -10,7 +10,6 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@ToString
 @Data
 @NoArgsConstructor(force = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

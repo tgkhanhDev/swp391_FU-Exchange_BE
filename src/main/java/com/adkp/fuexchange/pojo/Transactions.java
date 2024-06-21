@@ -26,13 +26,13 @@ public class Transactions {
     @JoinColumn(name = "transactionsStatusId", referencedColumnName = "transactionsStatusId")
     private TransactionsStatus transactionsStatusId;
 
-    private double totalPrice;
+    private long totalPrice;
 
     private LocalDateTime createTime;
 
     private LocalDateTime completeTime;
 
-    public Transactions(Payment paymentId, TransactionsStatus transactionsStatusId, double totalPrice, LocalDateTime createTime, LocalDateTime completeTime) {
+    public Transactions(Payment paymentId, TransactionsStatus transactionsStatusId, long totalPrice, LocalDateTime createTime, LocalDateTime completeTime) {
         this.paymentId = paymentId;
         this.transactionsStatusId = transactionsStatusId;
         this.totalPrice = totalPrice;

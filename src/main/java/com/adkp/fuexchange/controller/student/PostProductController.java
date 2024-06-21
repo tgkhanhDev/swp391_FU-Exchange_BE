@@ -1,5 +1,7 @@
 package com.adkp.fuexchange.controller.student;
 
+import com.adkp.fuexchange.dto.PostProductDTO;
+import com.adkp.fuexchange.request.CreatePostProductRequest;
 import com.adkp.fuexchange.request.UpdatePostProductRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.PostProductService;
@@ -36,18 +38,58 @@ public class PostProductController {
     }
 
     @Operation(summary = "Get post product by postProductId")
-    @GetMapping("detail/{postProductId}")
+    @GetMapping("/detail/{postProductId}")
     public ResponseObject<Object> getPostProductByPostProductId(@PathVariable("postProductId") int postProductId) {
         return postProductService.getPostProductById(postProductId);
     }
 
     @Operation(summary = "Update post product for all information")
     @PutMapping("/update")
-    public ResponseObject<Object> updatePostProduct(@RequestBody @Valid UpdatePostProductRequest updatePostProductRequest) {
+    public ResponseObject<Object> updatePostProduct(
+            @RequestBody @Valid UpdatePostProductRequest updatePostProductRequest
+    ) {
+        PostProductDTO postProduct = postProductService.updatePostProduct(updatePostProductRequest);
+
+        int status = HttpStatus.OK.value();
+        String message = HttpStatus.OK.name();
+        String content = "Cập nhật thông tin thành công!";
+
+        if (postProduct == null) {
+            status = HttpStatus.BAD_REQUEST.value();
+            message = HttpStatus.BAD_REQUEST.name();
+            content = "Cập nhật thông tin thất bại!";
+        }
         return ResponseObject.builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.name())
-                .content("Cập nhật thông tin thành công!")
+                .status(status)
+                .message(message)
+                .content(content)
+                .build();
+    }
+
+    @Operation(summary = "Create post product")
+    @PostMapping("/create")
+    public ResponseObject<Object> createPostProduct(
+            @RequestBody @Valid CreatePostProductRequest createPostProductRequest
+    ) {
+
+        int status = HttpStatus.OK.value();
+        String message = HttpStatus.OK.name();
+        String content = "Tạo bài post thành công. Vui lòng chờ chúng tôi xét duyệt!";
+
+        PostProductDTO postProductDTO =
+                postProductService.createPostProduct(createPostProductRequest);
+
+        if (postProductDTO == null) {
+            status = HttpStatus.BAD_REQUEST.value();
+            message = HttpStatus.BAD_REQUEST.name();
+            content = "Tạo bài post thất bại. Vui lòng tạo lại!";
+        }
+
+        return ResponseObject.builder()
+                .status(status)
+                .message(message)
+                .content(content)
+                .data(postProductDTO)
                 .build();
     }
 
