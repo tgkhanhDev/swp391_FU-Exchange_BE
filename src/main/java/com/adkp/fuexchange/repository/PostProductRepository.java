@@ -14,15 +14,10 @@ public interface PostProductRepository extends JpaRepository<PostProduct, Intege
 
     @Query(
             "SELECT pprd FROM PostProduct pprd " +
-                    "WHERE pprd.postProductId =  :postProductId"
+                    "WHERE pprd.postProductId =  :postProductId " +
+                    "AND pprd.postStatusId.postStatusId = 4"
     )
     PostProduct getPostProductByPostId(@Param("postProductId") Integer postProductId);
-
-    @Query(
-            "SELECT pprd FROM PostProduct pprd " +
-                    "WHERE pprd.postProductId In :postProductId"
-    )
-    List<PostProduct> getListPostProductById(@Param("postProductId") List<Integer> postProductId);
 
     @Query(
             value = "SELECT pprd.* FROM PostProduct pprd " +
@@ -39,4 +34,7 @@ public interface PostProductRepository extends JpaRepository<PostProduct, Intege
             Pageable pageable, @Param("campus") String campus, @Param("postType") String postType,
             @Param("name") String name, @Param("category") String categoryId
     );
+
+    @Query("Select pprd From PostProduct pprd Where pprd.postStatusId.postStatusId = 2")
+    List<PostProduct> viewCreateOrderRequest();
 }

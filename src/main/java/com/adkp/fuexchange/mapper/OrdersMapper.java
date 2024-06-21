@@ -16,8 +16,8 @@ public interface OrdersMapper {
     @Mapping(source = "registeredStudentId.registeredStudentId", target = "registeredStudent")
     @Mapping(source = "orderStatusId", target = "orderStatus")
     @Mapping(source = "paymentId.paymentId", target = "paymentId")
-    @Mapping(source = "createDate", target = "createDate", dateFormat = "dd-MM-yyyy")
-    @Mapping(source = "completeDate", target = "completeDate", dateFormat = "dd-MM-yyyy")
+    @Mapping(source = "createDate", target = "createDate")
+    @Mapping(source = "completeDate", target = "completeDate")
     @Mapping(source = "description", target = "description")
     OrdersDTO toOrdersDTO(Orders orders);
 

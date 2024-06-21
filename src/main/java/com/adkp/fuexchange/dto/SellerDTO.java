@@ -13,6 +13,6 @@ public class SellerDTO {
 
     private String bankingNumber;
 
-    private boolean active;
+    private int active;
 
 }

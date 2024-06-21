@@ -1,11 +1,7 @@
 package com.adkp.fuexchange.mapper;
 
 import com.adkp.fuexchange.dto.OrderPostProductDTO;
-import com.adkp.fuexchange.dto.PostProductDTO;
 import com.adkp.fuexchange.pojo.OrderPostProduct;
-import com.adkp.fuexchange.repository.OrderPostProductRepository;
-import com.adkp.fuexchange.request.PostProductRequest;
-import org.aspectj.lang.annotation.After;
 import org.mapstruct.*;
 
 import java.util.List;
@@ -15,12 +11,12 @@ import java.util.List;
 )
 public interface OrderPostProductMapper {
 
+    @Mapping(source = "sttOrder", target = "sttOrder")
     @Mapping(source = "orderId", target = "order")
     @Mapping(source = "postProductId", target = "postProduct")
     @Mapping(source = "variationDetailId", target = "variationDetail")
     @Mapping(source = "quantity", target = "quantity")
     @Mapping(source = "priceBought", target = "priceBought")
-    @Mapping(source = "orderPostProductStatus", target = "orderPostProductStatus")
     OrderPostProductDTO toOrderPostProductDTO(OrderPostProduct orderPostProduct);
 
     List<OrderPostProductDTO> toOrderPostProductDTOList(List<OrderPostProduct> orderPostProductList);

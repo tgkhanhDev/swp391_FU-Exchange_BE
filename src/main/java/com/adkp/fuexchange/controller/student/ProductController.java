@@ -27,9 +27,9 @@ public class ProductController {
     public ResponseObject<Object> viewMoreProduct(
             @PathVariable("current") int current,
             @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "sellerID", required = true) int sellerID
+            @RequestParam(value = "studentId", required = true) String studentId
     ) {
-        return productService.topProductByUserIdAndName(sellerID, name, current);
+        return productService.topProductByUserIdAndName(studentId, name, current);
 
     }
 

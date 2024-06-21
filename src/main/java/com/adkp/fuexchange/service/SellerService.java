@@ -1,6 +1,5 @@
 package com.adkp.fuexchange.service;
 
-import com.adkp.fuexchange.dto.OrderPostProductDTO;
 import com.adkp.fuexchange.dto.OrdersDTO;
 import com.adkp.fuexchange.dto.SellerDTO;
 import com.adkp.fuexchange.request.RegisterToSellerRequest;
@@ -27,5 +26,6 @@ public interface SellerService {
 
     List<OrdersDTO> getOrderBySellerId(Integer sellerId);
 
-    List<OrderDetailResponse> getOrderDetailBySellerIdAndOrderId(Integer sellerId, Integer orderId);
+    OrderDetailResponse getOrderDetailBySellerIdAndOrderId(Integer sellerId, Integer orderId, Integer orderStatusId);
+
 }

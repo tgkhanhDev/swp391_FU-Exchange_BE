@@ -23,7 +23,6 @@ public class WishListServiceImpl implements WishListService {
     private  final ProductDetailRepository productDetailRepository;
     private final RegisteredStudentRepository registeredStudentRepository;
 
-    @Autowired
     public WishListServiceImpl(WishListRepository wishListRepository, PostProductRepository postProductRepository, ProductRepository productRepository, ProductDetailRepository productDetailRepository, RegisteredStudentRepository registeredStudentRepository) {
         this.wishListRepository = wishListRepository;
         this.postProductRepository = postProductRepository;
@@ -31,6 +30,7 @@ public class WishListServiceImpl implements WishListService {
         this.productDetailRepository = productDetailRepository;
         this.registeredStudentRepository = registeredStudentRepository;
     }
+
 
     @Override
     @Transactional

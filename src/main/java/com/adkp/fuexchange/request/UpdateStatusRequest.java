@@ -1,11 +1,14 @@
 package com.adkp.fuexchange.request;
 
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 
 @Data
 public class UpdateStatusRequest {
 
-    private Integer sellerId;
+    @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
+    private int sellerId;
 
-    private Boolean isActive;
+    @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
+    private int isActive;
 }

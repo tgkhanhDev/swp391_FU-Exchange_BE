@@ -27,19 +27,16 @@ public class WishList {
     @JoinColumn(name = "registeredStudentId", referencedColumnName = "registeredStudentId")
     private RegisteredStudent registeredStudentId;
 
-
     private LocalDateTime createTime;
     private int quantity;
     private boolean isActive;
 
-
-    public WishList(PostProduct postProductId, RegisteredStudent registeredStudentId, LocalDateTime createTime,int quantity, boolean isActive) {
+    public WishList(PostProduct postProductId, RegisteredStudent registeredStudentId, LocalDateTime createTime,int quantity ,boolean isActive) {
         this.postProductId = postProductId;
         this.registeredStudentId = registeredStudentId;
         this.createTime = createTime;
         this.quantity = quantity;
         this.isActive = isActive;
-
     }
 
 }
