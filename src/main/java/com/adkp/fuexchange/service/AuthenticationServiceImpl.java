@@ -211,7 +211,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         // vua tao thì lấy Moderator role luon
 //Roles roleId, String firstName, String lastName, String gender, String identityCard, String address, String phoneNumber, LocalDate dob, String password, boolean isActive
-        Staff  staff = staffRepository.save(new Staff(roleRepository.getReferenceById(registerStaffRequest.getRoleID()), registerStaffRequest.getFirstName(),registerStaffRequest.getLastName(),
+        Staff  staff = staffRepository.save(new Staff(roleRepository.getReferenceById(4), registerStaffRequest.getFirstName(),registerStaffRequest.getLastName(),
                 registerStaffRequest.getGender(), registerStaffRequest.getIdentityCard(),
                 registerStaffRequest.getAddress(), registerStaffRequest.getPhoneNumber(),
                 registerStaffRequest.getDob(), passwordEncoder.encode(registerStaffRequest.getPassword()),true));

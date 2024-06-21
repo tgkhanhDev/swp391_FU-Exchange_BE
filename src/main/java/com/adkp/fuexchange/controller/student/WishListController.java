@@ -22,7 +22,7 @@ public class WishListController {
 
 
     @Operation(summary = "Create a wishlist")
-    @PostMapping("/create-wishlist")
+    @PostMapping("/create")
     public ResponseObject<Object>createWishList(
           @RequestBody  RegisterWishListRequest registerWishListRequest){
        return wishListService.createWishList(registerWishListRequest);
