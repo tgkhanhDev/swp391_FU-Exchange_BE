@@ -47,7 +47,7 @@ public class RegisteredStudentController {
     @GetMapping("/registered-student/{current}")
     public ResponseObject<Object>viewAllregisteredStudent(
             @PathVariable("current") int current,
-            @RequestParam("name") String name
+            @RequestParam(value = "name", required = false) String name
     ){
         return registeredStudentService.viewAllRegisteredStudent(  current, name);
     }
