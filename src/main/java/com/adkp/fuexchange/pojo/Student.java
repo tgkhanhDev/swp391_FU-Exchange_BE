@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
+
 import java.time.LocalDate;
 
 @Data
@@ -35,5 +36,4 @@ public class Student {
     private String gender;
 
     private LocalDate dob;
-
 }
