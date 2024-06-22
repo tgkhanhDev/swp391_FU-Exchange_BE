@@ -20,7 +20,8 @@ public interface SellerService {
 
     ResponseObject<Object> updateStatusSeller(UpdateStatusRequest updateStatusRequest);
 
-    SellerDTO getInformationSellerByStudentId(String studentId);
+    SellerDTO checkSellerbyStudentID(String studentId);
+    ResponseObject <Object> getInformationSellerByStudentId(String studentId);
 
     void deleteSellerByID(int sellerID);
 

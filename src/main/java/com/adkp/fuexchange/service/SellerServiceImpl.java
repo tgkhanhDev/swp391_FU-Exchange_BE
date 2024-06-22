@@ -12,7 +12,9 @@ import com.adkp.fuexchange.request.RegisterToSellerRequest;
 import com.adkp.fuexchange.request.UpdateInformationSellerRequest;
 import com.adkp.fuexchange.request.UpdateStatusRequest;
 import com.adkp.fuexchange.response.OrderDetailResponse;
+import com.adkp.fuexchange.response.RegisteredStudentInformationResponse;
 import com.adkp.fuexchange.response.ResponseObject;
+import com.adkp.fuexchange.response.SellerInformationResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -167,11 +169,23 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public SellerDTO getInformationSellerByStudentId(String studentId) {
+    public SellerDTO checkSellerbyStudentID(String studentId) {
+        return sellerMapper.toSellerDTO(sellerRepository.getInformationSellerByStudentId(studentId));
+    }
 
-        return sellerMapper.toSellerDTO(
-                sellerRepository.getInformationSellerByStudentId(studentId)
-        );
+    @Override
+    public ResponseObject<Object> getInformationSellerByStudentId(String studentId) {
+        Seller seller = sellerRepository.getInformationSellerByStudentId(studentId);
+
+        RegisteredStudent registeredStudent = registeredStudentRepository.getReferenceById(seller.getRegisteredStudentId().getRegisteredStudentId());
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("thông tin người bán hàng!")
+                .data(SellerInformationResponse.builder().sellerTO( sellerMapper.toSellerDTO(seller))
+                        .deliveryAddress(registeredStudent.getDeliveryAddress())
+                .build())
+                .build();
     }
 
     @Override
