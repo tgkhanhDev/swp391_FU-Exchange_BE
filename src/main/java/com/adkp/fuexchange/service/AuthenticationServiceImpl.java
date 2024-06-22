@@ -218,8 +218,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
-                .content("Đăng ký thành công").data(new StaffInforResponse(staff.getRoleId(),staff.getFirstName()+" "+staff.getLastName()
-                        ,staff.getGender(),staff.getIdentityCard(),staff.getAddress(),staff.getPhoneNumber(),staff.getDob()))
+                .content("Đăng ký thành công").data(new StaffInforResponse(staff.getStaffId(),staff.getRoleId(),staff.getFirstName(),staff.getLastName()
+                        ,staff.getGender(),staff.getIdentityCard(),staff.getAddress(),staff.getPhoneNumber(),staff.getDob(),staff.isActive()))
                 .build();
     }
 }

@@ -47,8 +47,8 @@ public class StaffServiceImpl implements StaffService {
         List<Staff> staffList = staffRepository.topStaffs(currentStaff,identityCardNum);
         List<StaffInforResponse> staffInforResponse = new ArrayList<>();
         for (Staff staff :staffList){
-            staffInforResponse.add(new StaffInforResponse(staff.getRoleId(),staff.getFirstName()+" "+staff.getLastName(),staff.getGender(),
-                    staff.getIdentityCard(), staff.getAddress(), staff.getPhoneNumber(), staff.getDob()));
+            staffInforResponse.add(new StaffInforResponse(staff.getStaffId(),staff.getRoleId(),staff.getFirstName(),staff.getLastName()
+                    ,staff.getGender(),staff.getIdentityCard(),staff.getAddress(),staff.getPhoneNumber(),staff.getDob(),staff.isActive()));
         }
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
@@ -67,8 +67,8 @@ public class StaffServiceImpl implements StaffService {
         return ResponseObject.builder().status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
                 .content("Đã tìm thấy thông tin nhân viên!")
-                .data(new StaffInforResponse(staff.getRoleId(),staff.getFirstName()+" "+staff.getLastName()
-                        ,staff.getGender(),staff.getIdentityCard(),staff.getAddress(),staff.getPhoneNumber(),staff.getDob())).build();
+                .data(new StaffInforResponse(staff.getStaffId(),staff.getRoleId(),staff.getFirstName(),staff.getLastName()
+                        ,staff.getGender(),staff.getIdentityCard(),staff.getAddress(),staff.getPhoneNumber(),staff.getDob(),staff.isActive())).build();
     }
 
     @Override
@@ -99,8 +99,8 @@ public class StaffServiceImpl implements StaffService {
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
-                .content("Đăng ký thành công").data(new StaffInforResponse(staff.getRoleId(),staff.getFirstName()+" "+staff.getLastName()
-                        ,staff.getGender(),staff.getIdentityCard(),staff.getAddress(),staff.getPhoneNumber(),staff.getDob()))
+                .content("Đăng ký thành công").data(new StaffInforResponse(staff.getStaffId(),staff.getRoleId(),staff.getFirstName(),staff.getLastName()
+                        ,staff.getGender(),staff.getIdentityCard(),staff.getAddress(),staff.getPhoneNumber(),staff.getDob(),staff.isActive()))
                 .build();
     }
 

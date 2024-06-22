@@ -8,9 +8,11 @@ import java.time.LocalDate;
 @Data
 public class StaffInforResponse {
 
+    private int staffID;
     private Roles roleId;
 
-    private String staffName;
+    private String firstName;
+    private String lastName;
 
 
 
@@ -22,13 +24,18 @@ public class StaffInforResponse {
 
     private LocalDate dob;
 
-    public StaffInforResponse(Roles roleId, String staffName, String gender, String identityCard, String address, String phoneNumber, LocalDate dob) {
+    private boolean active;
+
+    public StaffInforResponse(int staffID, Roles roleId, String firstName, String lastName, String gender, String identityCard, String address, String phoneNumber, LocalDate dob, boolean active) {
+        this.staffID = staffID;
         this.roleId = roleId;
-        this.staffName = staffName;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.gender = gender;
         this.identityCard = identityCard;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.dob = dob;
+        this.active = active;
     }
 }
