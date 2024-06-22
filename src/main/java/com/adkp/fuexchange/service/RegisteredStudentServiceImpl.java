@@ -1,7 +1,6 @@
 package com.adkp.fuexchange.service;
 
 import com.adkp.fuexchange.dto.OrderPostProductDTO;
-import com.adkp.fuexchange.dto.OrdersDTO;
 import com.adkp.fuexchange.dto.RegisteredStudentDTO;
 import com.adkp.fuexchange.mapper.OrderPostProductMapper;
 import com.adkp.fuexchange.mapper.OrdersMapper;
@@ -13,6 +12,7 @@ import com.adkp.fuexchange.pojo.Transactions;
 import com.adkp.fuexchange.repository.*;
 import com.adkp.fuexchange.request.UpdatePasswordRequest;
 import com.adkp.fuexchange.response.OrderDetailResponse;
+import com.adkp.fuexchange.response.RegisteredStudentInformationResponse;
 import com.adkp.fuexchange.response.ResponseObject;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +55,37 @@ public class RegisteredStudentServiceImpl implements RegisteredStudentService {
         this.paymentRepository = paymentRepository;
         this.transactionsRepository = transactionsRepository;
         this.ordersMapper = ordersMapper;
+    }
+
+    @Override
+    public ResponseObject<Object> viewAllRegisteredStudent() {
+      List<RegisteredStudent> registeredStudnetList =  registeredStudentRepository.findAllRegisteredStudent();
+
+      List<RegisteredStudentInformationResponse> registeredStudentInformationResponseList = new ArrayList<>();
+      for(RegisteredStudent registeredStudent : registeredStudnetList){
+          if(registeredStudent.getRegisteredStudentId()>0){
+              registeredStudentInformationResponseList.add(RegisteredStudentInformationResponse.builder()
+                      .registeredStudentId(registeredStudent.getRegisteredStudentId())
+                      .roleId(registeredStudent.getRoleId())
+                      .firstName(registeredStudent.getStudentId().getFirstName())
+                      .lastName(registeredStudent.getStudentId().getLastName())
+                      .identityCard(registeredStudent.getStudentId().getIdentityCard())
+                      .identityCard(registeredStudent.getStudentId().getAddress())
+                      .phoneNumber(registeredStudent.getStudentId().getPhoneNumber())
+                      .gender(registeredStudent.getStudentId().getGender())
+                      .dob(registeredStudent.getStudentId().getDob())
+                      .active(registeredStudent.isActive())
+                      .build());
+          }
+        }
+
+        return  ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Cập nhật thành công!").data(
+                        registeredStudentInformationResponseList
+                )
+                .build();
     }
 
     @Override
@@ -103,6 +134,44 @@ public class RegisteredStudentServiceImpl implements RegisteredStudentService {
 
         return OrderDetailResponse.builder()
                 .postProductInOrder(postProductInOrder)
+                .build();
+    }
+
+    @Override
+    public ResponseObject<Object> updateActiveByID(int registeredStudentId , int active) {
+        RegisteredStudent registeredStudent = registeredStudentRepository.getReferenceById(registeredStudentId);
+        registeredStudent.setActive((active==0)?false:true);
+        registeredStudentRepository.save(registeredStudent);
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Cập nhật thành công!")
+                .build();
+    }
+
+    @Override
+    public ResponseObject<Object> updateRegisterStudentByID(int registeredStudentId, String deliveryAddress) {
+        RegisteredStudent registeredStudent = registeredStudentRepository.getReferenceById(registeredStudentId);
+        registeredStudent.setDeliveryAddress(deliveryAddress);
+        registeredStudentRepository.save(registeredStudent);
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Cập nhật thành công!").data(
+                        RegisteredStudentInformationResponse.builder()
+                                .registeredStudentId(registeredStudent.getRegisteredStudentId())
+                                .roleId(registeredStudent.getRoleId())
+                                .firstName(registeredStudent.getStudentId().getFirstName())
+                                .lastName(registeredStudent.getStudentId().getLastName())
+                                .deliveryAddress(registeredStudent.getDeliveryAddress())
+                                .identityCard(registeredStudent.getStudentId().getIdentityCard())
+                                .identityCard(registeredStudent.getStudentId().getAddress())
+                                .phoneNumber(registeredStudent.getStudentId().getPhoneNumber())
+                                .gender(registeredStudent.getStudentId().getGender())
+                                .dob(registeredStudent.getStudentId().getDob())
+                                .active(registeredStudent.isActive())
+                                .build()
+                )
                 .build();
     }
 
