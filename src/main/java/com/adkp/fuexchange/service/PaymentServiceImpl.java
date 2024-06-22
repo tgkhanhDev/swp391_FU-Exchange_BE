@@ -60,7 +60,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(rollbackOn = {DataIntegrityViolationException.class})
-    public ResponseObject<Object> payOrders(OrdersRequest ordersRequest) {
+    public Orders payOrders(OrdersRequest ordersRequest) {
         boolean paymentStatus = false;
 
         long totalPrice = totalPrice(ordersRequest.getPostProductToBuyRequests());
@@ -75,11 +75,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         savePaymentAndTransaction(ordersRequest.getPaymentMethodId(), ordersSaved, paymentStatus, totalPrice);
 
-        return ResponseObject.builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.name())
-                .content("Mua hàng thành công!")
-                .build();
+        return ordersSaved;
     }
 
     private long totalPrice(List<PostProductRequest> postProductRequestList) {

@@ -2,7 +2,6 @@ package com.adkp.fuexchange.service;
 
 import com.adkp.fuexchange.dto.PostProductDTO;
 import com.adkp.fuexchange.mapper.PostProductMapper;
-import com.adkp.fuexchange.mapper.ProductMapper;
 import com.adkp.fuexchange.pojo.*;
 import com.adkp.fuexchange.repository.*;
 import com.adkp.fuexchange.request.CreatePostProductRequest;
@@ -37,10 +36,8 @@ public class PostProductServiceImpl implements PostProductService {
 
     private final ReviewRepository reviewRepository;
 
-    private final ProductMapper productMapper;
-
     @Autowired
-    public PostProductServiceImpl(PostProductRepository postProductRepository, PostProductMapper postProductMapper, ProductRepository productRepository, PostTypeRepository postTypeRepository, PostStatusRepository postStatusRepository, CampusRepository campusRepository, ReviewRepository reviewRepository, ProductMapper productMapper) {
+    public PostProductServiceImpl(PostProductRepository postProductRepository, PostProductMapper postProductMapper, ProductRepository productRepository, PostTypeRepository postTypeRepository, PostStatusRepository postStatusRepository, CampusRepository campusRepository, ReviewRepository reviewRepository) {
         this.postProductRepository = postProductRepository;
         this.postProductMapper = postProductMapper;
         this.productRepository = productRepository;
@@ -48,7 +45,6 @@ public class PostProductServiceImpl implements PostProductService {
         this.postStatusRepository = postStatusRepository;
         this.campusRepository = campusRepository;
         this.reviewRepository = reviewRepository;
-        this.productMapper = productMapper;
     }
 
     @Override
