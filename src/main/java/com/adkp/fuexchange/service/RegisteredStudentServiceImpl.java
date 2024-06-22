@@ -16,12 +16,15 @@ import com.adkp.fuexchange.response.RegisteredStudentInformationResponse;
 import com.adkp.fuexchange.response.ResponseObject;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RegisteredStudentServiceImpl implements RegisteredStudentService {
@@ -58,9 +61,10 @@ public class RegisteredStudentServiceImpl implements RegisteredStudentService {
     }
 
     @Override
-    public ResponseObject<Object> viewAllRegisteredStudent() {
-      List<RegisteredStudent> registeredStudnetList =  registeredStudentRepository.findAllRegisteredStudent();
-
+    public ResponseObject<Object> viewAllRegisteredStudent(int current,String name) {
+        Pageable currentRegisteredStudent = PageRequest.of(0, current);
+        String nameSearch = Optional.ofNullable(name).map(String::valueOf).orElse("");
+        List<RegisteredStudent> registeredStudnetList =  registeredStudentRepository.findAllRegisteredStudent(currentRegisteredStudent,nameSearch);
       List<RegisteredStudentInformationResponse> registeredStudentInformationResponseList = new ArrayList<>();
       for(RegisteredStudent registeredStudent : registeredStudnetList){
           if(registeredStudent.getRegisteredStudentId()>0){
@@ -70,7 +74,7 @@ public class RegisteredStudentServiceImpl implements RegisteredStudentService {
                       .firstName(registeredStudent.getStudentId().getFirstName())
                       .lastName(registeredStudent.getStudentId().getLastName())
                       .identityCard(registeredStudent.getStudentId().getIdentityCard())
-                      .identityCard(registeredStudent.getStudentId().getAddress())
+                      .address(registeredStudent.getStudentId().getAddress())
                       .phoneNumber(registeredStudent.getStudentId().getPhoneNumber())
                       .gender(registeredStudent.getStudentId().getGender())
                       .dob(registeredStudent.getStudentId().getDob())

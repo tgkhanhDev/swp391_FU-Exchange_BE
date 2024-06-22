@@ -7,7 +7,7 @@ import com.adkp.fuexchange.response.ResponseObject;
 
 public interface RegisteredStudentService {
 
-    ResponseObject<Object> viewAllRegisteredStudent();
+    ResponseObject<Object> viewAllRegisteredStudent(int current,String name);
     RegisteredStudentDTO viewProfile(Integer registeredStudentId);
 
     ResponseObject<Object> updatePassword(UpdatePasswordRequest updatePasswordRequest);

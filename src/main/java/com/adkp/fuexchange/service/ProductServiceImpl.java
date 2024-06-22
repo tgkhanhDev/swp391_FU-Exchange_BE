@@ -134,14 +134,15 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public ResponseObject<Object> updateProductInformation(UpdateInformationProductRequest updateInformationProductRequest) {
         if (productRepository.existsById(updateInformationProductRequest.getProductID())) {
-
             Product updatedProduct = productRepository.getReferenceById(updateInformationProductRequest.getProductID());
             updatedProduct.setCategoryId(categoryRepository.getReferenceById(updateInformationProductRequest.getCategoryId()));
             updatedProduct.setPrice(updateInformationProductRequest.getPrice());
+            productRepository.save(updatedProduct);
             // product detail
             ProductDetail productDetail = productDetailRepository.getReferenceById(updatedProduct.getProductDetailId().getProductDetailId());
             productDetail.setProductName(updateInformationProductRequest.getProductDetailIdProductName());
             productDetail.setDescription(updateInformationProductRequest.getProductDetailIdDescription());
+            productDetailRepository.save(productDetail);
             // variation
             if(updateInformationProductRequest.getVariationId()!=null){
                 Variation variation = variationRepository.getReferenceById(updateInformationProductRequest.getVariationId());
@@ -154,9 +155,6 @@ public class ProductServiceImpl implements ProductService {
                 variationDetailRepository.save(variationDetail);
 
             }
-
-            productDetailRepository.save(productDetail);
-            productRepository.save(updatedProduct);
             return ResponseObject.builder()
                     .status(HttpStatus.OK.value())
                     .message(HttpStatus.OK.name())

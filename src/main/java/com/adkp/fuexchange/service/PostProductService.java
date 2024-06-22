@@ -10,6 +10,8 @@ public interface PostProductService {
 
     ResponseObject<Object> getPostProductById(int postProductId);
 
+    ResponseObject<Object>getPostProductBySellerId(int sellerID);
+
     PostProductDTO updatePostProduct(UpdatePostProductRequest updatePostProductRequest);
 
     PostProductDTO createPostProduct(CreatePostProductRequest createPostProductRequest);

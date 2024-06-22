@@ -44,9 +44,12 @@ public class RegisteredStudentController {
                 .build();
     }
     @Operation(summary = "view all registered student")
-    @GetMapping("/registered-student")
-    public ResponseObject<Object>viewAllregisteredStudent(){
-        return registeredStudentService.viewAllRegisteredStudent();
+    @GetMapping("/registered-student/{current}")
+    public ResponseObject<Object>viewAllregisteredStudent(
+            @PathVariable("current") int current,
+            @RequestParam("name") String name
+    ){
+        return registeredStudentService.viewAllRegisteredStudent(  current, name);
     }
 
     @Operation(summary = "view order detail for student by registeredStudentId")
