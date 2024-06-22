@@ -28,17 +28,14 @@ public class UpdateInformationProductRequest {
 
     private double price;
 
-    private int productImageId;
 
-    private String imageUrl;
-
-    private int variationId;
+    private Integer variationId;
 
     private String variationName;
 
-    private int variationDetailId;
+    private Integer variationDetailId;
 
-    private String description;
+    private String variationDescription;
 
 
 }

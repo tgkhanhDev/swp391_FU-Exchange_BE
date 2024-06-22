@@ -136,15 +136,26 @@ public class ProductServiceImpl implements ProductService {
         if (productRepository.existsById(updateInformationProductRequest.getProductID())) {
 
             Product updatedProduct = productRepository.getReferenceById(updateInformationProductRequest.getProductID());
-//           if(updateInformationProductRequest.getVariationId().size()>0){
-//
-//               for (int i = 0; i < updateInformationProductRequest.getVariationId().size(); i++) {
-//                   updatedProduct.getVariationId().add(updateInformationProductRequest.getVariationId().get(i));
-//               }
-//           }
+            updatedProduct.setCategoryId(categoryRepository.getReferenceById(updateInformationProductRequest.getCategoryId()));
             updatedProduct.setPrice(updateInformationProductRequest.getPrice());
-            updatedProduct.getProductDetailId().setProductName(updateInformationProductRequest.getProductDetailIdProductName());
-            updatedProduct.getProductDetailId().setDescription(updateInformationProductRequest.getProductDetailIdDescription());
+            // product detail
+            ProductDetail productDetail = productDetailRepository.getReferenceById(updatedProduct.getProductDetailId().getProductDetailId());
+            productDetail.setProductName(updateInformationProductRequest.getProductDetailIdProductName());
+            productDetail.setDescription(updateInformationProductRequest.getProductDetailIdDescription());
+            // variation
+            if(updateInformationProductRequest.getVariationId()!=null){
+                Variation variation = variationRepository.getReferenceById(updateInformationProductRequest.getVariationId());
+                variation.setVariationName(updateInformationProductRequest.getVariationName());
+                variationRepository.save(variation);
+            }
+            if(updateInformationProductRequest.getVariationDetailId()!=null){
+                VariationDetail variationDetail = variationDetailRepository.getReferenceById(updateInformationProductRequest.getVariationDetailId());
+                variationDetail.setDescription(updateInformationProductRequest.getVariationDescription());
+                variationDetailRepository.save(variationDetail);
+
+            }
+
+            productDetailRepository.save(productDetail);
             productRepository.save(updatedProduct);
             return ResponseObject.builder()
                     .status(HttpStatus.OK.value())
