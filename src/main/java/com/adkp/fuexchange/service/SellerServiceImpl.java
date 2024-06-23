@@ -12,7 +12,6 @@ import com.adkp.fuexchange.request.RegisterToSellerRequest;
 import com.adkp.fuexchange.request.UpdateInformationSellerRequest;
 import com.adkp.fuexchange.request.UpdateStatusRequest;
 import com.adkp.fuexchange.response.OrderDetailResponse;
-import com.adkp.fuexchange.response.RegisteredStudentInformationResponse;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.response.SellerInformationResponse;
 import jakarta.transaction.Transactional;
@@ -65,13 +64,15 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     public ResponseObject<Object> viewInformationSellerById(int sellerId) {
+        Seller seller = sellerRepository.getReferenceById(sellerId);
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
                 .content("Xem thông tin thành công!")
-                .data(sellerMapper.toSellerDTO(
-                        sellerRepository.getReferenceById(sellerId)
-                ))
+                .data(SellerInformationResponse.builder()
+                        .sellerTO(sellerMapper.toSellerDTO(seller))
+                        .registeredStudentId(seller.getRegisteredStudentId().getRegisteredStudentId())
+                        .build())
                 .build();
     }
 
@@ -182,9 +183,9 @@ public class SellerServiceImpl implements SellerService {
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
                 .content("thông tin người bán hàng!")
-                .data(SellerInformationResponse.builder().sellerTO( sellerMapper.toSellerDTO(seller))
+                .data(SellerInformationResponse.builder().sellerTO(sellerMapper.toSellerDTO(seller))
                         .deliveryAddress(registeredStudent.getDeliveryAddress())
-                .build())
+                        .build())
                 .build();
     }
 
