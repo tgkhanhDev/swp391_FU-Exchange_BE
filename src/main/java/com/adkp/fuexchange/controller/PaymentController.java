@@ -1,6 +1,6 @@
 package com.adkp.fuexchange.controller;
 
-import com.adkp.fuexchange.pojo.Orders;
+import com.adkp.fuexchange.dto.OrderPostProductDTO;
 import com.adkp.fuexchange.repository.RegisteredStudentRepository;
 import com.adkp.fuexchange.request.OrdersRequest;
 import com.adkp.fuexchange.response.ResponseObject;
@@ -19,6 +19,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/order/payment")
@@ -117,7 +119,7 @@ public class PaymentController {
                     .build();
         }
 
-        Orders ordersResult = paymentService.payOrders(ordersRequest);
+        List<OrderPostProductDTO> ordersResult = paymentService.payOrders(ordersRequest);
 
         if (ordersResult == null) {
             status = HttpStatus.OK.value();

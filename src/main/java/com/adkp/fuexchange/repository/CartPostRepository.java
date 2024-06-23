@@ -33,4 +33,13 @@ public interface CartPostRepository extends JpaRepository<CartPost, Integer> {
             "WHERE cp.cartId = :cartId " +
             "ORDER BY cp.sttPostInCart DESC", nativeQuery = true)
     Integer getSttLastCart(@Param("cartId") Integer cartId);
+
+    @Query("SELECT cp FROM CartPost cp WHERE cp.cartId.cartId = :cartId " +
+            "AND cp.postProductId.postProductId IN :postProductId " +
+            "AND cp.variationDetailId.variationDetailId IN :variationDetailId")
+    List<CartPost> getCartPostByAllListId(
+            @Param("cartId") int cartId,
+            @Param("postProductId") List<Integer> postProductId,
+            @Param("variationDetailId") List<Integer> variationDetailId
+    );
 }
