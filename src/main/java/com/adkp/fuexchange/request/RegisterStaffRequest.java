@@ -8,8 +8,8 @@ import java.time.LocalDate;
 @Data
 public class RegisterStaffRequest {
     @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
-    private  int roleID;
-    @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
+
+
     private String firstName;
 
     @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
@@ -35,5 +35,5 @@ public class RegisterStaffRequest {
 
     @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
     private String confirmPassword;
-    private Boolean active = true;
+
 }

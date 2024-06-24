@@ -27,4 +27,7 @@ public class PostProductResponse {
     private String content;
     private  ProductResponse productResponse;
 
+    private List<PostProductResponse> productResponseList;
+
+
 }

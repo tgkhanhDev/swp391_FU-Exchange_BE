@@ -2,6 +2,7 @@ package com.adkp.fuexchange.controller;
 
 import com.adkp.fuexchange.request.LoginRequest;
 import com.adkp.fuexchange.request.RegisterRequest;
+import com.adkp.fuexchange.request.RegisterStaffRequest;
 import com.adkp.fuexchange.request.StaffLoginRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.AuthenticationService;
@@ -71,4 +72,13 @@ public class AuthenticateController {
     public ResponseObject<Object> loginStaff(@RequestBody @Valid StaffLoginRequest staffLoginRequest) {
         return authenticationService.staffLogin(staffLoginRequest);
     }
+
+    @Operation(summary = "Register staff  in website")
+    @PostMapping("/staff/register")
+    public ResponseObject<Object> registerStaff(
+            @Valid @RequestBody RegisterStaffRequest registerStaffRequest
+    ) {
+        return authenticationService.staffRegister(registerStaffRequest);
+    }
+
 }

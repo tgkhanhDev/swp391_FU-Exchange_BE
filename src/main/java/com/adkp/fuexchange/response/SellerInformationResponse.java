@@ -17,4 +17,7 @@ public class SellerInformationResponse {
     private SellerDTO sellerTO;
     private RegisteredStudentInformationResponse registeredStudentInformationResponse;
     private String deliveryAddress;
+
+    private  int registeredStudentId;
+
 }

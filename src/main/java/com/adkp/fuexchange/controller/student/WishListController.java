@@ -22,7 +22,9 @@ public class WishListController {
 
 
     @Operation(summary = "Create a wishlist")
-    @PostMapping("/create-wishlist")
+
+    @PostMapping("/create")
+
     public ResponseObject<Object>createWishList(
           @RequestBody  RegisterWishListRequest registerWishListRequest){
        return wishListService.createWishList(registerWishListRequest);
@@ -37,7 +39,9 @@ public class WishListController {
     }
 
     @Operation(summary = "Update quantity wishlist")
-    @PostMapping("/{wishListId}/update-quantity")
+
+    @PutMapping("/{wishListId}/update-quantity")
+
     public  ResponseObject<Object>updateQuantity(
             @PathVariable("wishListId") int wishListId,
             @RequestParam("quantity") int quantity
@@ -45,7 +49,9 @@ public class WishListController {
         return  wishListService.UpdateQuantity(wishListId, quantity);
     }
     @Operation(summary = "Update status wishlist")
-    @PostMapping("/{wishListId}/update-status")
+
+    @PutMapping("/{wishListId}/update-status")
+
     public  ResponseObject<Object>updateActive(
             @PathVariable("wishListId") int wishListId,
             @RequestParam("active") int active

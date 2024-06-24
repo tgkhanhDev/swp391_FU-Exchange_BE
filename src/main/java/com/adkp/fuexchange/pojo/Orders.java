@@ -43,9 +43,9 @@ public class Orders {
     @JsonBackReference
     private List<OrderPostProduct> orderPostProductId;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "orderId")
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "orderId")
     @JsonBackReference
-    private Review reviewId;
+    private List<Review> reviewId;
 
     public Orders(RegisteredStudent registeredStudentId, OrderStatus orderStatusId, LocalDateTime createDate, LocalDateTime completeDate, String description) {
         this.registeredStudentId = registeredStudentId;

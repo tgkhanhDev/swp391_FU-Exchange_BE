@@ -42,20 +42,24 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public ResponseObject<Object> viewMoreStaffs(int current,String identityCard) {
-//        Pageable currentStaff = PageRequest.of(0, current);
-//        String identityCardNum = Optional.ofNullable(identityCard).map(String::valueOf).orElse("");
-//        List<Staff> staffList = staffRepository.topStaffs(currentStaff,identityCardNum);
-//        List<StaffInforResponse> staffInforResponse = new ArrayList<>();
-//        for (Staff staff :staffList){
-//            staffInforResponse.add(new StaffInforResponse(staff.getRoleId(),staff.getFirstName()+" "+staff.getLastName(),staff.getGender(),
-//                    staff.getIdentityCard(), staff.getAddress(), staff.getPhoneNumber(), staff.getDob()));
-//        }
+
+        Pageable currentStaff = PageRequest.of(0, current);
+        String identityCardNum = Optional.ofNullable(identityCard).map(String::valueOf).orElse("");
+        List<Staff> staffList = staffRepository.topStaffs(currentStaff,identityCardNum);
+        List<StaffInforResponse> staffInforResponse = new ArrayList<>();
+        for (Staff staff :staffList){
+            staffInforResponse.add(new StaffInforResponse(staff.getStaffId(),staff.getRoleId(),staff.getFirstName(),staff.getLastName()
+                    ,staff.getGender(),staff.getIdentityCard(),staff.getAddress(),staff.getPhoneNumber(),staff.getDob(),staff.isActive()));
+        }
+
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
                 .content("Xem thêm thành công!")
-//                .data(new ListStaffResponse(staffInforResponse))
-//                .meta(new MetaResponse(countStaff(identityCardNum, staffInforResponse), current))
+
+                .data(new ListStaffResponse(staffInforResponse))
+                .meta(new MetaResponse(countStaff(identityCardNum, staffInforResponse), current))
+
                 .build();
     }
 
@@ -67,40 +71,44 @@ public class StaffServiceImpl implements StaffService {
         return ResponseObject.builder().status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
                 .content("Đã tìm thấy thông tin nhân viên!")
-                .data(new StaffInforResponse(staff.getRoleId(),staff.getFirstName()+" "+staff.getLastName()
-                        ,staff.getGender(),staff.getIdentityCard(),staff.getAddress(),staff.getPhoneNumber(),staff.getDob())).build();
+
+                .data(new StaffInforResponse(staff.getStaffId(),staff.getRoleId(),staff.getFirstName(),staff.getLastName()
+                        ,staff.getGender(),staff.getIdentityCard(),staff.getAddress(),staff.getPhoneNumber(),staff.getDob(),staff.isActive())).build();
+
     }
 
     @Override
     @Transactional
     public ResponseObject<Object> updateStaffInforByStaffID(UpdateInformationStaffRequest updateInformationStaffRequest) {
-//        if(staffRepository.checkAvailableStaffByIdentify(updateInformationStaffRequest.getIdentityCard(), updateInformationStaffRequest.getStaffId())!=null){
-//            return ResponseObject.builder()
-//                    .status(HttpStatus.BAD_REQUEST.value())
-//                    .message(HttpStatus.BAD_REQUEST.name())
-//                    .content("Căn cước công dân đã bị trùng!!")
-//                    .build();
-//        }
-//        if(staffRepository.checkAvailableStaffByNumberPhone(updateInformationStaffRequest.getPhoneNumber(),updateInformationStaffRequest.getStaffId())!=null){
-//            return ResponseObject.builder()
-//                    .status(HttpStatus.BAD_REQUEST.value())
-//                    .message(HttpStatus.BAD_REQUEST.name())
-//                    .content("Số điện thoại đã bị trùng!!")
-//                    .build();
-//        }
-//        Staff staff = staffRepository.getReferenceById(updateInformationStaffRequest.getStaffId());
-//        staff.setFirstName(updateInformationStaffRequest.getFirstName());
-//        staff.setLastName(updateInformationStaffRequest.getLastName());
-//        staff.setGender(updateInformationStaffRequest.getGender());
-//        staff.setIdentityCard(updateInformationStaffRequest.getIdentityCard());
-//        staff.setAddress(updateInformationStaffRequest.getAddress());
-//        staff.setPhoneNumber(updateInformationStaffRequest.getPhoneNumber());
-//        staff.setDob(updateInformationStaffRequest.getDob());
+
+        if(staffRepository.checkAvailableStaffByIdentify(updateInformationStaffRequest.getIdentityCard(), updateInformationStaffRequest.getStaffId())!=null){
+            return ResponseObject.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .message(HttpStatus.BAD_REQUEST.name())
+                    .content("Căn cước công dân đã bị trùng!!")
+                    .build();
+        }
+        if(staffRepository.checkAvailableStaffByNumberPhone(updateInformationStaffRequest.getPhoneNumber(),updateInformationStaffRequest.getStaffId())!=null){
+            return ResponseObject.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .message(HttpStatus.BAD_REQUEST.name())
+                    .content("Số điện thoại đã bị trùng!!")
+                    .build();
+        }
+        Staff staff = staffRepository.getReferenceById(updateInformationStaffRequest.getStaffId());
+        staff.setFirstName(updateInformationStaffRequest.getFirstName());
+        staff.setLastName(updateInformationStaffRequest.getLastName());
+        staff.setGender(updateInformationStaffRequest.getGender());
+        staff.setIdentityCard(updateInformationStaffRequest.getIdentityCard());
+        staff.setAddress(updateInformationStaffRequest.getAddress());
+        staff.setPhoneNumber(updateInformationStaffRequest.getPhoneNumber());
+        staff.setDob(updateInformationStaffRequest.getDob());
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
-//                .content("Đăng ký thành công").data(new StaffInforResponse(staff.getRoleId(),staff.getFirstName()+" "+staff.getLastName()
-//                        ,staff.getGender(),staff.getIdentityCard(),staff.getAddress(),staff.getPhoneNumber(),staff.getDob()))
+                .content("Đăng ký thành công").data(new StaffInforResponse(staff.getStaffId(),staff.getRoleId(),staff.getFirstName(),staff.getLastName()
+                        ,staff.getGender(),staff.getIdentityCard(),staff.getAddress(),staff.getPhoneNumber(),staff.getDob(),staff.isActive()))
+
                 .build();
     }
 

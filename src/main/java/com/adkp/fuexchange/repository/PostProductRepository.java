@@ -18,7 +18,10 @@ public interface PostProductRepository extends JpaRepository<PostProduct, Intege
                     "AND pprd.postStatusId.postStatusId = 4"
     )
     PostProduct getPostProductByPostId(@Param("postProductId") Integer postProductId);
-
+    @Query(
+            "SELECT pprd FROM PostProduct pprd " +
+                    "WHERE pprd.productId.sellerId.sellerId =  :sellerId ")
+    List<PostProduct > getPostProductBySellerId(@Param("sellerId") Integer sellerId);
     @Query(
             value = "SELECT pprd.* FROM PostProduct pprd " +
                     "JOIN Product p ON pprd.productId = p.productId " +
@@ -37,4 +40,8 @@ public interface PostProductRepository extends JpaRepository<PostProduct, Intege
 
     @Query("Select pprd From PostProduct pprd Where pprd.postStatusId.postStatusId = 2")
     List<PostProduct> viewCreateOrderRequest();
+    @Query("Select pprd From PostProduct pprd Where pprd.productId.sellerId.sellerId = :sellerId")
+    List<PostProduct> getPostProductBysellerID(@Param("sellerId")int sellerId);
+
+
 }

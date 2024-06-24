@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,6 +96,21 @@ public class PostProductServiceImpl implements PostProductService {
                 .message(HttpStatus.OK.name())
                 .content("Xem thông tin thành công!")
                 .data(postProductDTO)
+                .build();
+    }
+
+    @Override
+    public ResponseObject<Object> getPostProductBySellerId(int sellerID) {
+        List<PostProductDTO> postProductDTOList = new ArrayList<>();
+        List<PostProduct>  postProductList = postProductRepository.getPostProductBySellerId(sellerID);
+        for(PostProduct postProduct:postProductList){
+            postProductDTOList.add(postProductMapper.toPostProductDTO(postProduct));
+        }
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Xem thông tin thành công!")
+                .data(postProductDTOList)
                 .build();
     }
 
