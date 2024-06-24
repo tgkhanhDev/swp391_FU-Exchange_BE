@@ -35,6 +35,14 @@ public class WishListServiceImpl implements WishListService {
     @Override
     @Transactional
     public ResponseObject<Object> createWishList(RegisterWishListRequest registerWishListRequest) {
+        if(wishListRepository.checkWistListAvailable(registerWishListRequest.getPostProductId(),registerWishListRequest.getRegisteredStudentId())!=null){
+            return ResponseObject.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .message(HttpStatus.BAD_REQUEST.name())
+                    .content("Người dùng đã wishList bài đăng rồi!!")
+                    .build();
+        }
+
         PostProduct postProduct = postProductRepository.getReferenceById(registerWishListRequest.getPostProductId());
         if(registerWishListRequest.getQuantity()>postProduct.getQuantity()){
             return ResponseObject.builder()
