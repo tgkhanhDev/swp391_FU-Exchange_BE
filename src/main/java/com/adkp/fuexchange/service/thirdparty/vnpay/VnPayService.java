@@ -68,8 +68,6 @@ public class VnPayService {
     private long totalPrice(List<PostProductRequest> postProductRequestList) {
         long totalPrice = 0;
 
-        Map<Integer, Integer> quantityEachPost = new HashMap<>();
-
         PostProductRequest previousProduct = null;
 
         for (PostProductRequest currentProduct : postProductRequestList) {

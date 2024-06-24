@@ -31,10 +31,6 @@ public class VariationDetail {
 
     @OneToMany(mappedBy = "variationDetailId", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     @JsonBackReference
-    private List<CartPost> cartPostId;
-
-    @OneToMany(mappedBy = "variationDetailId", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
-    @JsonBackReference
     private List<OrderPostProduct> orderPostProductId;
 
     public VariationDetail(Variation variationId, String description) {
