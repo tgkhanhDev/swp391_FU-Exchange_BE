@@ -16,6 +16,7 @@ public class StaffInforResponse {
 
 
 
+
     private String gender;
     private String identityCard;
 
@@ -31,11 +32,14 @@ public class StaffInforResponse {
         this.roleId = roleId;
         this.firstName = firstName;
         this.lastName = lastName;
+
         this.gender = gender;
         this.identityCard = identityCard;
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.dob = dob;
+
         this.active = active;
+
     }
 }

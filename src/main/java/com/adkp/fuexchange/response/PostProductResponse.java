@@ -26,6 +26,8 @@ public class PostProductResponse {
     private LocalDateTime createDate;
     private String content;
     private  ProductResponse productResponse;
+
     private List<PostProductResponse> productResponseList;
+
 
 }

@@ -23,6 +23,9 @@ public class WishListServiceImpl implements WishListService {
     private  final ProductDetailRepository productDetailRepository;
     private final RegisteredStudentRepository registeredStudentRepository;
 
+
+    @Autowired
+
     public WishListServiceImpl(WishListRepository wishListRepository, PostProductRepository postProductRepository, ProductRepository productRepository, ProductDetailRepository productDetailRepository, RegisteredStudentRepository registeredStudentRepository) {
         this.wishListRepository = wishListRepository;
         this.postProductRepository = postProductRepository;
@@ -30,6 +33,7 @@ public class WishListServiceImpl implements WishListService {
         this.productDetailRepository = productDetailRepository;
         this.registeredStudentRepository = registeredStudentRepository;
     }
+
 
 
     @Override
@@ -75,6 +79,7 @@ public class WishListServiceImpl implements WishListService {
 
     @Override
     public ResponseObject<Object> viewWishListByPostProductID( int postProductID) {
+
         List<WishList> wishListList = wishListRepository.getWishListByPostProductID(postProductID);
         PostProduct postProduct = postProductRepository.getReferenceById(postProductID);
         Product product = productRepository.getReferenceById(postProduct.getProductId().getProductId());
@@ -104,11 +109,14 @@ public class WishListServiceImpl implements WishListService {
                             .isActive(index.isActive())
                     .build());
         }
+
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
                 .content("xuât danh sách wishlist thành công!")
+
                 .data(wishListResponesList)
+
                 .build();
     }
 

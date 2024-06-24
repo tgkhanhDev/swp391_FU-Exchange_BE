@@ -20,7 +20,7 @@ public class VnPayConfig {
         vnpParamsMap.put("vnp_OrderInfo", "Thanh+toan+don+hang:" +  VnPayUtils.getRandomNumber(8));
         vnpParamsMap.put("vnp_OrderType", "other");
         vnpParamsMap.put("vnp_Locale", "vn");
-        vnpParamsMap.put("vnp_ReturnUrl", "http://localhost:8080/order/payment/vn-pay/call-back");
+        vnpParamsMap.put("vnp_ReturnUrl", "http://localhost:3005");
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
         String vnpCreateDate = formatter.format(calendar.getTime());

@@ -42,6 +42,7 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public ResponseObject<Object> viewMoreStaffs(int current,String identityCard) {
+
         Pageable currentStaff = PageRequest.of(0, current);
         String identityCardNum = Optional.ofNullable(identityCard).map(String::valueOf).orElse("");
         List<Staff> staffList = staffRepository.topStaffs(currentStaff,identityCardNum);
@@ -50,12 +51,15 @@ public class StaffServiceImpl implements StaffService {
             staffInforResponse.add(new StaffInforResponse(staff.getStaffId(),staff.getRoleId(),staff.getFirstName(),staff.getLastName()
                     ,staff.getGender(),staff.getIdentityCard(),staff.getAddress(),staff.getPhoneNumber(),staff.getDob(),staff.isActive()));
         }
+
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
                 .content("Xem thêm thành công!")
+
                 .data(new ListStaffResponse(staffInforResponse))
                 .meta(new MetaResponse(countStaff(identityCardNum, staffInforResponse), current))
+
                 .build();
     }
 
@@ -67,13 +71,16 @@ public class StaffServiceImpl implements StaffService {
         return ResponseObject.builder().status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
                 .content("Đã tìm thấy thông tin nhân viên!")
+
                 .data(new StaffInforResponse(staff.getStaffId(),staff.getRoleId(),staff.getFirstName(),staff.getLastName()
                         ,staff.getGender(),staff.getIdentityCard(),staff.getAddress(),staff.getPhoneNumber(),staff.getDob(),staff.isActive())).build();
+
     }
 
     @Override
     @Transactional
     public ResponseObject<Object> updateStaffInforByStaffID(UpdateInformationStaffRequest updateInformationStaffRequest) {
+
         if(staffRepository.checkAvailableStaffByIdentify(updateInformationStaffRequest.getIdentityCard(), updateInformationStaffRequest.getStaffId())!=null){
             return ResponseObject.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
@@ -101,6 +108,7 @@ public class StaffServiceImpl implements StaffService {
                 .message(HttpStatus.OK.name())
                 .content("Đăng ký thành công").data(new StaffInforResponse(staff.getStaffId(),staff.getRoleId(),staff.getFirstName(),staff.getLastName()
                         ,staff.getGender(),staff.getIdentityCard(),staff.getAddress(),staff.getPhoneNumber(),staff.getDob(),staff.isActive()))
+
                 .build();
     }
 
