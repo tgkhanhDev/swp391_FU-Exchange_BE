@@ -6,12 +6,13 @@ import com.adkp.fuexchange.pojo.Transactions;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class PaymentDTO {
     private int paymentId;
 
-    private Orders order;
+    private List<Orders> order;
 
     private PaymentMethod paymentMethod;
 
