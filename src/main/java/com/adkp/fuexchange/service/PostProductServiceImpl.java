@@ -115,6 +115,21 @@ public class PostProductServiceImpl implements PostProductService {
     }
 
     @Override
+    public ResponseObject<Object>getPostProductByRegisteredStudentId(int registeredStudentId){
+        List<PostProductDTO> postProductDTOList = new ArrayList<>();
+        List<PostProduct>  postProductList = postProductRepository.getPostProductByRegisteredStudentId(registeredStudentId);
+        for(PostProduct postProduct:postProductList){
+            postProductDTOList.add(postProductMapper.toPostProductDTO(postProduct));
+        }
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Xem thông tin thành công!")
+                .data(postProductDTOList)
+                .build();
+    }
+
+    @Override
     @Transactional
     public PostProductDTO updatePostProduct(UpdatePostProductRequest updatePostProductRequest) {
 

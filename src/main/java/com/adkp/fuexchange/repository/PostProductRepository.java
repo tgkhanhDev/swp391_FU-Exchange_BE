@@ -44,4 +44,9 @@ public interface PostProductRepository extends JpaRepository<PostProduct, Intege
     List<PostProduct> getPostProductBysellerID(@Param("sellerId")int sellerId);
 
 
+    @Query(
+            "SELECT pprd FROM PostProduct pprd " +
+                    "WHERE pprd.productId.sellerId.registeredStudentId.registeredStudentId =  :registeredStudentId")
+    List<PostProduct > getPostProductByRegisteredStudentId(@Param("registeredStudentId") Integer registeredStudentId);
+
 }
