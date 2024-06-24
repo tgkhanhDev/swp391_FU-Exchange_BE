@@ -22,16 +22,17 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final CategoryRepository categoryRepository;
-    private final ProductDetailRepository productDetailRepository;
-    private final VariationDetailRepository variationDetailRepository;
-    private final VariationRepository variationRepository;
+    private  final CategoryRepository categoryRepository;
+    private  final ProductDetailRepository productDetailRepository;
+    private  final VariationDetailRepository variationDetailRepository;
+    private  final VariationRepository variationRepository;
     private final SellerRepository sellerRepository;
     private final ProductImageRepository productImageRepository;
     private final ProductMapper productMapper;
+    private final VariationMapper variationMapper;
 
     @Autowired
-    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ProductDetailRepository productDetailRepository, VariationDetailRepository variationDetailRepository, VariationRepository variationRepository, SellerRepository sellerRepository, ProductImageRepository productImageRepository, ProductMapper productMapper) {
+    public ProductServiceImpl(ProductRepository productRepository, CategoryRepository categoryRepository, ProductDetailRepository productDetailRepository, VariationDetailRepository variationDetailRepository, VariationRepository variationRepository, SellerRepository sellerRepository, ProductImageRepository productImageRepository, ProductMapper productMapper, VariationMapper variationMapper) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.productDetailRepository = productDetailRepository;
@@ -40,8 +41,8 @@ public class ProductServiceImpl implements ProductService {
         this.sellerRepository = sellerRepository;
         this.productImageRepository = productImageRepository;
         this.productMapper = productMapper;
+        this.variationMapper = variationMapper;
     }
-
     @Override
     public ResponseObject<Object> viewMoreProduct(int current) {
         Pageable currentProduct = PageRequest.of(0, current);
@@ -84,43 +85,47 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ResponseObject<Object> createProduct(RegisterProductRequest registerProductRequest) {
-        ProductDetail productDetail = new ProductDetail(registerProductRequest.getProductName(), registerProductRequest.getProductDescription());
+        ProductDetail productDetail = new ProductDetail(registerProductRequest.getProductName(),registerProductRequest.getProductDescription());
         productDetailRepository.save(productDetail);
 
         for (ProductImageRequest productImageRequest : registerProductRequest.getProductImageRequestsList()) {
-            productImageRepository.save(new ProductImage(productDetail, productImageRequest.getImageUrl()));
+            productImageRepository.save(new ProductImage(productDetail,productImageRequest.getImageUrl()));
         }
 
         Seller seller = sellerRepository.getInformationSellerByStudentId(registerProductRequest.getStudentId());
 
-        Product product = new Product(productDetail, sellerRepository.getReferenceById(seller.getSellerId())
-                , categoryRepository.getReferenceById(registerProductRequest.getCategoryId()), registerProductRequest.getPrice()
-                , true);
+        Product product = new Product(productDetail,sellerRepository.getReferenceById(seller.getSellerId())
+                ,categoryRepository.getReferenceById(registerProductRequest.getCategoryId()),registerProductRequest.getPrice()
+                ,true);
         productRepository.save(product);
 
         List<RegisterVariationResponse> variationList = new ArrayList<>();
-        List<RegisterVariationDetailResponse> variationDetailResponseList = new ArrayList<>();
-        for (VariationRequest variationRequest : registerProductRequest.getVariationList()) {
-            Variation variation = new Variation(variationRequest.getVariationName(), product);
+        List<RegisterVariationDetailResponse>variationDetailResponseList = new ArrayList<>();
+        for(VariationRequest variationRequest : registerProductRequest.getVariationList()){
+            Variation variation = new Variation(variationRequest.getVariationName(),product);
             variationRepository.save(variation);
 
 
-            for (VariationDetailRequest variationDetailRequest : variationRequest.getVariationDetailRequestList()) {
-                variationDetailRepository.save(new VariationDetail(variation, variationDetailRequest.getDescription()));
+            for(VariationDetailRequest variationDetailRequest: variationRequest.getVariationDetailRequestList()){
+                variationDetailRepository.save(new VariationDetail(variation,variationDetailRequest.getDescription()));
                 variationDetailResponseList.add(new RegisterVariationDetailResponse(variationDetailRequest.getDescription()));
-                variationList.add(new RegisterVariationResponse(variation.getVariationId(), variation.getVariationName(), variationDetailResponseList));
+                variationList.add(new RegisterVariationResponse(variation.getVariationId(),variation.getVariationName(),variationDetailResponseList));
             }
 
 
+
         }
+
+
+
 
 
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
                 .content("Tạo sản phẩm thành công!").data(new RegisterProductRespone(product.getProductId()
-                        , product.getSellerId().getSellerId(), product.getCategoryId(), product.getPrice(), product.isProductStatus()
-                        , variationList, productDetail))
+                        ,product.getSellerId().getSellerId(),product.getCategoryId(),product.getPrice(),product.isProductStatus()
+                        ,variationList,productDetail))
                 .build();
     }
 
@@ -180,7 +185,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse getProductByVariationDetailId(List<Integer> variationDetailId) {
 
-        List<VariationDetail> variationDetails = variationDetailRepository.findAllById(variationDetailId);
+        List<VariationDetail> variationDetails = variationDetailRepository.getVariationDetailByVariationId(variationDetailId);
 
         List<Integer> variationIds = new ArrayList<>();
 

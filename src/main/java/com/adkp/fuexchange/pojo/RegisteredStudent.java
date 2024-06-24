@@ -50,10 +50,6 @@ public class RegisteredStudent {
     @JsonBackReference
     private List<ChatMessage> studentReceiveId;
 
-    @OneToOne(mappedBy = "registeredStudentId", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JsonBackReference
-    private Seller sellerId;
-
     public RegisteredStudent(Student studentId, Roles roleId, String password, boolean active, String deliveryAddress) {
         this.studentId = studentId;
         this.roleId = roleId;
