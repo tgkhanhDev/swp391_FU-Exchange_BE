@@ -2,6 +2,7 @@ package com.adkp.fuexchange.service;
 
 import com.adkp.fuexchange.dto.PostProductDTO;
 import com.adkp.fuexchange.mapper.PostProductMapper;
+import com.adkp.fuexchange.mapper.ProductMapper;
 import com.adkp.fuexchange.pojo.*;
 import com.adkp.fuexchange.repository.*;
 import com.adkp.fuexchange.request.CreatePostProductRequest;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,8 +38,10 @@ public class PostProductServiceImpl implements PostProductService {
 
     private final ReviewRepository reviewRepository;
 
+    private final ProductMapper productMapper;
+
     @Autowired
-    public PostProductServiceImpl(PostProductRepository postProductRepository, PostProductMapper postProductMapper, ProductRepository productRepository, PostTypeRepository postTypeRepository, PostStatusRepository postStatusRepository, CampusRepository campusRepository, ReviewRepository reviewRepository) {
+    public PostProductServiceImpl(PostProductRepository postProductRepository, PostProductMapper postProductMapper, ProductRepository productRepository, PostTypeRepository postTypeRepository, PostStatusRepository postStatusRepository, CampusRepository campusRepository, ReviewRepository reviewRepository, ProductMapper productMapper) {
         this.postProductRepository = postProductRepository;
         this.postProductMapper = postProductMapper;
         this.productRepository = productRepository;
@@ -45,6 +49,7 @@ public class PostProductServiceImpl implements PostProductService {
         this.postStatusRepository = postStatusRepository;
         this.campusRepository = campusRepository;
         this.reviewRepository = reviewRepository;
+        this.productMapper = productMapper;
     }
 
     @Override
@@ -91,6 +96,21 @@ public class PostProductServiceImpl implements PostProductService {
                 .message(HttpStatus.OK.name())
                 .content("Xem thông tin thành công!")
                 .data(postProductDTO)
+                .build();
+    }
+
+    @Override
+    public ResponseObject<Object> getPostProductBySellerId(int sellerID) {
+        List<PostProductDTO> postProductDTOList = new ArrayList<>();
+        List<PostProduct>  postProductList = postProductRepository.getPostProductBySellerId(sellerID);
+        for(PostProduct postProduct:postProductList){
+            postProductDTOList.add(postProductMapper.toPostProductDTO(postProduct));
+        }
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Xem thông tin thành công!")
+                .data(postProductDTOList)
                 .build();
     }
 

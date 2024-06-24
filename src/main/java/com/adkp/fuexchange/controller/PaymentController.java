@@ -1,6 +1,5 @@
 package com.adkp.fuexchange.controller;
 
-import com.adkp.fuexchange.dto.OrderPostProductDTO;
 import com.adkp.fuexchange.repository.RegisteredStudentRepository;
 import com.adkp.fuexchange.request.OrdersRequest;
 import com.adkp.fuexchange.response.ResponseObject;
@@ -19,8 +18,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/order/payment")
@@ -107,10 +104,6 @@ public class PaymentController {
     @PostMapping(value = "/pay-order", consumes = "application/json")
     public ResponseObject<Object> payOrders(@Valid @RequestBody OrdersRequest ordersRequest) {
 
-        int status = HttpStatus.OK.value();
-        String message = HttpStatus.OK.name();
-        String content = "Mua hàng thành công!";
-
         if (registeredStudentRepository.getReferenceById(ordersRequest.getRegisteredStudentId()).getDeliveryAddress() == null) {
             return ResponseObject.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
@@ -118,21 +111,7 @@ public class PaymentController {
                     .content("Chưa có địa chỉ nhận hàng. Vui lòng điền đầy đủ thông tin trước khi mua hàng!")
                     .build();
         }
-
-        List<OrderPostProductDTO> ordersResult = paymentService.payOrders(ordersRequest);
-
-        if (ordersResult == null) {
-            status = HttpStatus.OK.value();
-            message = HttpStatus.OK.name();
-            content = "Mua hàng thất bại!";
-        }
-
-        return ResponseObject.builder()
-                .status(status)
-                .message(message)
-                .content(content)
-                .data(ordersResult)
-                .build();
+        return paymentService.payOrders(ordersRequest);
     }
 
 }

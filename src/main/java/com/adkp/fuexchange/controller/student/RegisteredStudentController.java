@@ -43,6 +43,14 @@ public class RegisteredStudentController {
                 )
                 .build();
     }
+    @Operation(summary = "view all registered student")
+    @GetMapping("/registered-student/{current}")
+    public ResponseObject<Object>viewAllregisteredStudent(
+            @PathVariable("current") int current,
+            @RequestParam(value = "name", required = false) String name
+    ){
+        return registeredStudentService.viewAllRegisteredStudent(  current, name);
+    }
 
     @Operation(summary = "view order detail for student by registeredStudentId")
     @GetMapping("/order-detail/{registeredStudentId}/{orderId}")
@@ -85,4 +93,21 @@ public class RegisteredStudentController {
 
         return registeredStudentService.updatePassword(updatePasswordRequest);
     }
+    @Operation(summary = "update delivery Address registered student ")
+    @PutMapping("/{registeredStudentId}/update-registered-student")
+    public  ResponseObject<Object>updateRegisterStudent(
+            @PathVariable("registeredStudentId") int registeredStudentId,
+            @RequestParam("deliveryAddress") String deliveryAddress
+            ){
+        return  registeredStudentService.updateRegisterStudentByID(registeredStudentId,deliveryAddress);
+    }
+    @Operation(summary = "update active registered student")
+    @PutMapping("/{registeredStudentId}/update-active")
+    public  ResponseObject<Object>updateActive(
+            @PathVariable("registeredStudentId") int registeredStudentId,
+            @RequestParam("active") int active
+    ){
+        return  registeredStudentService.updateActiveByID(registeredStudentId,active);
+    }
+
 }

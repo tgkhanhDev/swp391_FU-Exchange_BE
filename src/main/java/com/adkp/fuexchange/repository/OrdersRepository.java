@@ -13,7 +13,7 @@ public interface OrdersRepository extends JpaRepository<Orders,Integer> {
     List<Orders> getOrderByRegisterId(@Param("registeredStudentId") Integer registeredStudentId);
 
     @Query("Select od From Orders od Where od.orderStatusId.orderStatusId = :orderStatusId AND od.orderId = :orderId " +
-            "AND od.orderStatusId.orderStatusId = :orderStatusId")
+            "AND od.orderStatusId.orderStatusId > 1")
     Orders getOrderByStatus(@Param("orderId") Integer orderId, @Param("orderStatusId") Integer orderStatusId);
 
     @Query("Select od From Orders od Where od.orderStatusId.orderStatusId = 1")

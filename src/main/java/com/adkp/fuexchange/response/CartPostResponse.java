@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor(force = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CartPostResponse {
+    private CartPostEmbeddable cartPostId;
     private ProductDetail productDetailId; //prdDetail
     private Seller sellerId;
     private Category categoryId;
