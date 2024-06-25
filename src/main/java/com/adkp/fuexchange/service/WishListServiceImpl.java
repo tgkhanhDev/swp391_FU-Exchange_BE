@@ -83,40 +83,48 @@ public class WishListServiceImpl implements WishListService {
 
     @Override
     public ResponseObject<Object> viewWishListByPostProductID( int postProductID) {
-//        List<WishList> wishListList = wishListRepository.getWishListByPostProductID(postProductID);
-//        PostProduct postProduct = postProductRepository.getReferenceById(postProductID);
-//        Product product = productRepository.getReferenceById(postProduct.getProductId().getProductId());
-//        List<WishListRespone> wishListResponesList = new ArrayList<>();
-//        ProductResponse productResponse = new ProductResponse().builder().categoryId(product.getCategoryId())
-//                .price(product.getPrice())
-//                .productDetailResponse(new ProductDetailResponse().builder()
-//                        .productName(product.getProductDetailId().getProductName())
-//                        .description(product.getProductDetailId().getDescription())
-//                        .build())
-//                .build();
-//        PostProductResponse postProductResponse = new PostProductResponse().builder()
-//                .postProductId(postProduct.getPostProductId())
-//                .postTypeId(postProduct.getPostTypeId())
-//                .campusId(postProduct.getCampusId())
-//                .postStatusId(postProduct.getPostStatusId())
-//                .quantity(postProduct.getQuantity())
-//                .createDate(postProduct.getCreateDate()).
-//                productResponse(productResponse)
-//                .content(postProduct.getContent())
-//                .build();
-//        for(WishList index: wishListList ){
-//            wishListResponesList.add(WishListRespone.builder().registeredStudentId(index.getRegisteredStudentId().getRegisteredStudentId())
-//                            .postProductResponse(postProductResponse)
-//                            .createTime(index.getCreateTime())
-//                            .quantity(index.getQuantity())
-//                            .isActive(index.isActive())
-//                    .build());
-//        }
+        List<WishList> wishListList = wishListRepository.getWishListByPostProductID(postProductID);
+        if(wishListList.isEmpty()){
+            return ResponseObject.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .message(HttpStatus.BAD_REQUEST.name())
+                    .content("Danh sách không tồn tại!")
+                    .build();
+        }
+
+        PostProduct postProduct = postProductRepository.getReferenceById(postProductID);
+        Product product = productRepository.getReferenceById(postProduct.getProductId().getProductId());
+        List<WishListRespone> wishListResponesList = new ArrayList<>();
+        ProductResponse productResponse = new ProductResponse().builder().categoryId(product.getCategoryId())
+                .price(product.getPrice())
+                .productDetailResponse(new ProductDetailResponse().builder()
+                        .productName(product.getProductDetailId().getProductName())
+                        .description(product.getProductDetailId().getDescription())
+                        .build())
+                .build();
+        PostProductResponse postProductResponse = new PostProductResponse().builder()
+                .postProductId(postProduct.getPostProductId())
+                .postTypeId(postProduct.getPostTypeId())
+                .campusId(postProduct.getCampusId())
+                .postStatusId(postProduct.getPostStatusId())
+                .quantity(postProduct.getQuantity())
+                .createDate(postProduct.getCreateDate()).
+                productResponse(productResponse)
+                .content(postProduct.getContent())
+                .build();
+        for(WishList index: wishListList ){
+            wishListResponesList.add(WishListRespone.builder().wishListId(index.getWishListId()).registeredStudentId(index.getRegisteredStudentId().getRegisteredStudentId())
+                    .postProductResponse(postProductResponse)
+                    .createTime(index.getCreateTime())
+                    .quantity(index.getQuantity())
+                    .isActive(index.isActive())
+                    .build());
+        }
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
                 .content("xuât danh sách wishlist thành công!")
-//                .data(wishListResponesList)
+                .data(wishListResponesList)
                 .build();
     }
 

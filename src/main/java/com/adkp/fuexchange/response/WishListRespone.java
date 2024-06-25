@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class WishListRespone {
-
+    private int  wishListId;
     private int registeredStudentId;
 
     private PostProductResponse postProductResponse;
