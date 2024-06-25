@@ -8,14 +8,16 @@ import com.adkp.fuexchange.repository.PostProductRepository;
 import com.adkp.fuexchange.repository.RegisteredStudentRepository;
 import com.adkp.fuexchange.repository.VariationDetailRepository;
 import com.adkp.fuexchange.request.CartRequest;
+import com.adkp.fuexchange.response.CartPostResponse;
+import com.adkp.fuexchange.response.ResponseObject;
+import com.adkp.fuexchange.response.VariationResponse;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class CartPostServiceImpl implements CartPostService {
@@ -40,193 +42,155 @@ public class CartPostServiceImpl implements CartPostService {
 
 
     @Override
-    public List<CartPostDTO> viewCartPostProductByStudentId(Integer registeredStudentId) {
+    public ResponseObject<Object> viewCartPostProductByStudentId(String studentId) {
 
-        List<CartPost> cartPostDTO = cartPostRepository.getCartProductByRegisteredStudentId(registeredStudentId);
+//        CartPostDTO cartPostDTO = cartPostMapper.toCartPostDTOList(cartPostRepository.getCartProductByStudentId(studentId));
+//
+//        CartPostResponse cartPostResponse = CartPostResponse.builder()
+//                .productDetailId()
+//                .build();
 
-        return cartPostMapper.toCartPostDTOList(cartPostDTO);
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Xem thông tin thành công!")
+                .data(
+                        cartPostMapper.toCartPostDTOList(cartPostRepository.getCartProductByStudentId(studentId))
+                )
+                .build();
+    }
+
+    @Override
+    public ResponseObject<Object> viewCartPostById(CartPostEmbeddable cartPostId) {
+
+//        return ResponseObject.builder()
+//                .status(HttpStatus.OK.value())
+//                .message(HttpStatus.OK.name())
+//                .content("Xem thông tin thành công!")
+//                .data(
+//                        postProductMapper.toPostProductDTOList(cartPostRepository.getCartProductByStudentId(studentId))
+//                )
+//                .build();
+        return null;
+    }
+
+    private List<VariationResponse> getVariation(List<VariationDetail> variationDetails, List<Integer> variationIds) {
+
+        List<VariationResponse> variations = new ArrayList<>();
+
+        for (VariationDetail detail : variationDetails) {
+            variationIds.add(detail.getVariationId().getVariationId());
+
+            VariationResponse variation = VariationResponse.builder()
+                    .variationId(detail.getVariationId().getVariationId())
+                    .variationName(detail.getVariationId().getVariationName())
+                    .variationDetail(detail)
+                    .build();
+
+            detail.getVariationId().setProductId(null);
+            detail.setVariationId(null);
+
+            variations.add(variation);
+        }
+        return variations;
     }
 
     @Override
     @Transactional
-    public List<CartPost> addToCart(CartRequest cartRequest) {
+    public ResponseObject<Object> addToCart(CartRequest cartRequest) {
 
-        RegisteredStudent registeredStudent = registeredStudentRepository.getReferenceById(cartRequest.getRegisteredStudentId());
+
+
+        RegisteredStudent registeredStudent = registeredStudentRepository.findRegisteredStudentByStudentId(cartRequest.getStudentId());
+        if (registeredStudent == null) {
+            return ResponseObject.builder()
+                    .status(HttpStatus.NOT_FOUND.value())
+                    .message(HttpStatus.NOT_FOUND.name())
+                    .content("Người dùng không tồn tại")
+                    .build();
+        }
 
         Cart cart = registeredStudent.getCartId();
-
         PostProduct postProduct = postProductRepository.getReferenceById(cartRequest.getPostProductId());
-
-        List<CartPost> cartPostsSaved = cartPostRepository.getCartPostByAllId(
-                cart.getCartId(),
-                postProduct.getPostProductId(),
-                cartRequest.getVariationDetailId()
+//        VariationDetail variationDetail = variationDetailRepository.getReferenceById(cartRequest.getVariationId());
+        VariationDetail variationDetail = null;
+//======
+        cartPostRepository.save(
+                CartPost.builder()
+//                        .cartPostId(new CartPostEmbeddable(cart.getCartId(), cartRequest.getPostProductId(), cartRequest.getVariationId()))
+                        .cartId(registeredStudent.getCartId())
+                        .postProductId(postProduct)
+                        .variationDetailId(variationDetail)
+                        .quantity(cartRequest.getQuantity())
+                        .build()
         );
 
-        boolean validate = addToCartValidate(cartPostsSaved, cartRequest);
-
-        List<CartPost> cartPosts;
-
-        if (validate) {
-            cartPosts = saveAlreadyExistPostInCart(cartRequest, cartPostsSaved);
-
-            return cartPostRepository.saveAll(cartPosts);
-        }
-
-        cartPosts = saveNewPostInCart(cartRequest, cart, postProduct);
-
-        return cartPostRepository.saveAll(cartPosts);
-    }
-
-    private List<CartPost> saveAlreadyExistPostInCart(CartRequest cartRequest, List<CartPost> cartPostsSaved) {
-
-        ArrayList<CartPost> cartPosts = new ArrayList<>();
-
-        CartPost previousCartPost = null;
-
-        for (CartPost currentCartPost : cartPostsSaved) {
-
-            if (cartRequest.getVariationDetailId().size() == 1) {
-                cartPosts.add(
-                        CartPost.builder()
-                                .sttPostInCart(currentCartPost.getSttPostInCart())
-                                .cartId(currentCartPost.getCartId())
-                                .postProductId(currentCartPost.getPostProductId())
-                                .variationDetailId(currentCartPost.getVariationDetailId())
-                                .quantity(cartRequest.getQuantity() + currentCartPost.getQuantity())
-                                .build()
-                );
-                cartPostRepository.delete(currentCartPost);
-            } else if (previousCartPost != null &&
-                    currentCartPost.getSttPostInCart() == previousCartPost.getSttPostInCart() &&
-                    currentCartPost.getVariationDetailId().getVariationDetailId() != previousCartPost.getVariationDetailId().getVariationDetailId()
-            ) {
-                cartPosts.add(
-                        CartPost.builder()
-                                .sttPostInCart(previousCartPost.getSttPostInCart())
-                                .cartId(previousCartPost.getCartId())
-                                .postProductId(previousCartPost.getPostProductId())
-                                .variationDetailId(previousCartPost.getVariationDetailId())
-                                .quantity(cartRequest.getQuantity() + previousCartPost.getQuantity())
-                                .build()
-                );
-                cartPosts.add(
-                        CartPost.builder()
-                                .sttPostInCart(currentCartPost.getSttPostInCart())
-                                .cartId(currentCartPost.getCartId())
-                                .postProductId(currentCartPost.getPostProductId())
-                                .variationDetailId(currentCartPost.getVariationDetailId())
-                                .quantity(cartRequest.getQuantity() + currentCartPost.getQuantity())
-                                .build()
-                );
-                cartPostRepository.delete(previousCartPost);
-                cartPostRepository.delete(currentCartPost);
-            }
-
-            previousCartPost = currentCartPost;
-        }
-
-        return cartPosts;
-    }
-
-    private List<CartPost> saveNewPostInCart(CartRequest cartRequest, Cart cart, PostProduct postProduct) {
-
-        List<CartPost> cartPosts = new ArrayList<>();
-
-        int sttPostInCart = cartPostRepository.getSttLastCart(cart.getCartId()) + 1;
-
-        List<VariationDetail> variationDetails =
-                variationDetailRepository.findAllById(cartRequest.getVariationDetailId());
-
-        for (VariationDetail variationDetail : variationDetails) {
-            cartPosts.add(
-                    CartPost.builder()
-                            .sttPostInCart(sttPostInCart)
-                            .cartId(cart)
-                            .postProductId(postProduct)
-                            .variationDetailId(variationDetail)
-                            .quantity(cartRequest.getQuantity())
-                            .build()
-            );
-        }
-
-        return cartPosts;
-    }
-
-    private boolean addToCartValidate(List<CartPost> cartPostsSaved, CartRequest cartRequest) {
-
-        Map<Integer, List<Integer>> map = new HashMap<>();
-
-        List<Integer> variationDetail = new ArrayList<>();
-
-        CartPost previousCartPost = null;
-
-        for (CartPost currentCartPost : cartPostsSaved) {
-            if (cartRequest.getVariationDetailId().size() == 1) {
-                variationDetail.add(currentCartPost.getVariationDetailId().getVariationDetailId());
-
-                map.put(currentCartPost.getSttPostInCart(), variationDetail);
-            } else if (previousCartPost != null &&
-                    currentCartPost.getSttPostInCart() == previousCartPost.getSttPostInCart() &&
-                    currentCartPost.getVariationDetailId().getVariationDetailId() != previousCartPost.getVariationDetailId().getVariationDetailId()
-            ) {
-
-                variationDetail.clear();
-
-                variationDetail.add(previousCartPost.getVariationDetailId().getVariationDetailId());
-
-                variationDetail.add(currentCartPost.getVariationDetailId().getVariationDetailId());
-
-                map.put(currentCartPost.getSttPostInCart(), variationDetail);
-            }
-
-            previousCartPost = currentCartPost;
-        }
-
-        return map.containsValue(cartRequest.getVariationDetailId());
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Thêm giỏ hàng thành công")
+                .build();
     }
 
     @Override
     @Transactional
-    public boolean removeFromCart(CartRequest cartRequest) {
+    public ResponseObject<Object> updateCart(CartRequest cartRequest) {
 
-        RegisteredStudent registeredStudent = registeredStudentRepository.getReferenceById(cartRequest.getRegisteredStudentId());
+
+        RegisteredStudent registeredStudent = registeredStudentRepository.findRegisteredStudentByStudentId(cartRequest.getStudentId());
+        if (registeredStudent == null) {
+            return ResponseObject.builder()
+                    .status(HttpStatus.NOT_FOUND.value())
+                    .message(HttpStatus.NOT_FOUND.name())
+                    .content("Người dùng không tồn tại")
+                    .build();
+        }
 
         Cart cart = registeredStudent.getCartId();
+        PostProduct postProduct = postProductRepository.getReferenceById(cartRequest.getPostProductId());
+//        VariationDetail variationDetail = variationDetailRepository.getReferenceById(cartRequest.getVariationId());
 
-        PostProduct postProduct = postProductRepository.getPostProductByPostId(cartRequest.getPostProductId());
 
-        List<CartPost> cartPostsSaved = cartPostRepository.getCartPostByAllId(
-                cart.getCartId(),
-                postProduct.getPostProductId(),
-                cartRequest.getVariationDetailId()
+        VariationDetail variationDetail = null;
+//======
+
+
+
+        cartPostRepository.save(
+                CartPost.builder()
+//                        .cartPostId(new CartPostEmbeddable(cart.getCartId(), cartRequest.getPostProductId(), cartRequest.getVariationId()))
+                        .cartId(registeredStudent.getCartId())
+                        .postProductId(postProduct)
+                        .variationDetailId(variationDetail)
+                        .quantity(cartRequest.getQuantity())
+                        .build()
         );
 
-        return deleteAlgorithm(cartPostsSaved, cartRequest);
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Chỉnh sửa giỏ hàng thành công")
+                .build();
     }
 
-    private boolean deleteAlgorithm(List<CartPost> cartPostsSaved, CartRequest cartRequest) {
+    @Override
+    @Transactional
+    public ResponseObject<Object> removeFromCart(CartPostEmbeddable cartPostId) {
 
-        if (cartPostsSaved.isEmpty()) {
-            return false;
+        CartPost cartpost = cartPostRepository.getCartPostById(cartPostId.getCartId(), cartPostId.getPostProductId(), cartPostId.getVariationDetailId());
+        if (cartpost == null) {
+            return ResponseObject.builder()
+                    .status(HttpStatus.NOT_FOUND.value())
+                    .message(HttpStatus.NOT_FOUND.name())
+                    .content("Vật phẩm không tồn tại")
+                    .build();
         }
+        cartPostRepository.delete(cartpost);
 
-        CartPost previousCartPost = null;
-
-        for (CartPost currentCartPost : cartPostsSaved) {
-
-            if (cartRequest.getVariationDetailId().size() == 1) {
-                cartPostRepository.delete(currentCartPost);
-            } else if (previousCartPost != null &&
-                    currentCartPost.getSttPostInCart() == previousCartPost.getSttPostInCart() &&
-                    currentCartPost.getVariationDetailId().getVariationDetailId() != previousCartPost.getVariationDetailId().getVariationDetailId()
-            ) {
-                cartPostRepository.delete(previousCartPost);
-                cartPostRepository.delete(currentCartPost);
-            }
-
-            previousCartPost = currentCartPost;
-        }
-        return true;
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Xóa sản phẩm thành công")
+                .build();
     }
 }

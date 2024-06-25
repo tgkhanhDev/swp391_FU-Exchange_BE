@@ -37,6 +37,16 @@ public class PostProductController {
         return postProductService.viewMorePostProduct(current, campusId, postTypeId, name, categoryId);
     }
 
+    @GetMapping("/seller-post-product/{sellerId}")
+    public ResponseObject<Object> getPostProductBySellerId(@PathVariable("sellerId") int sellerId) {
+        return postProductService.getPostProductBySellerId(sellerId);
+    }
+
+    @GetMapping("/seller-post-product-by-regId/{registeredStudentId}")
+    public ResponseObject<Object> getPostProductByRegisteredStudentId(@PathVariable("registeredStudentId") int registeredStudentId) {
+        return postProductService.getPostProductByRegisteredStudentId(registeredStudentId);
+    }
+
     @Operation(summary = "Get post product by postProductId")
     @GetMapping("/detail/{postProductId}")
     public ResponseObject<Object> getPostProductByPostProductId(@PathVariable("postProductId") int postProductId) {

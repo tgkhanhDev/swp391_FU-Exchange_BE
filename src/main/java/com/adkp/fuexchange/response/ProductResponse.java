@@ -2,6 +2,7 @@ package com.adkp.fuexchange.response;
 
 
 import com.adkp.fuexchange.dto.ProductDTO;
+import com.adkp.fuexchange.pojo.Category;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,5 +27,12 @@ public class ProductResponse {
 
     private List<VariationResponse> variation;
 
-    private int postProductId;
+
+    private Category categoryId;
+
+    private double price;
+
+    private ProductDetailResponse productDetailResponse;
+
+
 }

@@ -14,7 +14,7 @@ public interface ChatService {
 
     ChatMessageDTO sendChatMessage(ChatRequest chatRequest);
 
-    ChatRoomDTO getChatRoomStudentToStudent(Integer registeredStudentId, Integer sellerId);
+    ChatRoomDTO getChatRoomByRegisteredStudentIdAndSellerId(Integer registeredStudentId, Integer sellerId);
 
     ChatMessageDTO contactToSeller(ContactToSellerRequest contactToSellerRequest);
 }

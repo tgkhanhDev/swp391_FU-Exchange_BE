@@ -51,15 +51,15 @@ public class ChatController {
                 .build();
     }
 
-    @GetMapping("/chat-room/student-to-student")
+    @GetMapping("/chat-room/student-to-seller")
     public ResponseObject<Object> getChatRoomByRegisteredStudentIdAndSellerId(
-            @RequestParam("registeredStudentId") int studentSendId,
-            @RequestParam("studentReceiveId") int studentReceiveId
+            @RequestParam("registeredStudentId") int registeredStudentId,
+            @RequestParam("sellerId") int sellerId
     ) {
 
         String content = "Xem thông tin thành công!";
 
-        ChatRoomDTO chatRoom = chatService.getChatRoomStudentToStudent(studentSendId, studentReceiveId);
+        ChatRoomDTO chatRoom = chatService.getChatRoomByRegisteredStudentIdAndSellerId(registeredStudentId, sellerId);
 
         if (chatRoom == null) {
             content = "Đoạn chat đã bị xóa hoặc chưa có tin nhắn nào được gửi!";

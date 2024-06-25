@@ -65,21 +65,14 @@ public class SellerController {
     public ResponseObject<Object> viewInformationSellerByStudentId(
             @PathVariable("studentId") String studentId
     ) {
-        if (sellerService.getInformationSellerByStudentId(studentId) == null) {
+        if (sellerService.checkSellerbyStudentID(studentId) == null) {
             return ResponseObject.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
                     .message(HttpStatus.BAD_REQUEST.name())
                     .content("Sinh viên chưa đăng ký trở thành người bán!")
                     .build();
         }
-        return ResponseObject.builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.name())
-                .content("Xem thông tin thành công!")
-                .data(
-                        sellerService.getInformationSellerByStudentId(studentId)
-                )
-                .build();
+        return sellerService.getInformationSellerByStudentId(studentId);
     }
 
     @Operation(summary = "Register to seller")

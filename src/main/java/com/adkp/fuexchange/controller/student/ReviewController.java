@@ -1,16 +1,16 @@
 package com.adkp.fuexchange.controller.student;
 
 import com.adkp.fuexchange.dto.ReviewDTO;
+import com.adkp.fuexchange.request.RegisterReviewRequest;
+import com.adkp.fuexchange.request.UpdateInformationReviewRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.response.ReviewResponse;
 import com.adkp.fuexchange.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -72,4 +72,35 @@ public class ReviewController {
                 .data(reviewResponse)
                 .build();
     }
+
+    @Operation(summary = "create review")
+    @PostMapping("/create")
+    public ResponseObject<Object>createReview(
+            @Valid @RequestBody RegisterReviewRequest registerReviewRequest
+    ){
+        return reviewService.createReview(registerReviewRequest);
+    }
+
+
+    @PutMapping("/{reviewId}")
+    public ResponseObject<Object>updateReview(
+                @PathVariable("reviewId") int reviewId,
+            @RequestBody UpdateInformationReviewRequest updateInformationReviewRequest
+            ){
+        return  reviewService.updateReview(reviewId,updateInformationReviewRequest);
+
+    }
+
+    @DeleteMapping("/{reviewId}")
+    public ResponseObject<Object>deteleReview(
+            @PathVariable("reviewId") int reviewId
+    ){
+        reviewService.deleteReview(reviewId);
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("xóa thành công!")
+                .build();
+    }
+
 }
