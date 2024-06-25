@@ -1,5 +1,6 @@
 package com.adkp.fuexchange.controller;
 
+import com.adkp.fuexchange.dto.OrderPostProductDTO;
 import com.adkp.fuexchange.repository.RegisteredStudentRepository;
 import com.adkp.fuexchange.request.OrdersRequest;
 import com.adkp.fuexchange.response.ResponseObject;
@@ -12,7 +13,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/order/payment")
@@ -75,20 +75,27 @@ public class PaymentController {
 
     @GetMapping("/vn-pay/call-back")
     @Hidden
-    public void paymentCallBack(
-            @RequestParam("vnp_ResponseCode") String vnp_ResponseCode,
-            HttpServletResponse httpServletResponse
-    ) throws IOException {
+    public ResponseObject<Object> paymentCallBack(@RequestParam("vnp_ResponseCode") String vnp_ResponseCode) {
 
-        // Thành công thì navigate qua facebook
+        int status = HttpStatus.BAD_REQUEST.value();
+
+        String message = HttpStatus.BAD_REQUEST.name();
+
+        String content = "Mua hàng thất bại!";
+
         if (vnPayService.vnPayPaymentCallBack(vnp_ResponseCode)) {
+            status = HttpStatus.OK.value();
 
-            httpServletResponse.sendRedirect("https://www.facebook.com/");
+            message = HttpStatus.BAD_REQUEST.name();
 
-            return;
+            content = "Mua hàng thành công!";
         }
 
-        httpServletResponse.sendRedirect("https://www.youtube.com/");
+        return ResponseObject.builder()
+                .status(status)
+                .message(message)
+                .content(content)
+                .build();
     }
 
     @ApiResponses(value = {
@@ -100,6 +107,10 @@ public class PaymentController {
     @PostMapping(value = "/pay-order", consumes = "application/json")
     public ResponseObject<Object> payOrders(@Valid @RequestBody OrdersRequest ordersRequest) {
 
+        int status = HttpStatus.OK.value();
+        String message = HttpStatus.OK.name();
+        String content = "Mua hàng thành công!";
+
         if (registeredStudentRepository.getReferenceById(ordersRequest.getRegisteredStudentId()).getDeliveryAddress() == null) {
             return ResponseObject.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
@@ -107,7 +118,21 @@ public class PaymentController {
                     .content("Chưa có địa chỉ nhận hàng. Vui lòng điền đầy đủ thông tin trước khi mua hàng!")
                     .build();
         }
-        return paymentService.payOrders(ordersRequest);
+
+        List<OrderPostProductDTO> ordersResult = paymentService.payOrders(ordersRequest);
+
+        if (ordersResult == null) {
+            status = HttpStatus.OK.value();
+            message = HttpStatus.OK.name();
+            content = "Mua hàng thất bại!";
+        }
+
+        return ResponseObject.builder()
+                .status(status)
+                .message(message)
+                .content(content)
+                .data(ordersResult)
+                .build();
     }
 
 }

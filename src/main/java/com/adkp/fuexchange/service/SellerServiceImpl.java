@@ -200,14 +200,14 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public OrderDetailResponse getOrderDetailBySellerIdAndOrderId(Integer sellerId, Integer orderId, Integer orderStatusId) {
+    public OrderDetailResponse getOrderDetailBySellerIdAndOrderId(Integer sellerId, Integer orderId) {
 
         List<OrderPostProductDTO> orderPostProductList =
-                orderPostProductMapper.toOrderPostProductDTOList(orderPostProductRepository.getOrdersDetailBySellerIdAndOrderId(sellerId, orderId, orderStatusId));
+                orderPostProductMapper.toOrderPostProductDTOList(orderPostProductRepository.getOrdersDetailBySellerIdAndOrderId(sellerId, orderId));
 
         List<OrderDetailResponse> postProductInOrder = getPostProductInOrder(orderPostProductList);
 
-        OrdersDTO orders = ordersMapper.toOrdersDTO(ordersRepository.getOrderByStatus(orderId, orderStatusId));
+        OrdersDTO orders = ordersMapper.toOrdersDTO(ordersRepository.getOrderByStatus(orderId));
 
         if (orders != null) {
 
