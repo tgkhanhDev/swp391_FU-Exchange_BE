@@ -59,7 +59,7 @@ public class ChatController {
 
         String content = "Xem thông tin thành công!";
 
-        ChatRoomDTO chatRoom = chatService.getChatRoomByRegisteredStudentIdAndSellerId(registeredStudentId, sellerId);
+        ChatRoomDTO chatRoom = chatService.getChatRoomStudentToStudent(registeredStudentId, sellerId);
 
         if (chatRoom == null) {
             content = "Đoạn chat đã bị xóa hoặc chưa có tin nhắn nào được gửi!";
