@@ -75,13 +75,11 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public ChatRoomDTO getChatRoomByRegisteredStudentIdAndSellerId(Integer registeredStudentId, Integer sellerId) {
-
-        Seller seller = sellerRepository.getReferenceById(sellerId);
+    public ChatRoomDTO getChatRoomStudentToStudent(Integer studentSendId, Integer studentReceiveId) {
 
         ChatRoom chatRoom = chatRoomRepository.getChatRoomByRegisteredStudentIdAndSellerId(
-                registeredStudentId,
-                seller.getRegisteredStudentId().getRegisteredStudentId()
+                studentSendId,
+                studentReceiveId
         );
 
         return chatRoomMapper.toChatRoomDTO(chatRoom);
