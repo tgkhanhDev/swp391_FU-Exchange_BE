@@ -13,7 +13,7 @@ import com.adkp.fuexchange.repository.ChatRoomRepository;
 import com.adkp.fuexchange.repository.RegisteredStudentRepository;
 import com.adkp.fuexchange.repository.SellerRepository;
 import com.adkp.fuexchange.request.ChatRequest;
-import com.adkp.fuexchange.request.ContactToSellerRequest;
+import com.adkp.fuexchange.request.ContactToRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,12 +87,12 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     @Transactional
-    public ChatMessageDTO contactToSeller(ContactToSellerRequest contactToSellerRequest) {
+    public ChatMessageDTO contactToSeller(ContactToRequest contactToRequest) {
 
-        Seller seller = sellerRepository.getReferenceById(contactToSellerRequest.getSellerId());
+        Seller seller = sellerRepository.getReferenceById(contactToRequest.getSellerId());
 
         ChatRoom chatRoom = chatRoomRepository.getChatRoomByRegisteredStudentIdAndSellerId(
-                contactToSellerRequest.getRegisteredStudentId(),
+                contactToRequest.getRegisteredStudentId(),
                 seller.getRegisteredStudentId().getRegisteredStudentId()
         );
 
@@ -100,18 +100,56 @@ public class ChatServiceImpl implements ChatService {
             chatRoom = chatRoomRepository.save(new ChatRoom(true));
         }
 
-        ChatMessage chatMessage = saveChatMessageContactToSeller(chatRoom, contactToSellerRequest);
+        ChatMessage chatMessage = saveChatMessageContactToSeller(chatRoom, contactToRequest);
 
         return chatMessageMapper.toChatMessageDTO(chatMessage);
     }
 
+    @Override
+    public ChatMessageDTO contactToStudent(ContactToRequest contactToRequest) {
+        Seller seller = sellerRepository.getReferenceById(contactToRequest.getSellerId());
+
+        ChatRoom chatRoom = chatRoomRepository.getChatRoomByRegisteredStudentIdAndSellerId(
+                seller.getRegisteredStudentId().getRegisteredStudentId(),
+                contactToRequest.getRegisteredStudentId()
+        );
+
+        if (chatRoom == null) {
+            chatRoom = chatRoomRepository.save(new ChatRoom(true));
+        }
+
+        ChatMessage chatMessage = saveChatMessageContactToStudent(chatRoom, contactToRequest);
+
+        return chatMessageMapper.toChatMessageDTO(chatMessage);
+    }
+
+    private ChatMessage saveChatMessageContactToStudent(
+            ChatRoom chatRoom,
+            ContactToRequest contactToRequest
+    ) {
+        Seller seller = sellerRepository.getReferenceById(contactToRequest.getSellerId());
+
+        RegisteredStudent studentSend = seller.getRegisteredStudentId();
+
+        RegisteredStudent studentReceive = registeredStudentRepository.getReferenceById(contactToRequest.getRegisteredStudentId());
+
+        return chatMessageRepository.save(
+                ChatMessage.builder()
+                        .chatRoomId(chatRoom)
+                        .studentSendId(studentSend)
+                        .studentReceiveId(studentReceive)
+                        .content(contactToRequest.getContent())
+                        .timeSend(LocalDateTime.now())
+                        .build());
+    }
+
     private ChatMessage saveChatMessageContactToSeller(
             ChatRoom chatRoom,
-            ContactToSellerRequest contactToSellerRequest
+            ContactToRequest contactToRequest
     ) {
-        Seller seller = sellerRepository.getReferenceById(contactToSellerRequest.getSellerId());
+        Seller seller = sellerRepository.getReferenceById(contactToRequest.getSellerId());
 
-        RegisteredStudent studentSend = registeredStudentRepository.getReferenceById(contactToSellerRequest.getRegisteredStudentId());
+        RegisteredStudent studentSend = registeredStudentRepository.getReferenceById(contactToRequest.getRegisteredStudentId());
 
         RegisteredStudent studentReceive = seller.getRegisteredStudentId();
 
@@ -120,7 +158,7 @@ public class ChatServiceImpl implements ChatService {
                         .chatRoomId(chatRoom)
                         .studentSendId(studentSend)
                         .studentReceiveId(studentReceive)
-                        .content(contactToSellerRequest.getContent())
+                        .content(contactToRequest.getContent())
                         .timeSend(LocalDateTime.now())
                         .build());
     }
@@ -135,6 +173,5 @@ public class ChatServiceImpl implements ChatService {
     private RegisteredStudent getRegisteredStudent(Integer registeredStudentId) {
         return registeredStudentRepository.getReferenceById(registeredStudentId);
     }
-
 
 }

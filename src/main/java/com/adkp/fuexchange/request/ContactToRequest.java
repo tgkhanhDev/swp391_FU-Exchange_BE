@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Data
-public class ContactToSellerRequest {
+public class ContactToRequest {
 
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
     private Integer registeredStudentId;

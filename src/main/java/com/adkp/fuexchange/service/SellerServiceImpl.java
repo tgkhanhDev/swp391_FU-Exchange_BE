@@ -170,7 +170,7 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public SellerDTO checkSellerbyStudentID(String studentId) {
+    public SellerDTO checkSellerByStudentID(String studentId) {
         return sellerMapper.toSellerDTO(sellerRepository.getInformationSellerByStudentId(studentId));
     }
 

@@ -3,7 +3,7 @@ package com.adkp.fuexchange.controller;
 import com.adkp.fuexchange.dto.ChatMessageDTO;
 import com.adkp.fuexchange.dto.ChatRoomDTO;
 import com.adkp.fuexchange.request.ChatRequest;
-import com.adkp.fuexchange.request.ContactToSellerRequest;
+import com.adkp.fuexchange.request.ContactToRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.ChatService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -97,13 +97,36 @@ public class ChatController {
     }
 
     @PostMapping("/contact-to-seller")
-    public ResponseObject<Object> sendMessage(@RequestBody @Valid ContactToSellerRequest contactToSellerRequest) {
+    public ResponseObject<Object> contactToSeller(@RequestBody @Valid ContactToRequest contactToSellerRequest) {
 
         int status = HttpStatus.OK.value();
         String message = (HttpStatus.OK.name());
         String content = "Gửi tin nhắn thành công!";
 
         ChatMessageDTO chatMessageDTO = chatService.contactToSeller(contactToSellerRequest);
+
+        if (chatMessageDTO == null) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR.value();
+            message = (HttpStatus.INTERNAL_SERVER_ERROR.name());
+            content = "Gửi tin nhắn thất bại!";
+        }
+
+        return ResponseObject.builder()
+                .status(status)
+                .message(message)
+                .content(content)
+                .data(chatMessageDTO)
+                .build();
+    }
+
+    @PostMapping("/contact-to-student")
+    public ResponseObject<Object> contactToStudent(@RequestBody @Valid ContactToRequest contactToRequest) {
+
+        int status = HttpStatus.OK.value();
+        String message = (HttpStatus.OK.name());
+        String content = "Gửi tin nhắn thành công!";
+
+        ChatMessageDTO chatMessageDTO = chatService.contactToStudent(contactToRequest);
 
         if (chatMessageDTO == null) {
             status = HttpStatus.INTERNAL_SERVER_ERROR.value();

@@ -56,10 +56,8 @@ public class StaffServiceImpl implements StaffService {
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
                 .content("Xem thêm thành công!")
-
                 .data(new ListStaffResponse(staffInforResponse))
                 .meta(new MetaResponse(countStaff(identityCardNum, staffInforResponse), current))
-
                 .build();
     }
 
@@ -71,7 +69,6 @@ public class StaffServiceImpl implements StaffService {
         return ResponseObject.builder().status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
                 .content("Đã tìm thấy thông tin nhân viên!")
-
                 .data(new StaffInforResponse(staff.getStaffId(),staff.getRoleId(),staff.getFirstName(),staff.getLastName()
                         ,staff.getGender(),staff.getIdentityCard(),staff.getAddress(),staff.getPhoneNumber(),staff.getDob(),staff.isActive())).build();
 
