@@ -2,6 +2,8 @@ package com.adkp.fuexchange.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +13,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(force = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
+@AllArgsConstructor
+@Builder
 @Table(name = "ReportSeller")
 public class ReportSeller {
     @Id
@@ -35,7 +39,6 @@ public class ReportSeller {
 
     private LocalDateTime createTime;
 
-    @Column(nullable = true)
     private String content;
 
     public ReportSeller(RegisteredStudent buyerId, Seller sellerId, ReportSellerType reportSellerTypeId, ReportStatus reportStatusId, LocalDateTime createTime, String content) {

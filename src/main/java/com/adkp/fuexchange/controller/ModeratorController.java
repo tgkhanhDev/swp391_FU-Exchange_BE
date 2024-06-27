@@ -1,13 +1,14 @@
 package com.adkp.fuexchange.controller;
 
-import com.adkp.fuexchange.dto.OrdersDTO;
-import com.adkp.fuexchange.dto.PostProductDTO;
-import com.adkp.fuexchange.dto.SellerDTO;
+import com.adkp.fuexchange.dto.*;
 import com.adkp.fuexchange.request.UpdatePostStatus;
+import com.adkp.fuexchange.request.UpdateReportPostRequest;
+import com.adkp.fuexchange.request.UpdateReportSellerRequest;
 import com.adkp.fuexchange.response.MetaResponse;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.ModeratorService;
 import com.adkp.fuexchange.service.PostProductService;
+import com.adkp.fuexchange.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -28,10 +29,13 @@ public class ModeratorController {
 
     private final PostProductService postProductService;
 
+    private final ReportService reportService;
+
     @Autowired
-    public ModeratorController(ModeratorService moderatorService, PostProductService postProductService) {
+    public ModeratorController(ModeratorService moderatorService, PostProductService postProductService, ReportService reportService) {
         this.moderatorService = moderatorService;
         this.postProductService = postProductService;
+        this.reportService = reportService;
     }
 
     @GetMapping("/view-register-to-seller-request")
@@ -108,7 +112,58 @@ public class ModeratorController {
                 .message(HttpStatus.OK.name())
                 .content("Xem thêm thành công!")
                 .data(postProductDTOs)
-                .meta(new MetaResponse(postProductService.countAllPostProduct(), 6))
+                .meta(new MetaResponse(postProductService.countAllPostProduct(), postProductDTOs.size()))
+                .build();
+    }
+
+
+    @PutMapping("/update-status-report-post")
+    public ResponseObject<Object> updateStatusReportPostProduct(
+            @RequestBody @Valid UpdateReportPostRequest updatePostProductRequest
+    ) {
+
+        int status = HttpStatus.OK.value();
+        String message = HttpStatus.OK.name();
+        String content = "Cập nhật thành công!";
+
+        ReportPostProductDTO updatedReport = reportService.updateStatusReportPostProduct(updatePostProductRequest);
+
+        if (updatedReport == null) {
+            status = HttpStatus.BAD_REQUEST.value();
+            message = HttpStatus.BAD_REQUEST.name();
+            content = "Cập nhật thất bại!";
+        }
+
+        return ResponseObject.builder()
+                .status(status)
+                .message(message)
+                .content(content)
+                .data(updatedReport)
+                .build();
+    }
+
+    @PutMapping("/update-status-report-seller")
+    public ResponseObject<Object> updateStatusReportSeller(
+            @RequestBody @Valid UpdateReportSellerRequest updateReportSellerRequest
+    ) {
+
+        int status = HttpStatus.OK.value();
+        String message = HttpStatus.OK.name();
+        String content = "Cập nhật thành công!";
+
+        ReportSellerDTO updatedReport = reportService.updateStatusReportSeller(updateReportSellerRequest);
+
+        if (updatedReport == null) {
+            status = HttpStatus.BAD_REQUEST.value();
+            message = HttpStatus.BAD_REQUEST.name();
+            content = "Cập nhật thất bại!";
+        }
+
+        return ResponseObject.builder()
+                .status(status)
+                .message(message)
+                .content(content)
+                .data(updatedReport)
                 .build();
     }
 }
