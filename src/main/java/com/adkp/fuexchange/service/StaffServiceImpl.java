@@ -57,7 +57,12 @@ public class StaffServiceImpl implements StaffService {
                 .message(HttpStatus.OK.name())
                 .content("Xem thêm thành công!")
                 .data(new ListStaffResponse(staffInforResponse))
-                .meta(new MetaResponse(countStaff(identityCardNum, staffInforResponse), current))
+                .meta(
+                        MetaResponse.builder()
+                                .total(countStaff(identityCardNum, staffInforResponse))
+                                .current(current)
+                                .build()
+                )
                 .build();
     }
 

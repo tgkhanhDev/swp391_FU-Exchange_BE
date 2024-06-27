@@ -31,5 +31,11 @@ public interface PostProductService {
             Integer postStatusId
     );
 
-    long countAllPostProduct();
+    long totalAfterFilter(
+            String sellerName,
+            Integer postTypeId,
+            Integer campusId,
+            Integer postStatusId
+    );
+
 }

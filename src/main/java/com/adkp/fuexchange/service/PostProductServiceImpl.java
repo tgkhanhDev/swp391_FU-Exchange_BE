@@ -66,7 +66,12 @@ public class PostProductServiceImpl implements PostProductService {
                 .message(HttpStatus.OK.name())
                 .content("Xem thêm thành công!")
                 .data(postProductDTO)
-                .meta(new MetaResponse((countPostProduct(campusId, postTypeId, name, categoryId, postProductDTO)), current))
+                .meta(
+                        MetaResponse.builder()
+                                .total(countPostProduct(campusId, postTypeId, name, categoryId, postProductDTO))
+                                .current(current)
+                                .build()
+                )
                 .build();
     }
 
@@ -207,8 +212,16 @@ public class PostProductServiceImpl implements PostProductService {
     }
 
     @Override
-    public long countAllPostProduct() {
-        return postProductRepository.count();
+    public long totalAfterFilter(String sellerName, Integer postTypeId, Integer campusId, Integer postStatusId) {
+
+        String seller = Optional.ofNullable(sellerName).map(String::valueOf).orElse("");
+        String postType = Optional.ofNullable(postTypeId).map(String::valueOf).orElse("");
+        String campus = Optional.ofNullable(campusId).map(String::valueOf).orElse("");
+        String postStatus = Optional.ofNullable(postStatusId).map(String::valueOf).orElse("");
+
+        return postProductRepository.totalAfterFilter(
+                seller, postType, campus, postStatus
+        );
     }
 
     public long countPostProduct(Integer campusId, Integer postTypeId, String name, Integer categoryId, List<PostProductDTO> postProductDTOList) {

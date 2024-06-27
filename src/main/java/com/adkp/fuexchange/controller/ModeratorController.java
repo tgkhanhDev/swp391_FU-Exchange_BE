@@ -107,12 +107,23 @@ public class ModeratorController {
                 postStatus
         );
 
+        long totalAfterFilter = postProductService.totalAfterFilter(
+                sellerName,
+                postTypeId,
+                campusId,
+                postStatus
+        );
+
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
                 .content("Xem thêm thành công!")
                 .data(postProductDTOs)
-                .meta(new MetaResponse(postProductService.countAllPostProduct(), postProductDTOs.size()))
+                .meta(
+                        MetaResponse.builder()
+                                .total(totalAfterFilter)
+                                .build()
+                )
                 .build();
     }
 
