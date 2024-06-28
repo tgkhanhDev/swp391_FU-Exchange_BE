@@ -90,4 +90,11 @@ public interface PostProductRepository extends JpaRepository<PostProduct, Intege
             @Param("campusId") String campusId,
             @Param("postStatusId") String postStatusId
     );
+
+    @Query("SELECT COUNT(pprd) FROM PostProduct pprd " +
+            "WHERE pprd.productId.productId = :productId " +
+            "AND pprd.postStatusId.postStatusId IN (2, 4)")
+    long checkProductInPost(
+        @Param("productId") Integer productId
+    );
 }

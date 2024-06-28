@@ -24,4 +24,6 @@ public interface ProductService {
     long countProduct(String name, List<ProductDTO> productDTOList);
 
     ProductResponse getProductByVariationDetailId(List<Integer> variationDetailId);
+
+    ProductDTO deleteProduct(Integer productId);
 }
