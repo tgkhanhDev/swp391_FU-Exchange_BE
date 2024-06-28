@@ -128,7 +128,7 @@ public class RegisteredStudentServiceImpl implements RegisteredStudentService {
 
         registeredStudent.setActive(isActive != 0);
 
-        return registeredStudentMapper.toRegisteredStudentDTO(registeredStudent);
+        return registeredStudentMapper.toRegisteredStudentDTO(registeredStudentRepository.save(registeredStudent));
     }
 
     private List<OrderDetailResponse> getPostProductInOrder(List<OrderPostProductDTO> orderPostProductList) {
