@@ -21,4 +21,8 @@ public interface RegisteredStudentService {
             String studentName
     );
 
+    RegisteredStudentDTO updateStatusRegisteredStudent(
+            Integer registeredStudentId,
+            Integer isActive
+    );
 }

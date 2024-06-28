@@ -3,6 +3,7 @@ package com.adkp.fuexchange.controller.student;
 import com.adkp.fuexchange.dto.OrdersDTO;
 import com.adkp.fuexchange.dto.RegisteredStudentDTO;
 import com.adkp.fuexchange.request.UpdatePasswordRequest;
+import com.adkp.fuexchange.request.UpdateStatusRegisteredStudentRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.OrderService;
 import com.adkp.fuexchange.service.RegisteredStudentService;
@@ -106,10 +107,29 @@ public class RegisteredStudentController {
                 .build();
     }
 
+    @Operation(summary = "Update of status account")
+    @PutMapping("/update-status")
+    public ResponseObject<Object> updateStatus(
+            @RequestBody @Valid UpdateStatusRegisteredStudentRequest updateStatusRegisteredStudentRequest
+    ) {
+
+        RegisteredStudentDTO registeredStudentUpdated = registeredStudentService.updateStatusRegisteredStudent(
+                updateStatusRegisteredStudentRequest.getRegisteredStudentId(),
+                updateStatusRegisteredStudentRequest.getIsActive()
+        );
+
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Cập nhật trạng thái tài khoản thành công!")
+                .data(registeredStudentUpdated)
+                .build();
+    }
+
     @Operation(summary = "Get information by registeredStudentId")
     @GetMapping("/filter")
     public ResponseObject<Object> filterRegisteredStudent(
-            @RequestParam("studentName") String studentName
+            @RequestParam(value = "studentName", required = false) String studentName
     ) {
 
         List<RegisteredStudentDTO> registeredStudentDTOs = registeredStudentService.filterRegisteredStudent(studentName);

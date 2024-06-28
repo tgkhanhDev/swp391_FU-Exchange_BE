@@ -122,6 +122,15 @@ public class RegisteredStudentServiceImpl implements RegisteredStudentService {
         return registeredStudentMapper.totoRegisteredStudentDTOList(registeredStudents);
     }
 
+    @Override
+    public RegisteredStudentDTO updateStatusRegisteredStudent(Integer registeredStudentId, Integer isActive) {
+        RegisteredStudent registeredStudent = registeredStudentRepository.getReferenceById(registeredStudentId);
+
+        registeredStudent.setActive(isActive != 0);
+
+        return registeredStudentMapper.toRegisteredStudentDTO(registeredStudent);
+    }
+
     private List<OrderDetailResponse> getPostProductInOrder(List<OrderPostProductDTO> orderPostProductList) {
 
         List<OrderDetailResponse> postProductInOrder = new ArrayList<>();
