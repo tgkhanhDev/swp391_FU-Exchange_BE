@@ -8,4 +8,7 @@ public interface ViewRenderService {
     ResponseObject<Object> viewAllPostType();
 
     ResponseObject<Object> viewAllCategoryType();
+
+    ResponseObject<Object> viewAllPostStatus();
+
 }

@@ -8,7 +8,9 @@ import com.adkp.fuexchange.service.ProductServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -91,6 +93,9 @@ public class ProductController {
         ProductDTO productDeleted = productService.deleteProduct(productId);
 
         if (productDeleted == null) {
+//            HttpHeaders header = new HttpHeaders();
+//            header.add("abc","123");
+//            ResponseEntity.status(HttpStatus.BAD_REQUEST);
             status = HttpStatus.BAD_REQUEST.value();
             message = HttpStatus.BAD_REQUEST.name();
             content = "Sản phẩm đang được bán hoặc đang chờ xác nhận được bán!";
