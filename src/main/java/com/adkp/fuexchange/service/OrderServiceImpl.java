@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -87,11 +88,7 @@ public class OrderServiceImpl implements OrderService {
 
         orders.setOrderStatusId(ordersStatusRepository.getReferenceById(orderUpdateRequest.getOrderStatusId()));
 
-        if (orderUpdateRequest.getCompleteDate() != null && orderUpdateRequest.getOrderStatusId() == 1) {
-            orders.setCompleteDate(orderUpdateRequest.getCompleteDate());
-        }
-
-        orders.setDescription(orderUpdateRequest.getDescription());
+        orders.setCompleteDate(LocalDateTime.now());
 
         updatePaymentStatus(orderUpdateRequest.getOrderStatusId(), orderUpdateRequest.getOrderId());
 
