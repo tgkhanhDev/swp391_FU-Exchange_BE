@@ -1,6 +1,7 @@
 package com.adkp.fuexchange.config;
 
-import com.adkp.fuexchange.security.RegisteredStudentDetailService;
+
+import com.adkp.fuexchange.security.UserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,8 +35,9 @@ public class WebSecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService(){
-        return new RegisteredStudentDetailService();
+        return new UserDetailService();
     }
+
 
     @Bean
     public AuthenticationProvider authenticationProvider() {

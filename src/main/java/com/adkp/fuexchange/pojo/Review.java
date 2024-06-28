@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor(force = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -20,7 +22,7 @@ public class Review {
     @JoinColumn(name = "postProductId", referencedColumnName = "postProductId")
     private PostProduct postProductId;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "orderId", referencedColumnName = "orderId")
     private Orders orderId;
 
@@ -28,10 +30,13 @@ public class Review {
 
     private String description;
 
-    public Review(PostProduct postProductId, Orders orderId, int ratingNumber, String description) {
+    private LocalDateTime createTime;
+
+    public Review(PostProduct postProductId, Orders orderId, int ratingNumber, String description, LocalDateTime createTime) {
         this.postProductId = postProductId;
         this.orderId = orderId;
         this.ratingNumber = ratingNumber;
         this.description = description;
+        this.createTime = createTime;
     }
 }

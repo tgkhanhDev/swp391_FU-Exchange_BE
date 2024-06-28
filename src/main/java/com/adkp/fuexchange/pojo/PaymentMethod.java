@@ -21,7 +21,7 @@ public class PaymentMethod {
 
     private String paymentMethodName;
 
-    @OneToMany(mappedBy = "paymentMethodId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToMany(mappedBy = "paymentMethodId", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
     @JsonBackReference
     private List<Payment> paymentId;
 

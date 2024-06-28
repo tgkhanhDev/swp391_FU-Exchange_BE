@@ -6,7 +6,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor(force = true)
@@ -19,24 +20,23 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int paymentId;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "orderId", referencedColumnName = "orderId")
-    private Orders orderId;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE})
     @JoinColumn(name = "paymentMethodId", referencedColumnName = "paymentMethodId")
     private PaymentMethod paymentMethodId;
 
     private boolean paymentStatus;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "paymentId")
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, mappedBy = "paymentId")
     @JsonBackReference
     private Transactions transactionId;
 
-    public Payment(Orders orderId, PaymentMethod paymentMethodId, boolean paymentStatus, Date createTime) {
-        this.orderId = orderId;
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE}, mappedBy = "orderId")
+    @JsonBackReference
+    private List<Orders> orderId;
+
+    public Payment(PaymentMethod paymentMethodId, boolean paymentStatus, LocalDateTime createTime) {
         this.paymentMethodId = paymentMethodId;
         this.paymentStatus = paymentStatus;
         this.createTime = createTime;

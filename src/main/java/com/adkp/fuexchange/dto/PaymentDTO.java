@@ -5,19 +5,20 @@ import com.adkp.fuexchange.pojo.PaymentMethod;
 import com.adkp.fuexchange.pojo.Transactions;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class PaymentDTO {
     private int paymentId;
 
-    private Orders order;
+    private List<Orders> order;
 
     private PaymentMethod paymentMethod;
 
     private boolean paymentStatus;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 
     private Transactions transaction;
 }

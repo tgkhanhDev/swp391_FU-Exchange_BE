@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor(force = true)
@@ -18,21 +18,21 @@ public class Transactions {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int transactionsId;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE})
     @JoinColumn(name = "paymentId", referencedColumnName = "paymentId")
     private Payment paymentId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE})
     @JoinColumn(name = "transactionsStatusId", referencedColumnName = "transactionsStatusId")
     private TransactionsStatus transactionsStatusId;
 
-    private double totalPrice;
+    private long totalPrice;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 
-    private Date completeTime;
+    private LocalDateTime completeTime;
 
-    public Transactions(Payment paymentId, TransactionsStatus transactionsStatusId, double totalPrice, Date createTime, Date completeTime) {
+    public Transactions(Payment paymentId, TransactionsStatus transactionsStatusId, long totalPrice, LocalDateTime createTime, LocalDateTime completeTime) {
         this.paymentId = paymentId;
         this.transactionsStatusId = transactionsStatusId;
         this.totalPrice = totalPrice;

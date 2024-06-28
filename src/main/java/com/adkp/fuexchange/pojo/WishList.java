@@ -5,13 +5,14 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor(force = true)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
-@Table(name = "Variation")
+@Table(name = "WishList")
 public class WishList {
 
     @Id
@@ -26,7 +27,16 @@ public class WishList {
     @JoinColumn(name = "registeredStudentId", referencedColumnName = "registeredStudentId")
     private RegisteredStudent registeredStudentId;
 
-    private Date createDate;
-
+    private LocalDateTime createTime;
+    private int quantity;
     private boolean isActive;
+
+    public WishList(PostProduct postProductId, RegisteredStudent registeredStudentId, LocalDateTime createTime,int quantity ,boolean isActive) {
+        this.postProductId = postProductId;
+        this.registeredStudentId = registeredStudentId;
+        this.createTime = createTime;
+        this.quantity = quantity;
+        this.isActive = isActive;
+    }
+
 }

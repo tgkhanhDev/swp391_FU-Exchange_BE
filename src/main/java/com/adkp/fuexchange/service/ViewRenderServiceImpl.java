@@ -5,6 +5,7 @@ import com.adkp.fuexchange.mapper.CategoryMapper;
 import com.adkp.fuexchange.mapper.PostTypeMapper;
 import com.adkp.fuexchange.repository.CampusRepository;
 import com.adkp.fuexchange.repository.CategoryRepository;
+import com.adkp.fuexchange.repository.PostStatusRepository;
 import com.adkp.fuexchange.repository.PostTypeRepository;
 import com.adkp.fuexchange.response.ResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +20,16 @@ public class ViewRenderServiceImpl implements ViewRenderService {
     private final CampusMapper campusMapper;
     private final PostTypeMapper postTypeMapper;
     private final CategoryMapper categoryMapper;
+    private final PostStatusRepository postStatusRepository;
 
-    @Autowired
-    public ViewRenderServiceImpl(CampusRepository campusRepository, PostTypeRepository postTypeRepository, CategoryRepository categoryTypeRepository, CampusMapper campusMapper, PostTypeMapper postTypeMapper, CategoryMapper categoryMapper) {
+    public ViewRenderServiceImpl(CampusRepository campusRepository, PostTypeRepository postTypeRepository, CategoryRepository categoryTypeRepository, CampusMapper campusMapper, PostTypeMapper postTypeMapper, CategoryMapper categoryMapper, PostStatusRepository postStatusRepository) {
         this.campusRepository = campusRepository;
         this.postTypeRepository = postTypeRepository;
         this.categoryTypeRepository = categoryTypeRepository;
         this.campusMapper = campusMapper;
         this.postTypeMapper = postTypeMapper;
         this.categoryMapper = categoryMapper;
+        this.postStatusRepository = postStatusRepository;
     }
 
     @Override
@@ -63,6 +65,18 @@ public class ViewRenderServiceImpl implements ViewRenderService {
                 .content("Xem thông tin thành công!")
                 .data(
                         categoryMapper.toCategoryDTOList(categoryTypeRepository.findAllCategoryProductType())
+                )
+                .build();
+    }
+
+    @Override
+    public ResponseObject<Object> viewAllPostStatus() {
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Xem thông tin thành công!")
+                .data(
+                        postStatusRepository.findAll()
                 )
                 .build();
     }

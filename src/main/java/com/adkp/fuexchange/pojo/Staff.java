@@ -2,22 +2,26 @@ package com.adkp.fuexchange.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import javax.lang.model.element.Name;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor(force = true)
+
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+
 @Entity
 @Table(name = "Staff")
 public class Staff {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String staffId;
+    private int staffId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "roleId", referencedColumnName = "roleId")
     private Roles roleId;
 
@@ -35,14 +39,15 @@ public class Staff {
     @Column(unique = true)
     private String phoneNumber;
 
-    private Date dob;
+    private LocalDate dob;
 
     @Column(nullable = false)
     private String password;
 
-    private boolean isActive;
+    @Column(name="isActive")
+    private boolean active;
 
-    public Staff(Roles roleId, String firstName, String lastName, String gender, String identityCard, String address, String phoneNumber, Date dob, String password, boolean isActive) {
+    public Staff(Roles roleId, String firstName, String lastName, String gender, String identityCard, String address, String phoneNumber, LocalDate dob, String password, boolean isActive) {
         this.roleId = roleId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -52,6 +57,6 @@ public class Staff {
         this.phoneNumber = phoneNumber;
         this.dob = dob;
         this.password = password;
-        this.isActive = isActive;
+        this.active = isActive;
     }
 }
