@@ -1,10 +1,12 @@
 package com.adkp.fuexchange.controller.student;
 
 import com.adkp.fuexchange.dto.OrdersDTO;
+import com.adkp.fuexchange.dto.RegisteredStudentDTO;
 import com.adkp.fuexchange.request.UpdatePasswordRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.OrderService;
 import com.adkp.fuexchange.service.RegisteredStudentService;
+import com.adkp.fuexchange.service.UpdateDeliveryAddressRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -83,5 +85,40 @@ public class RegisteredStudentController {
     public ResponseObject<Object> updatePassword(@RequestBody @Valid UpdatePasswordRequest updatePasswordRequest) {
 
         return registeredStudentService.updatePassword(updatePasswordRequest);
+    }
+
+    @Operation(summary = "Update of delivery address")
+    @PutMapping("/update-delivery-address")
+    public ResponseObject<Object> updateDeliveryAddress(
+            @RequestBody @Valid UpdateDeliveryAddressRequest updateDeliveryAddressRequest
+    ) {
+
+        RegisteredStudentDTO registeredStudentUpdated = registeredStudentService.updateDeliveryAddress(
+                updateDeliveryAddressRequest.getRegisteredStudentId(),
+                updateDeliveryAddressRequest.getDeliveryAddress()
+        );
+
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Cập nhật địa chỉ nhận hàng thành công!")
+                .data(registeredStudentUpdated)
+                .build();
+    }
+
+    @Operation(summary = "Get information by registeredStudentId")
+    @GetMapping("/filter")
+    public ResponseObject<Object> filterRegisteredStudent(
+            @RequestParam("studentName") String studentName
+    ) {
+
+        List<RegisteredStudentDTO> registeredStudentDTOs = registeredStudentService.filterRegisteredStudent(studentName);
+
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Xem thành công!")
+                .data(registeredStudentDTOs)
+                .build();
     }
 }

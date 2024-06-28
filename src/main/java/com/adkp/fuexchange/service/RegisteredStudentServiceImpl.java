@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RegisteredStudentServiceImpl implements RegisteredStudentService {
@@ -99,6 +100,26 @@ public class RegisteredStudentServiceImpl implements RegisteredStudentService {
         return OrderDetailResponse.builder()
                 .postProductInOrder(postProductInOrder)
                 .build();
+    }
+
+    @Override
+    public RegisteredStudentDTO updateDeliveryAddress(Integer registeredStudentId, String deliveryAddress) {
+
+        RegisteredStudent registeredStudent = registeredStudentRepository.getReferenceById(registeredStudentId);
+
+        registeredStudent.setDeliveryAddress(deliveryAddress);
+
+        return registeredStudentMapper.toRegisteredStudentDTO(registeredStudentRepository.save(registeredStudent));
+    }
+
+    @Override
+    public List<RegisteredStudentDTO> filterRegisteredStudent(String studentName) {
+
+        String name = Optional.ofNullable(studentName).map(String::valueOf).orElse("");
+
+        List<RegisteredStudent> registeredStudents = registeredStudentRepository.filterRegisteredStudent(name);
+
+        return registeredStudentMapper.totoRegisteredStudentDTOList(registeredStudents);
     }
 
     private List<OrderDetailResponse> getPostProductInOrder(List<OrderPostProductDTO> orderPostProductList) {

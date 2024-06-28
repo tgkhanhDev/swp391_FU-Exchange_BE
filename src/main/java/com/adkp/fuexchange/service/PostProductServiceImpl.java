@@ -38,8 +38,10 @@ public class PostProductServiceImpl implements PostProductService {
 
     private final ReviewRepository reviewRepository;
 
+    private final OrderPostProductRepository orderPostProductRepository;
+
     @Autowired
-    public PostProductServiceImpl(PostProductRepository postProductRepository, PostProductMapper postProductMapper, ProductRepository productRepository, PostTypeRepository postTypeRepository, PostStatusRepository postStatusRepository, CampusRepository campusRepository, ReviewRepository reviewRepository) {
+    public PostProductServiceImpl(PostProductRepository postProductRepository, PostProductMapper postProductMapper, ProductRepository productRepository, PostTypeRepository postTypeRepository, PostStatusRepository postStatusRepository, CampusRepository campusRepository, ReviewRepository reviewRepository, OrderPostProductRepository orderPostProductRepository) {
         this.postProductRepository = postProductRepository;
         this.postProductMapper = postProductMapper;
         this.productRepository = productRepository;
@@ -47,6 +49,7 @@ public class PostProductServiceImpl implements PostProductService {
         this.postStatusRepository = postStatusRepository;
         this.campusRepository = campusRepository;
         this.reviewRepository = reviewRepository;
+        this.orderPostProductRepository = orderPostProductRepository;
     }
 
     @Override
@@ -135,6 +138,13 @@ public class PostProductServiceImpl implements PostProductService {
     @Transactional
     public PostProductDTO updatePostProduct(UpdatePostProductRequest updatePostProductRequest) {
 
+        PostStatus postStatus = postStatusRepository.getReferenceById(updatePostProductRequest.getPostStatusId());
+        if (
+                postStatus.getPostStatusId() == 5 &&
+                        orderPostProductRepository.checkOrderInDeletePost(updatePostProductRequest.getPostProductId()) != 0
+        ) {
+            return null;
+        }
         PostProduct postProduct = postProductRepository.getReferenceById(updatePostProductRequest.getPostProductId());
 
         Product product = productRepository.getReferenceById(updatePostProductRequest.getProductId());
@@ -148,6 +158,8 @@ public class PostProductServiceImpl implements PostProductService {
         postProduct.setPostTypeId(postType);
 
         postProduct.setCampusId(campus);
+
+        postProduct.setPostStatusId(postStatus);
 
         postProduct.setQuantity(updatePostProductRequest.getQuantity());
 

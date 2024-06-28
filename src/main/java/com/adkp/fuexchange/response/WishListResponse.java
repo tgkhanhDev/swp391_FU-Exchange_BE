@@ -14,13 +14,15 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class WishListRespone {
+public class WishListResponse {
+
+    private int wishListId;
 
     private int registeredStudentId;
 
     private PostProductResponse postProductResponse;
     private int quantity;
-    private List<WishListRespone> wishListResponesList;
+    private List<WishListResponse> wishListResponesList;
     private LocalDateTime createTime;
     private boolean isActive;
 }

@@ -34,4 +34,10 @@ public interface OrderPostProductRepository extends JpaRepository<OrderPostProdu
             "odpprd.postProductId.postProductId = :postProductId ")
     List<OrderPostProduct> getOrdersPostProductId(@Param("postProductId") Integer postProductId);
 
+    @Query("SELECT COUNT(odpprd) From OrderPostProduct odpprd WHERE " +
+            "odpprd.postProductId.postProductId = :postProductId " +
+            "AND orderId.orderStatusId.orderStatusId IN (1, 2, 3)")
+    long checkOrderInDeletePost(
+            @Param("postProductId") Integer postProductId
+    );
 }

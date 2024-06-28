@@ -2,17 +2,18 @@ package com.adkp.fuexchange.controller.student;
 
 import com.adkp.fuexchange.request.RegisterWishListRequest;
 import com.adkp.fuexchange.response.ResponseObject;
-import com.adkp.fuexchange.response.WishListRespone;
 import com.adkp.fuexchange.service.WishListService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/wishlist")
 @Tag(name = "wishlist")
+@Validated
 public class WishListController {
     private final WishListService wishListService;
 
@@ -20,19 +21,16 @@ public class WishListController {
         this.wishListService = wishListService;
     }
 
-
     @Operation(summary = "Create a wishlist")
-
     @PostMapping("/create")
-
     public ResponseObject<Object>createWishList(
-          @RequestBody  RegisterWishListRequest registerWishListRequest){
+          @RequestBody @Valid RegisterWishListRequest registerWishListRequest){
        return wishListService.createWishList(registerWishListRequest);
     }
 
-    @Operation(summary = "view wishlist by postproductID")
+    @Operation(summary = "view wishlist by postProductID")
     @GetMapping("/{postProductId}")
-    public  ResponseObject<Object>viewWishListbyProduct(
+    public  ResponseObject<Object>viewWishListByProduct(
             @PathVariable("postProductId") int postProductId
     ){
         return  wishListService.viewWishListByPostProductID(postProductId);
