@@ -40,7 +40,6 @@ public class PostProduct {
 
     private int quantity;
 
-
     private LocalDateTime createDate;
 
     private String content;
@@ -48,6 +47,7 @@ public class PostProduct {
     @OneToMany(mappedBy = "postProductId", cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JsonBackReference
     private List<CartPost> cartPostId;
+
     public PostProduct(Product productId, PostType postTypeId, Campus campusId, PostStatus postStatusId, int quantity, LocalDateTime createDate) {
         this.productId = productId;
         this.postTypeId = postTypeId;

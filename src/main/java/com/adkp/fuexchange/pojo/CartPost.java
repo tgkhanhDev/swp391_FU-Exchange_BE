@@ -5,39 +5,29 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Data
-@NoArgsConstructor(force = true)
+@NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
+@Builder
 @Table(name = "CartPost")
-@ToString
+@IdClass(CartPost.class)
 public class CartPost {
 
-    @EmbeddedId
-    private CartPostEmbeddable cartPostId;
+    @Id
+    private int sttPostInCart;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
-    @MapsId("cartId")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "cartId", referencedColumnName = "cartId")
     private Cart cartId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
-    @MapsId("postProductId")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "postProductId", referencedColumnName = "postProductId")
     private PostProduct postProductId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
-    @MapsId("variationDetailId")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "variationDetailId", referencedColumnName = "variationDetailId")
     private VariationDetail variationDetailId;
 
     private int quantity;
-
-    public CartPost(Cart cartId, PostProduct postProductId, VariationDetail variationDetailId, int quantity) {
-        this.cartId = cartId;
-        this.postProductId = postProductId;
-        this.variationDetailId = variationDetailId;
-        this.quantity = quantity;
-    }
 }

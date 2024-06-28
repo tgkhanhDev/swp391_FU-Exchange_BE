@@ -29,7 +29,7 @@ public class OrderPostProductServiceImpl implements OrderPostProductService {
 
     @Override
     public ResponseObject<Object> viewTotalPriceEachPostProductBySellerID(int sellerID) {
-        List<PostProduct> postProductList = postProductRepository.getPostProductBysellerID(sellerID);
+        List<PostProduct> postProductList = postProductRepository.getPostProductBySellerID(sellerID);
         List<OrderPostProduct> productResponseList = new ArrayList<>();
         List<OrderPostProductResponse>  OrderPostProductResponse =  new ArrayList<>();
         long totalPrice = 0;

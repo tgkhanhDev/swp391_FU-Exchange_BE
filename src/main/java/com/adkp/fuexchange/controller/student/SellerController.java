@@ -1,9 +1,12 @@
 package com.adkp.fuexchange.controller.student;
 
+import com.adkp.fuexchange.dto.PostProductDTO;
 import com.adkp.fuexchange.request.RegisterToSellerRequest;
 import com.adkp.fuexchange.request.UpdateInformationSellerRequest;
+import com.adkp.fuexchange.request.UpdatePostStatus;
 import com.adkp.fuexchange.request.UpdateStatusRequest;
 import com.adkp.fuexchange.response.ResponseObject;
+import com.adkp.fuexchange.service.PostProductService;
 import com.adkp.fuexchange.service.SellerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,9 +24,12 @@ public class SellerController {
 
     private final SellerService sellerService;
 
+    private final PostProductService postProductService;
+
     @Autowired
-    public SellerController(SellerService sellerService) {
+    public SellerController(SellerService sellerService, PostProductService postProductService) {
         this.sellerService = sellerService;
+        this.postProductService = postProductService;
     }
 
     @Operation(summary = "view order for seller by seller id")
@@ -41,13 +47,12 @@ public class SellerController {
     @GetMapping("/order-detail/{sellerId}/{orderId}")
     public ResponseObject<Object> getOrderDetailBySellerIdAndOrderId(
             @PathVariable("sellerId") Integer sellerId,
-            @PathVariable("orderId") Integer orderId,
-            @RequestParam("orderStatusId") Integer orderStatusId
+            @PathVariable("orderId") Integer orderId
     ) {
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
-                .data(sellerService.getOrderDetailBySellerIdAndOrderId(sellerId, orderId, orderStatusId))
+                .data(sellerService.getOrderDetailBySellerIdAndOrderId(sellerId, orderId))
                 .content("Xem thành công!")
                 .build();
     }
@@ -65,7 +70,7 @@ public class SellerController {
     public ResponseObject<Object> viewInformationSellerByStudentId(
             @PathVariable("studentId") String studentId
     ) {
-        if (sellerService.checkSellerbyStudentID(studentId) == null) {
+        if (sellerService.checkSellerByStudentID(studentId) == null) {
             return ResponseObject.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
                     .message(HttpStatus.BAD_REQUEST.name())
@@ -121,4 +126,17 @@ public class SellerController {
                 .build();
     }
 
+    @Operation(summary = "Update status of post product")
+    @PutMapping("/update/status-post-product")
+    public ResponseObject<Object> updateStatusPostProduct(@RequestBody @Valid UpdatePostStatus updatePostStatus) {
+
+        PostProductDTO postProductDTO = postProductService.updateStatusPostProduct(updatePostStatus);
+
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Cập nhật thành công")
+                .data(postProductDTO)
+                .build();
+    }
 }

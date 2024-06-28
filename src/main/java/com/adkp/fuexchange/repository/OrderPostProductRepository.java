@@ -17,16 +17,14 @@ public interface OrderPostProductRepository extends JpaRepository<OrderPostProdu
 
     @Query("SELECT odpprd FROM OrderPostProduct odpprd " +
             "WHERE odpprd.postProductId.productId.sellerId.sellerId = :sellerId " +
-            "AND odpprd.orderId.orderStatusId.orderStatusId = :orderStatusId " +
             "AND odpprd.orderId.orderId = :orderId " +
             "ORDER BY odpprd.orderId.createDate DESC")
     List<OrderPostProduct> getOrdersDetailBySellerIdAndOrderId(
-            @Param("sellerId") Integer sellerId, @Param("orderId") Integer orderId, @Param("orderStatusId") Integer orderStatusId
+            @Param("sellerId") Integer sellerId, @Param("orderId") Integer orderId
     );
 
     @Query("SELECT odpprd FROM OrderPostProduct odpprd " +
             "WHERE odpprd.orderId.registeredStudentId.registeredStudentId = :registeredStudentId " +
-            "AND odpprd.orderId.orderStatusId.orderStatusId > 1 " +
             "AND odpprd.orderId.orderId = :orderId " +
             "ORDER BY odpprd.orderId.createDate DESC")
     List<OrderPostProduct> getOrdersDetailByRegisteredStudentId(

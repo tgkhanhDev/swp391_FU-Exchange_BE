@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor(force = true)
@@ -18,10 +19,6 @@ public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int paymentId;
-
-    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE})
-    @JoinColumn(name = "orderId", referencedColumnName = "orderId")
-    private Orders orderId;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE})
     @JoinColumn(name = "paymentMethodId", referencedColumnName = "paymentMethodId")
@@ -35,8 +32,11 @@ public class Payment {
     @JsonBackReference
     private Transactions transactionId;
 
-    public Payment(Orders orderId, PaymentMethod paymentMethodId, boolean paymentStatus, LocalDateTime createTime) {
-        this.orderId = orderId;
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST,CascadeType.REMOVE}, mappedBy = "orderId")
+    @JsonBackReference
+    private List<Orders> orderId;
+
+    public Payment(PaymentMethod paymentMethodId, boolean paymentStatus, LocalDateTime createTime) {
         this.paymentMethodId = paymentMethodId;
         this.paymentStatus = paymentStatus;
         this.createTime = createTime;

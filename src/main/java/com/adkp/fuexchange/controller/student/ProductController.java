@@ -1,5 +1,6 @@
 package com.adkp.fuexchange.controller.student;
 
+import com.adkp.fuexchange.dto.ProductDTO;
 import com.adkp.fuexchange.request.RegisterProductRequest;
 import com.adkp.fuexchange.request.UpdateInformationProductRequest;
 import com.adkp.fuexchange.response.ResponseObject;
@@ -7,7 +8,9 @@ import com.adkp.fuexchange.service.ProductServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,6 +43,7 @@ public class ProductController {
     ) {
         return productService.getProductByProductID(productID);
     }
+
     @Operation(summary = "Create a product")
     @PostMapping("/create-product")
     public ResponseObject<Object> createAProduct(
@@ -73,6 +77,34 @@ public class ProductController {
                 .message(HttpStatus.OK.name())
                 .data(productService.getProductByVariationDetailId(variationDetailId))
                 .content("Lấy sản phẩm thành công")
+                .build();
+    }
+
+    @PutMapping("/delete-product")
+    @Operation(summary = "Delete product")
+    public ResponseObject<Object> deleteProduct(
+            @RequestBody Integer productId
+    ) {
+
+        int status = HttpStatus.OK.value();
+        String message = HttpStatus.OK.name();
+        String content = "Xóa sản phẩm thành công!";
+
+        ProductDTO productDeleted = productService.deleteProduct(productId);
+
+        if (productDeleted == null) {
+//            HttpHeaders header = new HttpHeaders();
+//            header.add("abc","123");
+//            ResponseEntity.status(HttpStatus.BAD_REQUEST);
+            status = HttpStatus.BAD_REQUEST.value();
+            message = HttpStatus.BAD_REQUEST.name();
+            content = "Sản phẩm đang được bán hoặc đang chờ xác nhận được bán!";
+        }
+        return ResponseObject.builder()
+                .status(status)
+                .message(message)
+                .content(content)
+                .data(productDeleted)
                 .build();
     }
 }

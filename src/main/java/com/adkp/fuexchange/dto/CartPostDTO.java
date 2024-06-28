@@ -1,6 +1,5 @@
 package com.adkp.fuexchange.dto;
 
-import com.adkp.fuexchange.pojo.CartPostEmbeddable;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -11,13 +10,11 @@ import lombok.experimental.FieldDefaults;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CartPostDTO {
 
-    private CartPostEmbeddable cartPostId;
+    CartDTO cart;
 
-    private CartDTO cart;
+    PostProductDTO postProduct;
 
-    private PostProductDTO postProduct;
+    VariationDetailDTO variationDetail;
 
-    private VariationDetailDTO variationDetail;
-
-    private int quantity;
+    int quantity;
 }

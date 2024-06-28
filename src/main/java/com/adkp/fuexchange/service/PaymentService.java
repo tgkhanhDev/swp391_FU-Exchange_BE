@@ -1,10 +1,12 @@
 package com.adkp.fuexchange.service;
 
+import com.adkp.fuexchange.dto.OrderPostProductDTO;
 import com.adkp.fuexchange.request.OrdersRequest;
-import com.adkp.fuexchange.response.ResponseObject;
+
+import java.util.List;
 
 public interface PaymentService {
 
-    ResponseObject<Object> payOrders(OrdersRequest ordersRequest);
+    List<OrderPostProductDTO> payOrders(OrdersRequest ordersRequest);
 
 }

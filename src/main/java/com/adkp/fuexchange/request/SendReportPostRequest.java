@@ -1,18 +1,19 @@
 package com.adkp.fuexchange.request;
 
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Data
-public class ContactToSellerRequest {
+public class SendReportPostRequest {
 
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
-    private Integer registeredStudentId;
+    private int registeredStudentId;
 
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
-    private Integer sellerId;
+    private int postProductId;
 
-    @NotEmpty(message = "Vui lòng nhập đầy đủ thông tin!")
+    @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
+    private int reportProductTypeId;
+
     private String content;
 }

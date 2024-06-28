@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name="View Render")
 public class ViewRenderController {
     private final ViewRenderService viewRenderService;
+
     @Autowired
     public ViewRenderController(ViewRenderService viewRenderService) {
         this.viewRenderService = viewRenderService;
@@ -54,6 +55,19 @@ public class ViewRenderController {
                     content = @Content)
     })
     public ResponseObject<Object> viewAllCategoryType(){return viewRenderService.viewAllCategoryType();}
+
+    @GetMapping("/post-status")
+    @Operation(summary = "Get all post status for rendering")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",description = "Fetch all Category Type",
+                    content = {@Content(mediaType = "application/json")}),
+            @ApiResponse(responseCode = "404",
+                    description = "Not Available",
+                    content = @Content)
+    })
+    public ResponseObject<Object> viewAllPostStatus(){
+        return viewRenderService.viewAllPostStatus();
+    }
 
 
 }

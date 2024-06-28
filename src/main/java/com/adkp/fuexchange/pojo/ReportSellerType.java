@@ -18,10 +18,7 @@ public class ReportSellerType {
 
     private String reportTypeName;
 
-    private String description;
-
-    public ReportSellerType(String reportTypeName, String description) {
+    public ReportSellerType(String reportTypeName) {
         this.reportTypeName = reportTypeName;
-        this.description = description;
     }
 }

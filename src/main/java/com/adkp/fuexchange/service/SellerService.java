@@ -20,13 +20,13 @@ public interface SellerService {
 
     ResponseObject<Object> updateStatusSeller(UpdateStatusRequest updateStatusRequest);
 
-    SellerDTO checkSellerbyStudentID(String studentId);
+    SellerDTO checkSellerByStudentID(String studentId);
     ResponseObject <Object> getInformationSellerByStudentId(String studentId);
 
     void deleteSellerByID(int sellerID);
 
     List<OrdersDTO> getOrderBySellerId(Integer sellerId);
 
-    OrderDetailResponse getOrderDetailBySellerIdAndOrderId(Integer sellerId, Integer orderId, Integer orderStatusId);
+    OrderDetailResponse getOrderDetailBySellerIdAndOrderId(Integer sellerId, Integer orderId);
 
 }

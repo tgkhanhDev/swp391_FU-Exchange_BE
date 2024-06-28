@@ -16,6 +16,7 @@ public class ReportStatus {
     private int reportStatusId;
 
     private String reportStatusName;
+
     public ReportStatus(String reportStatusName) {
         this.reportStatusName = reportStatusName;
     }
