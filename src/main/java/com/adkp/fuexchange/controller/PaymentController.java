@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -75,27 +77,17 @@ public class PaymentController {
 
     @GetMapping("/vn-pay/call-back")
     @Hidden
-    public ResponseObject<Object> paymentCallBack(@RequestParam("vnp_ResponseCode") String vnp_ResponseCode) {
-
-        int status = HttpStatus.BAD_REQUEST.value();
-
-        String message = HttpStatus.BAD_REQUEST.name();
-
-        String content = "Mua hàng thất bại!";
+    public void paymentCallBack(
+            @RequestParam("vnp_ResponseCode") String vnp_ResponseCode,
+            HttpServletResponse httpServletResponse
+    ) throws IOException {
 
         if (vnPayService.vnPayPaymentCallBack(vnp_ResponseCode)) {
-            status = HttpStatus.OK.value();
-
-            message = HttpStatus.BAD_REQUEST.name();
-
-            content = "Mua hàng thành công!";
+            httpServletResponse.sendRedirect("http://localhost:3005/authorize/order");
+            return;
         }
 
-        return ResponseObject.builder()
-                .status(status)
-                .message(message)
-                .content(content)
-                .build();
+        httpServletResponse.sendRedirect("http://localhost:3005/abc");
     }
 
     @ApiResponses(value = {
