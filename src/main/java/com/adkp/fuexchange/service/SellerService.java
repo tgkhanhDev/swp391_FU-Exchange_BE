@@ -29,4 +29,5 @@ public interface SellerService {
 
     OrderDetailResponse getOrderDetailBySellerIdAndOrderId(Integer sellerId, Integer orderId);
 
+    List<SellerDTO> getAllSeller();
 }

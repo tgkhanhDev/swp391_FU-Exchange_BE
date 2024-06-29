@@ -221,6 +221,13 @@ public class SellerServiceImpl implements SellerService {
                 .build();
     }
 
+    @Override
+    public List<SellerDTO> getAllSeller() {
+        List<Seller> sellers = sellerRepository.findAll();
+
+        return sellerMapper.toSellerDTOList(sellers);
+    }
+
     private List<OrderDetailResponse> getPostProductInOrder(List<OrderPostProductDTO> orderPostProductList) {
 
         List<OrderDetailResponse> postProductInOrder = new ArrayList<>();
