@@ -1,7 +1,6 @@
 package com.adkp.fuexchange.controller;
 
 import com.adkp.fuexchange.dto.OrderPostProductDTO;
-import com.adkp.fuexchange.repository.RegisteredStudentRepository;
 import com.adkp.fuexchange.request.OrdersRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.PaymentService;
@@ -34,14 +33,11 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    private final RegisteredStudentRepository registeredStudentRepository;
-
 
     @Autowired
-    public PaymentController(VnPayService vnPayService, PaymentService paymentService, RegisteredStudentRepository registeredStudentRepository) {
+    public PaymentController(VnPayService vnPayService, PaymentService paymentService) {
         this.vnPayService = vnPayService;
         this.paymentService = paymentService;
-        this.registeredStudentRepository = registeredStudentRepository;
     }
 
     @ApiResponses(value = {
@@ -64,7 +60,7 @@ public class PaymentController {
             @RequestHeader HttpHeaders headers
     ) {
 
-        if (registeredStudentRepository.getReferenceById(ordersRequest.getRegisteredStudentId()).getDeliveryAddress() == null) {
+        if (vnPayService.validateDeliveryAddress(ordersRequest)) {
             return VnPayResponse.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
                     .message(HttpStatus.BAD_REQUEST.name())
@@ -103,7 +99,7 @@ public class PaymentController {
         String message = HttpStatus.OK.name();
         String content = "Mua hàng thành công!";
 
-        if (registeredStudentRepository.getReferenceById(ordersRequest.getRegisteredStudentId()).getDeliveryAddress() == null) {
+        if (vnPayService.validateDeliveryAddress(ordersRequest)) {
             return ResponseObject.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
                     .message(HttpStatus.BAD_REQUEST.name())

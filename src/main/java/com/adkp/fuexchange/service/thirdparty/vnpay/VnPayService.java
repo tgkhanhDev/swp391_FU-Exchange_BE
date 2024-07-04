@@ -2,6 +2,7 @@ package com.adkp.fuexchange.service.thirdparty.vnpay;
 
 import com.adkp.fuexchange.pojo.PostProduct;
 import com.adkp.fuexchange.repository.PostProductRepository;
+import com.adkp.fuexchange.repository.RegisteredStudentRepository;
 import com.adkp.fuexchange.request.OrdersRequest;
 import com.adkp.fuexchange.request.PostProductRequest;
 import com.adkp.fuexchange.utils.Utils;
@@ -27,11 +28,14 @@ public class VnPayService {
 
     private final PostProductRepository postProductRepository;
 
+    private final RegisteredStudentRepository registeredStudentRepository;
+
     @Autowired
-    public VnPayService(HttpSession session, Utils utils, PostProductRepository postProductRepository) {
+    public VnPayService(HttpSession session, Utils utils, PostProductRepository postProductRepository, RegisteredStudentRepository registeredStudentRepository) {
         this.session = session;
         this.utils = utils;
         this.postProductRepository = postProductRepository;
+        this.registeredStudentRepository = registeredStudentRepository;
     }
 
     public VnPayResponse vnPayPayment(OrdersRequest ordersRequest, HttpHeaders headers) {
@@ -110,6 +114,11 @@ public class VnPayService {
 
         }
 
+    }
+
+    public boolean validateDeliveryAddress(OrdersRequest ordersRequest) {
+        String deliveryAddress = registeredStudentRepository.getReferenceById(ordersRequest.getRegisteredStudentId()).getDeliveryAddress();
+        return deliveryAddress == null;
     }
 
     private Map<Integer, Integer> calcQuantityEachPost(List<PostProductRequest> postProductRequestList) {

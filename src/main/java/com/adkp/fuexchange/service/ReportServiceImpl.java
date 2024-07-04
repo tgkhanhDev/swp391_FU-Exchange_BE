@@ -185,7 +185,7 @@ public class ReportServiceImpl implements ReportService {
 
         ReportStatus reportStatus = reportStatusRepository.getReferenceById(1);
 
-        if (checkReportedInReportPost(registeredStudentSend.getRegisteredStudentId(), sellerReport.getSellerId())) {
+        if (checkReportedInReportSeller(registeredStudentSend.getRegisteredStudentId(), sellerReport.getSellerId())) {
             return null;
         }
 
