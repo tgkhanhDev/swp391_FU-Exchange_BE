@@ -77,7 +77,6 @@ public class PaymentController {
             @RequestParam("vnp_ResponseCode") String vnp_ResponseCode,
             HttpServletResponse httpServletResponse
     ) throws IOException {
-
         if (vnPayService.vnPayPaymentCallBack(vnp_ResponseCode)) {
             httpServletResponse.sendRedirect("http://localhost:3005/authorize/order");
             return;

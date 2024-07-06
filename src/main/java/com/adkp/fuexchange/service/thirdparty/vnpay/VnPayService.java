@@ -1,6 +1,7 @@
 package com.adkp.fuexchange.service.thirdparty.vnpay;
 
 import com.adkp.fuexchange.pojo.PostProduct;
+import com.adkp.fuexchange.pojo.UserSession;
 import com.adkp.fuexchange.repository.PostProductRepository;
 import com.adkp.fuexchange.repository.RegisteredStudentRepository;
 import com.adkp.fuexchange.request.OrdersRequest;
@@ -22,7 +23,8 @@ import java.util.Map;
 @Service
 public class VnPayService {
 
-    private final HttpSession session;
+    public final HttpSession session;
+
 
     private final Utils utils;
 
@@ -50,7 +52,8 @@ public class VnPayService {
         String vnpSecureHash = VnPayUtils.hmacSHA512(VnPayUtils.getSecretKey(), hashData);
         queryUrl += "&vnp_SecureHash=" + vnpSecureHash;
         String paymentUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html" + "?" + queryUrl;
-        session.setAttribute("ordersRequest", ordersRequest);
+        UserSession.getInstance().setOrdersRequest(ordersRequest);
+
         return VnPayResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
@@ -60,12 +63,15 @@ public class VnPayService {
 
     public boolean vnPayPaymentCallBack(String vnp_ResponseCode) {
         if (vnp_ResponseCode.equals("00")) {
-            OrdersRequest ordersRequest = (OrdersRequest) session.getAttribute("ordersRequest");
-            session.removeAttribute("ordersRequest");
+//            OrdersRequest ordersRequest = (OrdersRequest) this.session.getAttribute("ordersRequest");
+            OrdersRequest ordersRequest = UserSession.getInstance().getOrdersRequest();
+            UserSession.getInstance().cleanUserSession();
+//            session.removeAttribute("ordersRequest");
             utils.navigationDataAsyncForAnotherMethod("http://localhost:8080/order/payment/pay-order", ordersRequest, HttpMethod.POST);
             return true;
         }
-        session.removeAttribute("ordersRequest");
+//        session.removeAttribute("ordersRequest");
+        UserSession.getInstance().cleanUserSession();
         return false;
     }
 
