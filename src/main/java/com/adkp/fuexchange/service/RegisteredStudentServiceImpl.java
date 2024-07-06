@@ -4,10 +4,7 @@ import com.adkp.fuexchange.dto.OrderPostProductDTO;
 import com.adkp.fuexchange.dto.RegisteredStudentDTO;
 import com.adkp.fuexchange.mapper.OrderPostProductMapper;
 import com.adkp.fuexchange.mapper.RegisteredStudentMapper;
-import com.adkp.fuexchange.pojo.Orders;
-import com.adkp.fuexchange.pojo.Payment;
 import com.adkp.fuexchange.pojo.RegisteredStudent;
-import com.adkp.fuexchange.pojo.Transactions;
 import com.adkp.fuexchange.repository.*;
 import com.adkp.fuexchange.request.UpdatePasswordRequest;
 import com.adkp.fuexchange.response.OrderDetailResponse;
@@ -90,10 +87,10 @@ public class RegisteredStudentServiceImpl implements RegisteredStudentService {
     }
 
     @Override
-    public OrderDetailResponse getOrdersDetailByRegisteredStudentId(Integer registeredStudentId, Integer orderId) {
+    public OrderDetailResponse getOrdersDetailByRegisteredStudentId(Integer registeredStudentId) {
 
         List<OrderPostProductDTO> orderPostProductList =
-                orderPostProductMapper.toOrderPostProductDTOList(orderPostProductRepository.getOrdersDetailByRegisteredStudentId(registeredStudentId, orderId));
+                orderPostProductMapper.toOrderPostProductDTOList(orderPostProductRepository.getOrdersDetailByRegisteredStudentId(registeredStudentId));
 
         List<OrderDetailResponse> postProductInOrder = getPostProductInOrder(orderPostProductList);
 
@@ -151,6 +148,7 @@ public class RegisteredStudentServiceImpl implements RegisteredStudentService {
 
                     postProductInOrder.add(
                             OrderDetailResponse.builder()
+                                    .order(currentOrderProductDTO.getOrder())
                                     .postProduct(currentOrderProductDTO.getPostProduct())
                                     .firstVariation(
                                             previousOrderProductDTO.getVariationDetail().getVariation().getVariationName() + ": "
@@ -161,35 +159,31 @@ public class RegisteredStudentServiceImpl implements RegisteredStudentService {
                                                     + currentOrderProductDTO.getVariationDetail().getDescription()
                                     )
                                     .quantity(currentOrderProductDTO.getQuantity())
+                                    .imageUrlProduct(
+                                            currentOrderProductDTO.getPostProduct().getProduct().getDetail().getProductImage().get(0).getImageUrl()
+                                    )
                                     .build());
                 }
             } else {
 
                 postProductInOrder.add(
                         OrderDetailResponse.builder()
+                                .order(currentOrderProductDTO.getOrder())
                                 .postProduct(currentOrderProductDTO.getPostProduct())
                                 .firstVariation(
                                         currentOrderProductDTO.getVariationDetail().getVariation().getVariationName() + ": "
                                                 + currentOrderProductDTO.getVariationDetail().getDescription()
                                 )
                                 .quantity(currentOrderProductDTO.getQuantity())
+                                .imageUrlProduct(
+                                        currentOrderProductDTO.getPostProduct().getProduct().getDetail().getProductImage().get(0).getImageUrl()
+                                )
                                 .build());
             }
-
+            currentOrderProductDTO.getPostProduct().getProduct().getDetail().setProductImage(null);
             previousOrderProductDTO = currentOrderProductDTO;
         }
 
         return postProductInOrder;
-    }
-
-    private long totalPriceInOrder(Integer orderId) {
-
-        Orders orders = ordersRepository.getReferenceById(orderId);
-
-        Payment payment = paymentRepository.getReferenceById(orders.getPaymentId().getPaymentId());
-
-        Transactions transactions = transactionsRepository.getReferenceById(payment.getTransactionId().getTransactionsId());
-
-        return transactions.getTotalPrice() * 1000;
     }
 }

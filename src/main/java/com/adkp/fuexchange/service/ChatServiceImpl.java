@@ -123,6 +123,16 @@ public class ChatServiceImpl implements ChatService {
         return chatMessageMapper.toChatMessageDTO(chatMessage);
     }
 
+    @Override
+    public ChatRoomDTO deleteChatRoom(int chatRoomId) {
+
+        ChatRoom chatRoom = chatRoomRepository.getReferenceById(chatRoomId);
+
+        chatRoom.setActive(false);
+
+        return chatRoomMapper.toChatRoomDTO(chatRoomRepository.save(chatRoom));
+    }
+
     private ChatMessage saveChatMessageContactToStudent(
             ChatRoom chatRoom,
             ContactToRequest contactToRequest

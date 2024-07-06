@@ -13,7 +13,7 @@ public interface RegisteredStudentService {
 
     ResponseObject<Object> updatePassword(UpdatePasswordRequest updatePasswordRequest);
 
-    OrderDetailResponse getOrdersDetailByRegisteredStudentId(Integer registeredStudentId, Integer orderId);
+    OrderDetailResponse getOrdersDetailByRegisteredStudentId(Integer registeredStudentId);
 
     RegisteredStudentDTO updateDeliveryAddress(Integer registeredStudentId, String deliveryAddress);
 

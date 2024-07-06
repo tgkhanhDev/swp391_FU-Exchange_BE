@@ -2,6 +2,7 @@ package com.adkp.fuexchange.response;
 
 import com.adkp.fuexchange.dto.OrdersDTO;
 import com.adkp.fuexchange.dto.PostProductDTO;
+import com.adkp.fuexchange.dto.ProductImageDTO;
 import com.adkp.fuexchange.dto.VariationDetailDTO;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
@@ -21,6 +22,8 @@ public class OrderDetailResponse {
     private List<OrderDetailResponse> postProductInOrder;
 
     private List<VariationDetailDTO> variationDetail;
+
+    private String imageUrlProduct;
 
     private int quantity;
 
