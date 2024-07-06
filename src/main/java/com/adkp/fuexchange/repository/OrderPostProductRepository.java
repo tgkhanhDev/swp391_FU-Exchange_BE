@@ -2,6 +2,8 @@ package com.adkp.fuexchange.repository;
 
 import com.adkp.fuexchange.pojo.OrderPostProduct;
 import com.adkp.fuexchange.pojo.Orders;
+import com.adkp.fuexchange.pojo.PostProduct;
+import com.adkp.fuexchange.pojo.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,9 +31,11 @@ public interface OrderPostProductRepository extends JpaRepository<OrderPostProdu
     List<OrderPostProduct> getOrdersDetailByRegisteredStudentId(
             @Param("registeredStudentId") Integer registeredStudentId, @Param("orderId") Integer orderId
     );
+
     @Query("SELECT odpprd From OrderPostProduct odpprd WHERE " +
-            "odpprd.postProductId.postProductId = :postProductId ")
-    List<OrderPostProduct> getOrdersPostProductId(@Param("postProductId") Integer postProductId);
+            "odpprd.postProductId.productId IN :product " +
+            "ORDER BY odpprd.postProductId.postProductId")
+    List<OrderPostProduct> getAllOrdersByProduct(@Param("product") List<Product> products);
 
     @Query("SELECT COUNT(odpprd) From OrderPostProduct odpprd WHERE " +
             "odpprd.postProductId.postProductId = :postProductId " +

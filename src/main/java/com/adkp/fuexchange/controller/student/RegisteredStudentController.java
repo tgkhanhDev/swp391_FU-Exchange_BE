@@ -7,7 +7,7 @@ import com.adkp.fuexchange.request.UpdateStatusRegisteredStudentRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.OrderService;
 import com.adkp.fuexchange.service.RegisteredStudentService;
-import com.adkp.fuexchange.service.UpdateDeliveryAddressRequest;
+import com.adkp.fuexchange.request.UpdateDeliveryAddressRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
