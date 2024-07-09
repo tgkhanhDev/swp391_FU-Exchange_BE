@@ -9,7 +9,6 @@ import java.time.LocalDate;
 public class RegisterStaffRequest {
     @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
 
-
     private String firstName;
 
     @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")

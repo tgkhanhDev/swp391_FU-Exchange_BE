@@ -82,7 +82,7 @@ public class PaymentController {
             return;
         }
 
-        httpServletResponse.sendRedirect("http://localhost:3005/abc");
+        httpServletResponse.sendRedirect("http://localhost:3005/cancel");
     }
 
     @ApiResponses(value = {
