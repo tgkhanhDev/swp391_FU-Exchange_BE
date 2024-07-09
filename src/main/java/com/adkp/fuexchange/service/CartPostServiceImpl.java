@@ -198,7 +198,13 @@ public class CartPostServiceImpl implements CartPostService {
 
         List<CartPost> cartPosts = new ArrayList<>();
 
-        int sttPostInCart = cartPostRepository.getSttLastCart(cart.getCartId()) + 1;
+        Integer sttPostInCart = cartPostRepository.getSttLastCart(cart.getCartId());
+
+        if(sttPostInCart == null){
+            sttPostInCart = 1;
+        } else {
+            sttPostInCart += 1;
+        }
 
         List<VariationDetail> variationDetails =
                 variationDetailRepository.findAllById(cartRequest.getVariationDetailId());
