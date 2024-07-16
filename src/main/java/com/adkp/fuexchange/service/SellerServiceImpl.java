@@ -12,6 +12,7 @@ import com.adkp.fuexchange.request.RegisterToSellerRequest;
 import com.adkp.fuexchange.request.UpdateInformationSellerRequest;
 import com.adkp.fuexchange.request.UpdateStatusRequest;
 import com.adkp.fuexchange.response.OrderDetailResponse;
+import com.adkp.fuexchange.response.PostProductResponse;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.response.SellerInformationResponse;
 import jakarta.transaction.Transactional;
@@ -200,25 +201,16 @@ public class SellerServiceImpl implements SellerService {
     }
 
     @Override
-    public OrderDetailResponse getOrderDetailBySellerIdAndOrderId(Integer sellerId, Integer orderId) {
+    public List<OrderDetailResponse> getOrderDetailBySellerIdAndOrderId(Integer sellerId, Integer orderId) {
 
         List<OrderPostProductDTO> orderPostProductList =
                 orderPostProductMapper.toOrderPostProductDTOList(orderPostProductRepository.getOrdersDetailBySellerIdAndOrderId(sellerId, orderId));
 
-        List<OrderDetailResponse> postProductInOrder = getPostProductInOrder(orderPostProductList);
-
-        OrdersDTO orders = ordersMapper.toOrdersDTO(ordersRepository.getOrderByStatus(orderId));
-
-        if (orders != null) {
-
-            orders.setTotalPrice(totalPriceInOrder(orderId));
-
+        if(orderPostProductList.isEmpty()){
+            return null;
         }
 
-        return OrderDetailResponse.builder()
-                .order(orders)
-                .postProductInOrder(postProductInOrder)
-                .build();
+        return getPostProductInOrder(orderPostProductList);
     }
 
     @Override
@@ -226,57 +218,6 @@ public class SellerServiceImpl implements SellerService {
         List<Seller> sellers = sellerRepository.findAll();
 
         return sellerMapper.toSellerDTOList(sellers);
-    }
-
-    private List<OrderDetailResponse> getPostProductInOrder(List<OrderPostProductDTO> orderPostProductList) {
-
-        List<OrderDetailResponse> postProductInOrder = new ArrayList<>();
-
-        OrderPostProductDTO previousOrderProductDTO = null;
-
-        for (OrderPostProductDTO currentOrderProductDTO : orderPostProductList) {
-
-            currentOrderProductDTO.getPostProduct().setPriceBought(currentOrderProductDTO.getPriceBought() * 1000);
-
-            if (previousOrderProductDTO != null) {
-
-                if (currentOrderProductDTO.getSttOrder() == previousOrderProductDTO.getSttOrder() &&
-                        currentOrderProductDTO.getVariationDetail().getVariationDetailId() != previousOrderProductDTO.getVariationDetail().getVariationDetailId()
-                ) {
-
-                    postProductInOrder.remove(previousOrderProductDTO);
-
-                    postProductInOrder.add(
-                            OrderDetailResponse.builder()
-                                    .postProduct(currentOrderProductDTO.getPostProduct())
-                                    .firstVariation(
-                                            previousOrderProductDTO.getVariationDetail().getVariation().getVariationName() + ": "
-                                                    + previousOrderProductDTO.getVariationDetail().getDescription()
-                                    )
-                                    .secondVariation(
-                                            currentOrderProductDTO.getVariationDetail().getVariation().getVariationName() + ": "
-                                                    + currentOrderProductDTO.getVariationDetail().getDescription()
-                                    )
-                                    .quantity(currentOrderProductDTO.getQuantity())
-                                    .build());
-                }
-            } else {
-
-                postProductInOrder.add(
-                        OrderDetailResponse.builder()
-                                .postProduct(currentOrderProductDTO.getPostProduct())
-                                .firstVariation(
-                                        currentOrderProductDTO.getVariationDetail().getVariation().getVariationName() + ": "
-                                                + currentOrderProductDTO.getVariationDetail().getDescription()
-                                )
-                                .quantity(currentOrderProductDTO.getQuantity())
-                                .build());
-            }
-
-            previousOrderProductDTO = currentOrderProductDTO;
-        }
-
-        return postProductInOrder;
     }
 
     private long totalPriceInOrder(Integer orderId) {
@@ -288,5 +229,138 @@ public class SellerServiceImpl implements SellerService {
         Transactions transactions = transactionsRepository.getReferenceById(payment.getTransactionId().getTransactionsId());
 
         return transactions.getTotalPrice() * 1000;
+    }
+
+    private List<OrderDetailResponse> getPostProductInOrder(List<OrderPostProductDTO> orderPostProductList) {
+
+        List<OrderDetailResponse> orderResponse = new ArrayList<>();
+
+        List<PostProductResponse> postProductInOrder = new ArrayList<>();
+
+        OrderPostProductDTO previousOrderProductDTO = null;
+
+        PostProductResponse postProductResponse = new PostProductResponse();
+
+        List<PostProductResponse> previousPostProductInOrder;
+
+        OrderPostProductDTO last = orderPostProductList.get(orderPostProductList.size() - 1);
+
+        for (OrderPostProductDTO currentOrderProductDTO : orderPostProductList) {
+
+            currentOrderProductDTO.getPostProduct().setPriceBought(currentOrderProductDTO.getPriceBought() * 1000);
+
+            if (previousOrderProductDTO != null) {
+
+                postProductResponse = setInformationForSecond(currentOrderProductDTO, previousOrderProductDTO, postProductResponse);
+
+                previousPostProductInOrder = postProductInOrder;
+
+                postProductInOrder = postProductCanAdd(currentOrderProductDTO, previousOrderProductDTO, postProductInOrder, postProductResponse);
+
+                if (currentOrderProductDTO.getPostProduct().getSellerId() != previousOrderProductDTO.getPostProduct().getSellerId()) {
+                    orderResponse.add(
+                            OrderDetailResponse.builder()
+                                    .order(currentOrderProductDTO.getOrder())
+                                    .postProductInOrder(previousPostProductInOrder)
+                                    .build());
+                }
+                PostProductResponse lastPost = postProductInOrder.get(postProductInOrder.size() - 1);
+                if (
+                        last.getPostProduct().getPostProductId() == lastPost.getPostProductId() &&
+                                last.getOrder().getOrderId() == currentOrderProductDTO.getOrder().getOrderId()
+                                && last.getVariationDetail().getVariationDetailId() == currentOrderProductDTO.getVariationDetail().getVariationDetailId()
+                ) {
+
+                    orderResponse.add(
+                            OrderDetailResponse.builder()
+                                    .order(currentOrderProductDTO.getOrder())
+                                    .postProductInOrder(postProductInOrder)
+                                    .build());
+                }
+
+            } else {
+                setInformationForFirst(currentOrderProductDTO, postProductResponse, postProductInOrder);
+                if (orderPostProductList.size() == 1) {
+                    orderResponse.add(
+                            OrderDetailResponse.builder()
+                                    .order(currentOrderProductDTO.getOrder())
+                                    .postProductInOrder(postProductInOrder)
+                                    .build());
+                }
+            }
+
+            currentOrderProductDTO.getPostProduct().getProduct().getDetail().setProductImage(null);
+            previousOrderProductDTO = currentOrderProductDTO;
+        }
+
+        return orderResponse;
+    }
+
+    private PostProductResponse setInformationForSecond(
+            OrderPostProductDTO currentOrderProductDTO, OrderPostProductDTO previousOrderProductDTO,
+            PostProductResponse postProductResponse
+    ) {
+        if (currentOrderProductDTO.getPostProduct().getPostProductId() == previousOrderProductDTO.getPostProduct().getPostProductId()
+                && currentOrderProductDTO.getSttOrder() == previousOrderProductDTO.getSttOrder()
+                && currentOrderProductDTO.getOrder().getOrderId() == previousOrderProductDTO.getOrder().getOrderId()
+        ) {
+            postProductResponse.setSecondVariation(
+                    currentOrderProductDTO.getVariationDetail().getVariation().getVariationName() + ": "
+                            + currentOrderProductDTO.getVariationDetail().getDescription()
+            );
+            return postProductResponse;
+        } else {
+            postProductResponse = new PostProductResponse();
+            postProductResponse.setPostProductId(currentOrderProductDTO.getPostProduct().getPostProductId());
+            postProductResponse.setPostStatusDTO(currentOrderProductDTO.getPostProduct().getPostStatus());
+            postProductResponse.setFirstVariation(
+                    currentOrderProductDTO.getVariationDetail().getVariation().getVariationName() + ": "
+                            + currentOrderProductDTO.getVariationDetail().getDescription()
+            );
+            postProductResponse.setProductName(currentOrderProductDTO.getPostProduct().getProduct().getDetail().getProductName());
+            postProductResponse.setPriceBought(currentOrderProductDTO.getPriceBought());
+            postProductResponse.setQuantity(currentOrderProductDTO.getQuantity());
+            postProductResponse.setImageUrlProduct(
+                    currentOrderProductDTO.getPostProduct().getProduct().getDetail().getProductImage().get(0).getImageUrl()
+            );
+        }
+
+        return postProductResponse;
+    }
+
+    private void setInformationForFirst(
+            OrderPostProductDTO currentOrderProductDTO, PostProductResponse postProductResponse, List<PostProductResponse> postProductInOrder
+    ) {
+        postProductResponse.setPostProductId(currentOrderProductDTO.getPostProduct().getPostProductId());
+        postProductResponse.setPostStatusDTO(currentOrderProductDTO.getPostProduct().getPostStatus());
+        postProductResponse.setFirstVariation(
+                currentOrderProductDTO.getVariationDetail().getVariation().getVariationName() + ": "
+                        + currentOrderProductDTO.getVariationDetail().getDescription()
+        );
+        postProductResponse.setQuantity(currentOrderProductDTO.getQuantity());
+        postProductResponse.setImageUrlProduct(
+                currentOrderProductDTO.getPostProduct().getProduct().getDetail().getProductImage().get(0).getImageUrl()
+        );
+        postProductInOrder.add(postProductResponse);
+    }
+
+    private List<PostProductResponse> postProductCanAdd(
+            OrderPostProductDTO currentOrderPostProductDTO, OrderPostProductDTO previousOrderPostProductDTO,
+            List<PostProductResponse> postProductInOrder, PostProductResponse postProductResponse
+    ) {
+        if (currentOrderPostProductDTO.getOrder().getOrderId() == previousOrderPostProductDTO.getOrder().getOrderId()
+                && currentOrderPostProductDTO.getPostProduct().getSellerId() == previousOrderPostProductDTO.getPostProduct().getSellerId()
+        ) {
+            if (currentOrderPostProductDTO.getPostProduct().getPostProductId() == previousOrderPostProductDTO.getPostProduct().getPostProductId()) {
+                postProductInOrder.remove(postProductInOrder.size() - 1);
+                postProductInOrder.add(postProductResponse);
+            } else {
+                postProductInOrder.add(postProductResponse);
+            }
+        } else {
+            postProductInOrder = new ArrayList<>();
+            postProductInOrder.add(postProductResponse);
+        }
+        return postProductInOrder;
     }
 }

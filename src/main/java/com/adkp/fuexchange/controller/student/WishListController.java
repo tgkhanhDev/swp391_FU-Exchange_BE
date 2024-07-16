@@ -23,44 +23,46 @@ public class WishListController {
 
     @Operation(summary = "Create a wishlist")
     @PostMapping("/create")
-    public ResponseObject<Object>createWishList(
-          @RequestBody @Valid RegisterWishListRequest registerWishListRequest){
-       return wishListService.createWishList(registerWishListRequest);
+    public ResponseObject<Object> createWishList(
+            @RequestBody @Valid RegisterWishListRequest registerWishListRequest) {
+        return wishListService.createWishList(registerWishListRequest);
     }
 
     @Operation(summary = "view wishlist by postProductID")
     @GetMapping("/{postProductId}")
-    public  ResponseObject<Object>viewWishListByProduct(
+    public ResponseObject<Object> viewWishListByProduct(
             @PathVariable("postProductId") int postProductId
-    ){
-        return  wishListService.viewWishListByPostProductID(postProductId);
+    ) {
+        return wishListService.viewWishListByPostProductID(postProductId);
     }
 
     @Operation(summary = "Update quantity wishlist")
 
     @PutMapping("/{wishListId}/update-quantity")
 
-    public  ResponseObject<Object>updateQuantity(
+    public ResponseObject<Object> updateQuantity(
             @PathVariable("wishListId") int wishListId,
             @RequestParam("quantity") int quantity
-    ){
-        return  wishListService.UpdateQuantity(wishListId, quantity);
+    ) {
+        return wishListService.UpdateQuantity(wishListId, quantity);
     }
+
     @Operation(summary = "Update status wishlist")
 
     @PutMapping("/{wishListId}/update-status")
 
-    public  ResponseObject<Object>updateActive(
+    public ResponseObject<Object> updateActive(
             @PathVariable("wishListId") int wishListId,
             @RequestParam("active") int active
-    ){
-        return  wishListService.UpdateActive(wishListId,active);
+    ) {
+        return wishListService.UpdateActive(wishListId, active);
     }
+
     @Operation(summary = "Delete wishlist by wishListID")
     @DeleteMapping("/{wishListId}")
-    public ResponseObject<Object>deleteWishList(
+    public ResponseObject<Object> deleteWishList(
             @PathVariable("wishListId") int wishListId
-    ){
+    ) {
         wishListService.deleteWishList(wishListId);
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())

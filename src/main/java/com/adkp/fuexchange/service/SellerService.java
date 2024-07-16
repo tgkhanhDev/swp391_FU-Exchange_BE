@@ -27,7 +27,7 @@ public interface SellerService {
 
     List<OrdersDTO> getOrderBySellerId(Integer sellerId);
 
-    OrderDetailResponse getOrderDetailBySellerIdAndOrderId(Integer sellerId, Integer orderId);
+    List<OrderDetailResponse> getOrderDetailBySellerIdAndOrderId(Integer sellerId, Integer orderId);
 
     List<SellerDTO> getAllSeller();
 }

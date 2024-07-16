@@ -49,7 +49,7 @@ public class RegisteredStudentController {
             @PathVariable("registeredStudentId") Integer registeredStudentId
     ) {
 
-        OrderDetailResponse orderDetailResponse = registeredStudentService.getOrdersDetailByRegisteredStudentId(registeredStudentId);
+        List<OrderDetailResponse> orderDetailResponse = registeredStudentService.getOrdersDetailByRegisteredStudentId(registeredStudentId);
 
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())

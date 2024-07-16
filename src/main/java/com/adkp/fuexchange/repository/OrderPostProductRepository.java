@@ -26,7 +26,7 @@ public interface OrderPostProductRepository extends JpaRepository<OrderPostProdu
 
     @Query("SELECT odpprd FROM OrderPostProduct odpprd " +
             "WHERE odpprd.orderId.registeredStudentId.registeredStudentId = :registeredStudentId " +
-            "ORDER BY odpprd.orderId.createDate DESC")
+            "ORDER BY odpprd.orderId.createDate DESC, sttOrder ASC")
     List<OrderPostProduct> getOrdersDetailByRegisteredStudentId(
             @Param("registeredStudentId") Integer registeredStudentId
     );

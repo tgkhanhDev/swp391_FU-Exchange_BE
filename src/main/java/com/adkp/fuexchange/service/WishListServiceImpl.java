@@ -1,12 +1,10 @@
 package com.adkp.fuexchange.service;
 
 import com.adkp.fuexchange.pojo.PostProduct;
+import com.adkp.fuexchange.pojo.PostStatus;
 import com.adkp.fuexchange.pojo.Product;
 import com.adkp.fuexchange.pojo.WishList;
-import com.adkp.fuexchange.repository.PostProductRepository;
-import com.adkp.fuexchange.repository.ProductRepository;
-import com.adkp.fuexchange.repository.RegisteredStudentRepository;
-import com.adkp.fuexchange.repository.WishListRepository;
+import com.adkp.fuexchange.repository.*;
 import com.adkp.fuexchange.request.RegisterWishListRequest;
 import com.adkp.fuexchange.response.*;
 import jakarta.transaction.Transactional;
@@ -24,15 +22,16 @@ public class WishListServiceImpl implements WishListService {
     private final PostProductRepository postProductRepository;
     private final ProductRepository productRepository;
     private final RegisteredStudentRepository registeredStudentRepository;
-
+    private final PostStatusRepository postStatusRepository;
 
     @Autowired
 
-    public WishListServiceImpl(WishListRepository wishListRepository, PostProductRepository postProductRepository, ProductRepository productRepository, RegisteredStudentRepository registeredStudentRepository) {
+    public WishListServiceImpl(WishListRepository wishListRepository, PostProductRepository postProductRepository, ProductRepository productRepository, RegisteredStudentRepository registeredStudentRepository, PostStatusRepository postStatusRepository) {
         this.wishListRepository = wishListRepository;
         this.postProductRepository = postProductRepository;
         this.productRepository = productRepository;
         this.registeredStudentRepository = registeredStudentRepository;
+        this.postStatusRepository = postStatusRepository;
     }
 
 
@@ -42,9 +41,8 @@ public class WishListServiceImpl implements WishListService {
 
         PostProduct postProduct = postProductRepository.getReferenceById(registerWishListRequest.getPostProductId());
 
-        if(wishListRepository.checkExistInWishList(
-                registerWishListRequest.getPostProductId(), registerWishListRequest.getRegisteredStudentId()) != 0)
-        {
+        if (wishListRepository.checkExistInWishList(
+                registerWishListRequest.getPostProductId(), registerWishListRequest.getRegisteredStudentId()) != 0) {
             return ResponseObject.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
                     .message(HttpStatus.BAD_REQUEST.name())
@@ -163,7 +161,7 @@ public class WishListServiceImpl implements WishListService {
         WishList wishList = wishListRepository.getReferenceById(wishListID);
         PostProduct postProduct = postProductRepository.getReferenceById(wishList.getPostProductId().getPostProductId());
 
-
+        PostStatus postStatus = postStatusRepository.getReferenceById(1);
         // xem thu post product dang trang thai chap nhan giao dich ko và phai ve poststatus ==4 moi giao dich dc
         if (active == 1 && (postProduct.getPostStatusId().getPostStatusId() != 4)) {
             return ResponseObject.builder()
@@ -178,10 +176,11 @@ public class WishListServiceImpl implements WishListService {
             return ResponseObject.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
                     .message(HttpStatus.BAD_REQUEST.name())
-                    .content("sản phẩm đã hết!!")
+                    .content("Sản phẩm đã hết!!")
                     .data(WishListResponse.builder().isActive(wishList.isActive()).build())
                     .build();
         }
+
         if (active == 1 && (postProduct.getQuantity() < wishList.getQuantity())) {
             return ResponseObject.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
@@ -191,6 +190,9 @@ public class WishListServiceImpl implements WishListService {
                     .build();
         }
         postProduct.setQuantity((active == 0) ? (postProduct.getQuantity() + wishList.getQuantity()) : (postProduct.getQuantity() - wishList.getQuantity()));
+        if (postProduct.getQuantity() == 0) {
+            postProduct.setPostStatusId(postStatus);
+        }
         wishList.setActive((active == 0) ? false : true);
         postProductRepository.save(postProduct);
         wishListRepository.save(wishList);
