@@ -104,11 +104,14 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private void saveTransactions(Payment paymentSaved, double totalPrice) {
+        String formatted = new DecimalFormat("#.###").format(totalPrice / 1000);
+        double parsedValue = Double.parseDouble(formatted.replace(",", "."));
+        long longValue = (long) parsedValue;
         transactionsRepository.save(
                 new Transactions(
                         paymentSaved,
                         transactionsStatusRepository.getReferenceById(1),
-                        Long.parseLong(new DecimalFormat("#.###").format(totalPrice / 1000)),
+                        longValue,
                         LocalDateTime.now(),
                         LocalDateTime.now().plusDays(3)
                 )
@@ -275,29 +278,14 @@ public class PaymentServiceImpl implements PaymentService {
 
     private void removeAlgorithm(List<CartPost> cartPostsSaved) {
 
-
         if (cartPostsSaved.isEmpty()) {
             return;
         }
 
-        CartPost previousCartPost = null;
-
         for (CartPost currentCartPost : cartPostsSaved) {
 
-            if (previousCartPost != null
-            ) {
-                if (
-                        currentCartPost.getSttPostInCart() == previousCartPost.getSttPostInCart() &&
-                                currentCartPost.getVariationDetailId().getVariationDetailId() != previousCartPost.getVariationDetailId().getVariationDetailId()
-                ) {
-                    cartPostRepository.delete(previousCartPost);
-                    cartPostRepository.delete(currentCartPost);
-                }
-            } else {
-                cartPostRepository.delete(currentCartPost);
-            }
+            cartPostRepository.delete(currentCartPost);
 
-            previousCartPost = currentCartPost;
         }
     }
 }

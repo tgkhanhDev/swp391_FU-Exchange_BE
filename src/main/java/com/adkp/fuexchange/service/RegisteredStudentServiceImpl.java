@@ -11,7 +11,6 @@ import com.adkp.fuexchange.request.UpdatePasswordRequest;
 import com.adkp.fuexchange.response.OrderDetailResponse;
 import com.adkp.fuexchange.response.PostProductResponse;
 import com.adkp.fuexchange.response.ResponseObject;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -86,7 +85,7 @@ public class RegisteredStudentServiceImpl implements RegisteredStudentService {
         List<OrderPostProductDTO> orderPostProductList =
                 orderPostProductMapper.toOrderPostProductDTOList(orderPostProductRepository.getOrdersDetailByRegisteredStudentId(registeredStudentId));
 
-        if(orderPostProductList.isEmpty()){
+        if (orderPostProductList.isEmpty()) {
             return null;
         }
 
@@ -151,7 +150,7 @@ public class RegisteredStudentServiceImpl implements RegisteredStudentService {
                 if (currentOrderProductDTO.getPostProduct().getSellerId() != previousOrderProductDTO.getPostProduct().getSellerId()) {
                     orderResponse.add(
                             OrderDetailResponse.builder()
-                                    .order(currentOrderProductDTO.getOrder())
+                                    .order(previousOrderProductDTO.getOrder())
                                     .postProductInOrder(previousPostProductInOrder)
                                     .build());
                 }

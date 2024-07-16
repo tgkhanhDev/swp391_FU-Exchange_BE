@@ -206,7 +206,7 @@ public class SellerServiceImpl implements SellerService {
         List<OrderPostProductDTO> orderPostProductList =
                 orderPostProductMapper.toOrderPostProductDTOList(orderPostProductRepository.getOrdersDetailBySellerIdAndOrderId(sellerId, orderId));
 
-        if(orderPostProductList.isEmpty()){
+        if (orderPostProductList.isEmpty()) {
             return null;
         }
 
@@ -260,7 +260,7 @@ public class SellerServiceImpl implements SellerService {
                 if (currentOrderProductDTO.getPostProduct().getSellerId() != previousOrderProductDTO.getPostProduct().getSellerId()) {
                     orderResponse.add(
                             OrderDetailResponse.builder()
-                                    .order(currentOrderProductDTO.getOrder())
+                                    .order(previousOrderProductDTO.getOrder())
                                     .postProductInOrder(previousPostProductInOrder)
                                     .build());
                 }
