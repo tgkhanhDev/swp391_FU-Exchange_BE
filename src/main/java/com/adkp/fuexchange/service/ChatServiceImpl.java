@@ -96,7 +96,7 @@ public class ChatServiceImpl implements ChatService {
                 seller.getRegisteredStudentId().getRegisteredStudentId()
         );
 
-        if (chatRoom == null) {
+        if (chatRoom == null || !chatRoom.isActive()) {
             chatRoom = chatRoomRepository.save(new ChatRoom(true));
         }
 

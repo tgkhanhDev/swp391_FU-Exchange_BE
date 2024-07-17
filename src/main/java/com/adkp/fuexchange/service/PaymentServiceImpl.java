@@ -13,10 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -196,6 +193,9 @@ public class PaymentServiceImpl implements PaymentService {
 
         List<OrderPostProduct> orderPostProducts = new ArrayList<>();
         Orders orders = null;
+
+        postProductRequests = sort(postProductRequests);
+
         for (PostProductRequest postProductRequest : postProductRequests) {
             PostProduct curentPostProduct = postProductRepository.getReferenceById(postProductRequest.getPostProductId());
 
@@ -287,5 +287,15 @@ public class PaymentServiceImpl implements PaymentService {
             cartPostRepository.delete(currentCartPost);
 
         }
+    }
+
+    private List<PostProductRequest> sort(List<PostProductRequest> postProductRequests) {
+        postProductRequests.sort(new Comparator<PostProductRequest>() {
+            @Override
+            public int compare(PostProductRequest p1, PostProductRequest p2) {
+                return Integer.compare(p1.getSellerId(), p2.getSellerId());
+            }
+        });
+        return postProductRequests;
     }
 }
