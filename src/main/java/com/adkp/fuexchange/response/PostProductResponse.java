@@ -40,6 +40,8 @@ public class PostProductResponse {
 
     private List<PostProductResponse> productResponseList;
 
+    private int sellerId;
+
     private String productName;
 
     private String imageUrlProduct;

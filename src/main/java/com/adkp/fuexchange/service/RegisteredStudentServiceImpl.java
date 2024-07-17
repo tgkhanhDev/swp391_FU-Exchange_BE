@@ -208,6 +208,7 @@ public class RegisteredStudentServiceImpl implements RegisteredStudentService {
                             + currentOrderProductDTO.getVariationDetail().getDescription()
             );
             postProductResponse.setProductName(currentOrderProductDTO.getPostProduct().getProduct().getDetail().getProductName());
+            postProductResponse.setSellerId(currentOrderProductDTO.getPostProduct().getSellerId());
             postProductResponse.setPriceBought(currentOrderProductDTO.getPriceBought());
             postProductResponse.setQuantity(currentOrderProductDTO.getQuantity());
             postProductResponse.setImageUrlProduct(
@@ -227,6 +228,7 @@ public class RegisteredStudentServiceImpl implements RegisteredStudentService {
                 currentOrderProductDTO.getVariationDetail().getVariation().getVariationName() + ": "
                         + currentOrderProductDTO.getVariationDetail().getDescription()
         );
+        postProductResponse.setSellerId(currentOrderProductDTO.getPostProduct().getSellerId());
         postProductResponse.setPriceBought(currentOrderProductDTO.getPriceBought());
         postProductResponse.setProductName(currentOrderProductDTO.getPostProduct().getProduct().getDetail().getProductName());
         postProductResponse.setQuantity(currentOrderProductDTO.getQuantity());
