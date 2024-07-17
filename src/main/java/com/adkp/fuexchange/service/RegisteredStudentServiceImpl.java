@@ -227,6 +227,8 @@ public class RegisteredStudentServiceImpl implements RegisteredStudentService {
                 currentOrderProductDTO.getVariationDetail().getVariation().getVariationName() + ": "
                         + currentOrderProductDTO.getVariationDetail().getDescription()
         );
+        postProductResponse.setPriceBought(currentOrderProductDTO.getPriceBought());
+        postProductResponse.setProductName(currentOrderProductDTO.getPostProduct().getProduct().getDetail().getProductName());
         postProductResponse.setQuantity(currentOrderProductDTO.getQuantity());
         postProductResponse.setImageUrlProduct(
                 currentOrderProductDTO.getPostProduct().getProduct().getDetail().getProductImage().get(0).getImageUrl()
