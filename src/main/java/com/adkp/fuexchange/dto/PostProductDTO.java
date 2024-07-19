@@ -11,6 +11,8 @@ public class PostProductDTO {
 
     private int postProductId;
 
+    private int sellerId;
+
     private ProductDTO product;
 
     private PostTypeDTO postType;

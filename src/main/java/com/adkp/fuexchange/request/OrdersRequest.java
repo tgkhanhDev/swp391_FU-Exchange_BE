@@ -1,5 +1,6 @@
 package com.adkp.fuexchange.request;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -17,7 +18,7 @@ public class OrdersRequest {
     private int registeredStudentId;
 
     @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
-    private List<PostProductRequest> postProductToBuyRequests;
+    private List<@Valid PostProductRequest> postProductToBuyRequests;
 
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
     private int paymentMethodId;

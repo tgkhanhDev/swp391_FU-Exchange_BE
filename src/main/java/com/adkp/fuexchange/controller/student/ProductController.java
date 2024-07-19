@@ -3,14 +3,14 @@ package com.adkp.fuexchange.controller.student;
 import com.adkp.fuexchange.dto.ProductDTO;
 import com.adkp.fuexchange.request.RegisterProductRequest;
 import com.adkp.fuexchange.request.UpdateInformationProductRequest;
+import com.adkp.fuexchange.response.ProductResponse;
 import com.adkp.fuexchange.response.ResponseObject;
-import com.adkp.fuexchange.service.ProductServiceImpl;
+import com.adkp.fuexchange.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,10 +18,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/product")
 @Tag(name = "Product")
+@Validated
 public class ProductController {
-    private final ProductServiceImpl productService;
+    private final ProductService productService;
 
-    public ProductController(ProductServiceImpl productService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
@@ -53,18 +54,17 @@ public class ProductController {
     }
 
     @PutMapping("/update-information")
-    public ResponseObject<Object> updateInformation(@RequestBody UpdateInformationProductRequest updateInformationProductRequest
+    public ResponseObject<Object> updateInformation(
+            @RequestBody @Valid UpdateInformationProductRequest updateInformationProductRequest
     ) {
 
-        if (updateInformationProductRequest.getProductDetailIdProductName() != null
-                && updateInformationProductRequest.getPrice() >= 0
-        ) {
-            return productService.updateProductInformation(updateInformationProductRequest);
-        }
+        ProductDTO product = productService.updateProductInformation(updateInformationProductRequest);
+
         return ResponseObject.builder()
-                .status(HttpStatus.BAD_REQUEST.value())
-                .message(HttpStatus.BAD_REQUEST.name())
-                .content("Vui lòng nhập đầy đủ thông tin cập nhật sản phẩm ")
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Cập nhật thông tin sản phẩm thành công!")
+                .data(product)
                 .build();
     }
 
@@ -72,10 +72,12 @@ public class ProductController {
     @Operation(summary = "Get product by variation detail")
     public ResponseObject<Object> getProductVariationId(@RequestBody List<Integer> variationDetailId) {
 
+        ProductResponse productResponse = productService.getProductByVariationDetailId(variationDetailId);
+
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
-                .data(productService.getProductByVariationDetailId(variationDetailId))
+                .data(productResponse)
                 .content("Lấy sản phẩm thành công")
                 .build();
     }
@@ -93,9 +95,6 @@ public class ProductController {
         ProductDTO productDeleted = productService.deleteProduct(productId);
 
         if (productDeleted == null) {
-//            HttpHeaders header = new HttpHeaders();
-//            header.add("abc","123");
-//            ResponseEntity.status(HttpStatus.BAD_REQUEST);
             status = HttpStatus.BAD_REQUEST.value();
             message = HttpStatus.BAD_REQUEST.name();
             content = "Sản phẩm đang được bán hoặc đang chờ xác nhận được bán!";

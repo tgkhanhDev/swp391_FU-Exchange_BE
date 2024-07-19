@@ -2,6 +2,7 @@ package com.adkp.fuexchange.repository;
 
 import com.adkp.fuexchange.pojo.ReportPostProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -31,5 +32,20 @@ public interface ReportPostProductRepository extends JpaRepository<ReportPostPro
     ReportPostProduct checkReportedOfStudentInReportPostProduct(
             @Param("buyerId") Integer buyerId,
             @Param("postProductId") Integer postProductId
+    );
+
+    @Query("SELECT rppprd FROM ReportPostProduct rppprd " +
+            "WHERE rppprd.postProductId.postProductId = :postProductId")
+    List<ReportPostProduct> getReportByPostId(
+            @Param("postProductId") Integer postProductId
+    );
+
+    @Modifying
+    @Query("UPDATE ReportPostProduct rppprd " +
+            "SET rppprd.reportStatusId.reportStatusId = :reportStatusId " +
+            "WHERE rppprd.postProductId.postProductId = :postProductId")
+    void updateStatusPostProduct(
+            @Param("postProductId") Integer postProductId,
+            @Param("reportStatusId") Integer reportStatusId
     );
 }

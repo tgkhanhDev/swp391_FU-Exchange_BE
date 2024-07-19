@@ -28,15 +28,18 @@ public class WishList {
     private RegisteredStudent registeredStudentId;
 
     private LocalDateTime createTime;
-    private int quantity;
-    private boolean isActive;
 
-    public WishList(PostProduct postProductId, RegisteredStudent registeredStudentId, LocalDateTime createTime,int quantity ,boolean isActive) {
+    private int quantity;
+
+    @Column(name = "isActive")
+    private boolean active;
+
+    public WishList(PostProduct postProductId, RegisteredStudent registeredStudentId, LocalDateTime createTime,int quantity ,boolean active) {
         this.postProductId = postProductId;
         this.registeredStudentId = registeredStudentId;
         this.createTime = createTime;
         this.quantity = quantity;
-        this.isActive = isActive;
+        this.active = active;
     }
 
 }

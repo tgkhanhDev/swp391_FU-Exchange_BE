@@ -3,6 +3,7 @@ package com.adkp.fuexchange.repository;
 import com.adkp.fuexchange.pojo.ReportPostProduct;
 import com.adkp.fuexchange.pojo.ReportSeller;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -32,5 +33,20 @@ public interface ReportSellerRepository extends JpaRepository<ReportSeller, Inte
     ReportSeller checkReportedOfStudentInReportSeller(
             @Param("buyerId") Integer buyerId,
             @Param("sellerId") Integer sellerId
+    );
+
+    @Query("SELECT rpsl FROM ReportSeller rpsl " +
+            "WHERE rpsl.sellerId.sellerId = :sellerId")
+    List<ReportSeller> getReportBySellerId(
+            @Param("sellerId") Integer sellerId
+    );
+
+    @Modifying
+    @Query("UPDATE ReportSeller rpsl " +
+            "SET rpsl.reportStatusId.reportStatusId = :reportStatusId " +
+            "WHERE rpsl.sellerId.sellerId = :sellerId")
+    void updateStatusSeller(
+            @Param("sellerId") Integer sellerId,
+            @Param("reportStatusId") Integer reportStatusId
     );
 }

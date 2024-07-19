@@ -1,8 +1,8 @@
 package com.adkp.fuexchange.controller.cart;
 
 import com.adkp.fuexchange.dto.CartPostDTO;
-import com.adkp.fuexchange.pojo.CartPost;
 import com.adkp.fuexchange.request.CartRequest;
+import com.adkp.fuexchange.request.UpdateCartRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.CartPostService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -66,12 +66,34 @@ public class CartController {
         String message = HttpStatus.OK.name();
         String content = "Thêm giỏ hàng thành công";
 
-        List<CartPost> cartPosts = cartPostService.addToCart(cartRequest);
+        List<CartPostDTO> cartPosts = cartPostService.addToCart(cartRequest);
 
         if (cartPosts == null) {
             status = HttpStatus.BAD_REQUEST.value();
             message = HttpStatus.BAD_REQUEST.name();
             content = "Thêm giỏ hàng thất bại!";
+        }
+        return ResponseObject.builder()
+                .status(status)
+                .message(message)
+                .content(content)
+                .data(cartPosts)
+                .build();
+    }
+
+    @PutMapping("/update-cart")
+    public ResponseObject<Object> updateCart(@Valid @RequestBody UpdateCartRequest updateCartRequest) {
+
+        int status = HttpStatus.OK.value();
+        String message = HttpStatus.OK.name();
+        String content = "Cập nhât giỏ hàng thành công";
+
+        List<CartPostDTO> cartPosts = cartPostService.updateCart(updateCartRequest);
+
+        if (cartPosts == null) {
+            status = HttpStatus.BAD_REQUEST.value();
+            message = HttpStatus.BAD_REQUEST.name();
+            content = "Cập nhât hàng thất bại!";
         }
         return ResponseObject.builder()
                 .status(status)

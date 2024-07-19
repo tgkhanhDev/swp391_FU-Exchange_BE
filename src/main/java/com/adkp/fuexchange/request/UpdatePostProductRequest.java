@@ -20,6 +20,9 @@ public class UpdatePostProductRequest {
     private Integer campusId;
 
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
+    private Integer postStatusId;
+
+    @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
     private int quantity;
 
     @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")

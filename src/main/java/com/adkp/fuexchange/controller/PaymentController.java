@@ -1,7 +1,6 @@
 package com.adkp.fuexchange.controller;
 
 import com.adkp.fuexchange.dto.OrderPostProductDTO;
-import com.adkp.fuexchange.repository.RegisteredStudentRepository;
 import com.adkp.fuexchange.request.OrdersRequest;
 import com.adkp.fuexchange.response.ResponseObject;
 import com.adkp.fuexchange.service.PaymentService;
@@ -13,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -32,14 +33,11 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    private final RegisteredStudentRepository registeredStudentRepository;
-
 
     @Autowired
-    public PaymentController(VnPayService vnPayService, PaymentService paymentService, RegisteredStudentRepository registeredStudentRepository) {
+    public PaymentController(VnPayService vnPayService, PaymentService paymentService) {
         this.vnPayService = vnPayService;
         this.paymentService = paymentService;
-        this.registeredStudentRepository = registeredStudentRepository;
     }
 
     @ApiResponses(value = {
@@ -62,7 +60,7 @@ public class PaymentController {
             @RequestHeader HttpHeaders headers
     ) {
 
-        if (registeredStudentRepository.getReferenceById(ordersRequest.getRegisteredStudentId()).getDeliveryAddress() == null) {
+        if (vnPayService.validateDeliveryAddress(ordersRequest)) {
             return VnPayResponse.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
                     .message(HttpStatus.BAD_REQUEST.name())
@@ -75,27 +73,16 @@ public class PaymentController {
 
     @GetMapping("/vn-pay/call-back")
     @Hidden
-    public ResponseObject<Object> paymentCallBack(@RequestParam("vnp_ResponseCode") String vnp_ResponseCode) {
-
-        int status = HttpStatus.BAD_REQUEST.value();
-
-        String message = HttpStatus.BAD_REQUEST.name();
-
-        String content = "Mua hàng thất bại!";
-
+    public void paymentCallBack(
+            @RequestParam("vnp_ResponseCode") String vnp_ResponseCode,
+            HttpServletResponse httpServletResponse
+    ) throws IOException {
         if (vnPayService.vnPayPaymentCallBack(vnp_ResponseCode)) {
-            status = HttpStatus.OK.value();
-
-            message = HttpStatus.BAD_REQUEST.name();
-
-            content = "Mua hàng thành công!";
+            httpServletResponse.sendRedirect("http://localhost:3005/authorize/order");
+            return;
         }
 
-        return ResponseObject.builder()
-                .status(status)
-                .message(message)
-                .content(content)
-                .build();
+        httpServletResponse.sendRedirect("http://localhost:3005/cancel");
     }
 
     @ApiResponses(value = {
@@ -111,7 +98,7 @@ public class PaymentController {
         String message = HttpStatus.OK.name();
         String content = "Mua hàng thành công!";
 
-        if (registeredStudentRepository.getReferenceById(ordersRequest.getRegisteredStudentId()).getDeliveryAddress() == null) {
+        if (vnPayService.validateDeliveryAddress(ordersRequest)) {
             return ResponseObject.builder()
                     .status(HttpStatus.BAD_REQUEST.value())
                     .message(HttpStatus.BAD_REQUEST.name())

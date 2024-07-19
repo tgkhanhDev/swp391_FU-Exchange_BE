@@ -43,9 +43,6 @@ public interface PostProductRepository extends JpaRepository<PostProduct, Intege
     @Query("Select pprd From PostProduct pprd Where pprd.postStatusId.postStatusId = 2")
     List<PostProduct> viewCreateOrderRequest();
 
-    @Query("Select pprd From PostProduct pprd Where pprd.productId.sellerId.sellerId = :sellerId")
-    List<PostProduct> getPostProductBySellerID(@Param("sellerId") int sellerId);
-
     @Query(
             "SELECT pprd FROM PostProduct pprd " +
                     "WHERE pprd.productId.sellerId.registeredStudentId.registeredStudentId =  :registeredStudentId")

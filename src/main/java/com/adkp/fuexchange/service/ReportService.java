@@ -31,9 +31,9 @@ public interface ReportService {
 
     ReportPostProductDTO sendReportPostProduct(SendReportPostRequest sendReportPostRequest);
 
-    ReportPostProductDTO updateStatusReportPostProduct(UpdateReportPostRequest updatePostProductRequest);
+    List<ReportPostProductDTO> updateStatusReportPostProduct(UpdateReportPostRequest updatePostProductRequest);
 
     ReportSellerDTO sendReportSeller(SendReportSellerRequest sendReportSellerRequest);
 
-    ReportSellerDTO updateStatusReportSeller(UpdateReportSellerRequest updateReportSellerRequest);
+    List<ReportSellerDTO> updateStatusReportSeller(UpdateReportSellerRequest updateReportSellerRequest);
 }

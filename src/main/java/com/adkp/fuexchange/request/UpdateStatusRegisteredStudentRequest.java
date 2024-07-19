@@ -4,10 +4,10 @@ import jakarta.validation.constraints.Min;
 import lombok.Data;
 
 @Data
-public class UpdateStatusRequest {
+public class UpdateStatusRegisteredStudentRequest {
 
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
-    private int sellerId;
+    private Integer registeredStudentId;
 
-    private int isActive;
+    private Integer isActive;
 }

@@ -141,4 +141,29 @@ public class ChatController {
                 .data(chatMessageDTO)
                 .build();
     }
+
+    @PutMapping("/delete-chat-room")
+    public ResponseObject<Object> updateStatusChatRoom(
+            @RequestBody Integer chatRoomId
+    ) {
+
+        int status = HttpStatus.OK.value();
+        String message = (HttpStatus.OK.name());
+        String content = "Xóa thành công!";
+
+        ChatRoomDTO chatRoomDTO = chatService.deleteChatRoom(chatRoomId);
+
+        if (chatRoomDTO == null) {
+            status = HttpStatus.INTERNAL_SERVER_ERROR.value();
+            message = (HttpStatus.INTERNAL_SERVER_ERROR.name());
+            content = "Xóa thất bại!";
+        }
+
+        return ResponseObject.builder()
+                .status(status)
+                .message(message)
+                .content(content)
+                .data(chatRoomDTO)
+                .build();
+    }
 }

@@ -96,7 +96,7 @@ public class ChatServiceImpl implements ChatService {
                 seller.getRegisteredStudentId().getRegisteredStudentId()
         );
 
-        if (chatRoom == null) {
+        if (chatRoom == null || !chatRoom.isActive()) {
             chatRoom = chatRoomRepository.save(new ChatRoom(true));
         }
 
@@ -121,6 +121,16 @@ public class ChatServiceImpl implements ChatService {
         ChatMessage chatMessage = saveChatMessageContactToStudent(chatRoom, contactToRequest);
 
         return chatMessageMapper.toChatMessageDTO(chatMessage);
+    }
+
+    @Override
+    public ChatRoomDTO deleteChatRoom(int chatRoomId) {
+
+        ChatRoom chatRoom = chatRoomRepository.getReferenceById(chatRoomId);
+
+        chatRoom.setActive(false);
+
+        return chatRoomMapper.toChatRoomDTO(chatRoomRepository.save(chatRoom));
     }
 
     private ChatMessage saveChatMessageContactToStudent(
