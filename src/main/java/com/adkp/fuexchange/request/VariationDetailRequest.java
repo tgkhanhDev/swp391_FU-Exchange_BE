@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 public class VariationDetailRequest {
 
+    @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
     private String description;
-
 }

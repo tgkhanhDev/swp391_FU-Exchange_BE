@@ -20,4 +20,7 @@ public interface ReviewRepository extends JpaRepository<Review, Integer>{
 
     @Query("SELECT AVG(CAST(rv.ratingNumber AS double)) FROM Review rv WHERE rv.postProductId.postProductId = :postProductId")
     Double calcAvgRatingByPostProductId(@Param("postProductId") Integer postProductId);
+
+    @Query("SELECT rv From Review rv WHERE rv.orderId.orderId = :orderId AND rv.postProductId.postProductId = :postProductId")
+    Review getReviewByOrderAndPost(@Param("postProductId") Integer postProductId, @Param("orderId") Integer orderId);
 }

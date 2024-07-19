@@ -75,26 +75,41 @@ public class ReviewController {
 
     @Operation(summary = "create review")
     @PostMapping("/create")
-    public ResponseObject<Object>createReview(
+    public ResponseObject<Object> createReview(
             @Valid @RequestBody RegisterReviewRequest registerReviewRequest
-    ){
-        return reviewService.createReview(registerReviewRequest);
+    ) {
+        ReviewDTO reviewDTO = reviewService.createReview(registerReviewRequest);
+
+        if (reviewDTO == null) {
+            return ResponseObject.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .message(HttpStatus.BAD_REQUEST.name())
+                    .content("Đơn hàng phải hoàn thành mới được đánh giá.")
+                    .build();
+        }
+
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .content("Đã đánh giá thành công!")
+                .data(reviewDTO)
+                .build();
     }
 
 
     @PutMapping("/{reviewId}")
-    public ResponseObject<Object>updateReview(
-                @PathVariable("reviewId") int reviewId,
+    public ResponseObject<Object> updateReview(
+            @PathVariable("reviewId") int reviewId,
             @RequestBody UpdateInformationReviewRequest updateInformationReviewRequest
-            ){
-        return  reviewService.updateReview(reviewId,updateInformationReviewRequest);
+    ) {
+        return reviewService.updateReview(reviewId, updateInformationReviewRequest);
 
     }
 
     @DeleteMapping("/{reviewId}")
-    public ResponseObject<Object>deteleReview(
+    public ResponseObject<Object> deleteReview(
             @PathVariable("reviewId") int reviewId
-    ){
+    ) {
         reviewService.deleteReview(reviewId);
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())

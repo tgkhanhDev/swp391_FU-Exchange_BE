@@ -1,6 +1,7 @@
 package com.adkp.fuexchange.request;
 
 import com.adkp.fuexchange.dto.VariationDTO;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -21,16 +22,19 @@ public class UpdateInformationProductRequest {
     private Integer productId;
 
     @NotEmpty(message = "Vui lòng nhập đầy đủ thông tin!")
+    @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
     private String productName;
 
     @NotEmpty(message = "Vui lòng nhập đầy đủ thông tin!")
+    @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
     private String productDescription;
 
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
+    @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
     private Integer categoryId;
 
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
     private double price;
 
-    List<UpdateVariationRequest> variation;
+    List<@Valid UpdateVariationRequest> variation;
 }

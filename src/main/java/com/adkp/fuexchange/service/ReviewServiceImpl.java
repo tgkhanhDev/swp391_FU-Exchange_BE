@@ -1,5 +1,6 @@
 package com.adkp.fuexchange.service;
 
+import com.adkp.fuexchange.dto.PostProductDTO;
 import com.adkp.fuexchange.dto.ReviewDTO;
 import com.adkp.fuexchange.mapper.ReviewMapper;
 import com.adkp.fuexchange.pojo.Orders;
@@ -25,10 +26,9 @@ import java.util.List;
 public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewMapper reviewMapper;
-
     private final ReviewRepository reviewRepository;
     private final PostProductRepository postProductRepository;
-    private  final OrdersRepository ordersRepository;
+    private final OrdersRepository ordersRepository;
 
     @Autowired
     public ReviewServiceImpl(ReviewMapper reviewMapper, ReviewRepository reviewRepository, PostProductRepository postProductRepository, OrdersRepository ordersRepository) {
@@ -42,7 +42,7 @@ public class ReviewServiceImpl implements ReviewService {
     public List<ReviewDTO> getReviewByOrderId(Integer orderId) {
         List<Review> reviewDTO = reviewRepository.getReviewByOrderId(orderId);
 
-        return  reviewMapper.toReviewDTOList(reviewDTO);
+        return reviewMapper.toReviewDTOList(reviewDTO);
     }
 
     @Override
@@ -67,25 +67,32 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     @Transactional
-    public ResponseObject<Object> createReview(RegisterReviewRequest registerReviewRequest) {
+    public ReviewDTO createReview(RegisterReviewRequest registerReviewRequest) {
+
         Orders orders = ordersRepository.getReferenceById(registerReviewRequest.getOrderId());
-        if(orders.getOrderStatusId().getOrderStatusId()!=5){
-            return ResponseObject.builder()
-                    .status(HttpStatus.BAD_REQUEST.value())
-                    .message(HttpStatus.BAD_REQUEST.name())
-                    .content("đơn hàng phải hoàn thành mới được review")
-                    .build();
+        if (orders.getOrderStatusId().getOrderStatusId() != 5) {
+            return null;
         }
-        Review review = new Review(postProductRepository.getReferenceById(registerReviewRequest.getPostProductId()),
-                orders,
-                registerReviewRequest.getRatingNumber(), registerReviewRequest.getDescription(), LocalDateTime.now());
-         reviewRepository.save(review);
-        return ResponseObject.builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.name())
-                .content("Đã tạo wishlist thành công!")
-                .data(registerReviewRequest)
-                .build();
+
+        Review review = reviewRepository.getReviewByOrderAndPost(
+                registerReviewRequest.getPostProductId(), registerReviewRequest.getOrderId()
+        );
+
+        if (review == null) {
+            Review newReview = Review.builder()
+                    .postProductId(postProductRepository.getReferenceById(registerReviewRequest.getPostProductId()))
+                    .orderId(ordersRepository.getReferenceById(registerReviewRequest.getOrderId()))
+                    .ratingNumber(registerReviewRequest.getRatingNumber())
+                    .description(registerReviewRequest.getDescription())
+                    .createTime(LocalDateTime.now())
+                    .build();
+            return reviewMapper.toReviewDTO(reviewRepository.save(newReview));
+        }
+        review.setRatingNumber(registerReviewRequest.getRatingNumber());
+        review.setDescription(registerReviewRequest.getDescription());
+        review.setCreateTime(LocalDateTime.now());
+
+        return reviewMapper.toReviewDTO(reviewRepository.save(review));
     }
 
     @Override

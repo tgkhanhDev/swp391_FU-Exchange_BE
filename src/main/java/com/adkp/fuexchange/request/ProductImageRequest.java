@@ -1,6 +1,5 @@
 package com.adkp.fuexchange.request;
 
-import com.adkp.fuexchange.pojo.ProductDetail;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
