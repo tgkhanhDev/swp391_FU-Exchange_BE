@@ -77,7 +77,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public ChatRoomDTO getChatRoomStudentToStudent(Integer studentSendId, Integer studentReceiveId) {
 
-        ChatRoom chatRoom = chatRoomRepository.getChatRoomByRegisteredStudentIdAndSellerId(
+        ChatRoom chatRoom = chatRoomRepository.getChatRoomByStudentToStudent(
                 studentSendId,
                 studentReceiveId
         );
@@ -96,7 +96,7 @@ public class ChatServiceImpl implements ChatService {
                 seller.getRegisteredStudentId().getRegisteredStudentId()
         );
 
-        if (chatRoom == null || !chatRoom.isActive()) {
+        if (chatRoom == null) {
             chatRoom = chatRoomRepository.save(new ChatRoom(true));
         }
 
@@ -114,7 +114,7 @@ public class ChatServiceImpl implements ChatService {
                 contactToRequest.getRegisteredStudentId()
         );
 
-        if (chatRoom == null || !chatRoom.isActive()) {
+        if (chatRoom == null) {
             chatRoom = chatRoomRepository.save(new ChatRoom(true));
         }
 
