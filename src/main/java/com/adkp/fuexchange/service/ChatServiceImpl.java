@@ -109,7 +109,7 @@ public class ChatServiceImpl implements ChatService {
     public ChatMessageDTO contactToStudent(ContactToRequest contactToRequest) {
         Seller seller = sellerRepository.getReferenceById(contactToRequest.getSellerId());
 
-        ChatRoom chatRoom = chatRoomRepository.getChatRoomByRegisteredStudentIdAndSellerId(
+        ChatRoom chatRoom = chatRoomRepository.getChatRoomBySellerIdAndRegisteredStudentId(
                 seller.getRegisteredStudentId().getRegisteredStudentId(),
                 contactToRequest.getRegisteredStudentId()
         );
