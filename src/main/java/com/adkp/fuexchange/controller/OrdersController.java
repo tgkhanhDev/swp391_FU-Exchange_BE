@@ -29,18 +29,19 @@ public class OrdersController {
     @Operation(summary = "Update order")
     @PutMapping("/update")
     public ResponseObject<Object> updateOrder(@Valid @RequestBody OrderUpdateRequest orderUpdateRequest) {
-        if (orderService.updateOrder(orderUpdateRequest) != null) {
+        OrdersDTO ordersDTO = orderService.updateOrder(orderUpdateRequest);
+        if (ordersDTO != null) {
             return ResponseObject.builder()
                     .status(HttpStatus.OK.value())
                     .message(HttpStatus.OK.name())
                     .content("Cập nhật thành công!")
+                    .data(ordersDTO)
                     .build();
         }
         return ResponseObject.builder()
-                .status(HttpStatus.OK.value())
-                .message(HttpStatus.OK.name())
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message(HttpStatus.BAD_GATEWAY.name())
                 .content("Cập nhật thất bại!")
-                .data(orderService.updateOrder(orderUpdateRequest))
                 .build();
     }
 

@@ -42,4 +42,10 @@ public interface OrderPostProductRepository extends JpaRepository<OrderPostProdu
     long checkOrderInDeletePost(
             @Param("postProductId") Integer postProductId
     );
+
+    @Query("SELECT DISTINCT new OrderPostProduct(odpprd.sttOrder, odpprd.postProductId, odpprd.quantity) " +
+            "FROM OrderPostProduct odpprd " +
+            "WHERE odpprd.orderId.orderId = :orderId " +
+            "AND odpprd.orderId.orderStatusId.orderStatusId IN (1, 2)")
+    List<OrderPostProduct> getOrderPostProductByOrderId(@Param("orderId") Integer orderId);
 }
