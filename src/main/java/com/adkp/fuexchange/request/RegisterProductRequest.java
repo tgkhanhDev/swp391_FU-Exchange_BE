@@ -27,8 +27,12 @@ public class RegisterProductRequest {
 
     private boolean productStatus;
 
+    @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
+    @NotEmpty(message = "Vui lòng nhập đầy đủ thông tin!")
     List<@Valid VariationRequest> variationList;
 
+    @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
+    @NotEmpty(message = "Vui lòng nhập đầy đủ thông tin!")
     List<@Valid ProductImageRequest> productImageRequestsList;
 
 }
