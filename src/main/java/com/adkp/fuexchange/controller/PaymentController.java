@@ -67,7 +67,6 @@ public class PaymentController {
                     .content("Chưa có địa chỉ nhận hàng. Vui lòng điền đầy đủ thông tin trước khi mua hàng!")
                     .build();
         }
-        vnPayService.validateQuantity(ordersRequest.getPostProductToBuyRequests());
         return vnPayService.vnPayPayment(ordersRequest, headers);
     }
 
