@@ -321,6 +321,7 @@ public class SellerServiceImpl implements SellerService {
                             + currentOrderProductDTO.getVariationDetail().getDescription()
             );
             postProductResponse.setProductName(currentOrderProductDTO.getPostProduct().getProduct().getDetail().getProductName());
+            postProductResponse.setSellerId(currentOrderProductDTO.getPostProduct().getSellerId());
             postProductResponse.setPriceBought(currentOrderProductDTO.getPriceBought());
             postProductResponse.setQuantity(currentOrderProductDTO.getQuantity());
             postProductResponse.setImageUrlProduct(
@@ -340,6 +341,9 @@ public class SellerServiceImpl implements SellerService {
                 currentOrderProductDTO.getVariationDetail().getVariation().getVariationName() + ": "
                         + currentOrderProductDTO.getVariationDetail().getDescription()
         );
+        postProductResponse.setSellerId(currentOrderProductDTO.getPostProduct().getSellerId());
+        postProductResponse.setPriceBought(currentOrderProductDTO.getPriceBought());
+        postProductResponse.setProductName(currentOrderProductDTO.getPostProduct().getProduct().getDetail().getProductName());
         postProductResponse.setQuantity(currentOrderProductDTO.getQuantity());
         postProductResponse.setImageUrlProduct(
                 currentOrderProductDTO.getPostProduct().getProduct().getDetail().getProductImage().get(0).getImageUrl()
