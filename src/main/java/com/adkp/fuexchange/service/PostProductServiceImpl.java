@@ -71,7 +71,7 @@ public class PostProductServiceImpl implements PostProductService {
                 .data(postProductDTO)
                 .meta(
                         MetaResponse.builder()
-                                .total(countPostProduct(campus, postType, name, category))
+                                .total(postProductRepository.countFilter(campus, postType, name, category))
                                 .current(current)
                                 .build()
                 )
@@ -236,10 +236,4 @@ public class PostProductServiceImpl implements PostProductService {
         );
     }
 
-    public long countPostProduct(String campusId, String postTypeId, String name, String categoryId) {
-        if (campusId == null && postTypeId == null && (name == null || name.isEmpty())) {
-            return postProductRepository.count();
-        }
-        return postProductRepository.countFilter(campusId, postTypeId, name, categoryId);
-    }
 }
