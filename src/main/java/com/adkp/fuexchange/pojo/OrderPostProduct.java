@@ -36,4 +36,9 @@ public class OrderPostProduct {
 
     private long priceBought;
 
+    public OrderPostProduct(int sttOrder, PostProduct postProductId, int quantity) {
+        this.sttOrder = sttOrder;
+        this.postProductId = postProductId;
+        this.quantity = quantity;
+    }
 }

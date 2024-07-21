@@ -63,22 +63,17 @@ public class VnPayService {
 
     public boolean vnPayPaymentCallBack(String vnp_ResponseCode) {
         if (vnp_ResponseCode.equals("00")) {
-//            OrdersRequest ordersRequest = (OrdersRequest) this.session.getAttribute("ordersRequest");
             OrdersRequest ordersRequest = UserSession.getInstance().getOrdersRequest();
             UserSession.getInstance().cleanUserSession();
-//            session.removeAttribute("ordersRequest");
             utils.navigationDataAsyncForAnotherMethod("http://localhost:8080/order/payment/pay-order", ordersRequest, HttpMethod.POST);
             return true;
         }
-//        session.removeAttribute("ordersRequest");
         UserSession.getInstance().cleanUserSession();
         return false;
     }
 
     private long totalPrice(List<PostProductRequest> postProductRequestList) {
         long totalPrice = 0;
-
-        Map<Integer, Integer> quantityEachPost = new HashMap<>();
 
         PostProductRequest previousProduct = null;
 

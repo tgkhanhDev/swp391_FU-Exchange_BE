@@ -37,9 +37,7 @@ public class WishListController {
     }
 
     @Operation(summary = "Update quantity wishlist")
-
     @PutMapping("/{wishListId}/update-quantity")
-
     public ResponseObject<Object> updateQuantity(
             @PathVariable("wishListId") int wishListId,
             @RequestParam("quantity") int quantity

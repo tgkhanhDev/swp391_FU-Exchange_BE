@@ -257,20 +257,23 @@ public class SellerServiceImpl implements SellerService {
 
                 postProductInOrder = postProductCanAdd(currentOrderProductDTO, previousOrderProductDTO, postProductInOrder, postProductResponse);
 
-                if (currentOrderProductDTO.getPostProduct().getSellerId() != previousOrderProductDTO.getPostProduct().getSellerId()) {
+                if (currentOrderProductDTO.getPostProduct().getSellerId() != previousOrderProductDTO.getPostProduct().getSellerId()
+                        || currentOrderProductDTO.getOrder().getOrderId() != previousOrderProductDTO.getOrder().getOrderId()
+                ) {
                     orderResponse.add(
                             OrderDetailResponse.builder()
                                     .order(previousOrderProductDTO.getOrder())
                                     .postProductInOrder(previousPostProductInOrder)
                                     .build());
                 }
+
                 PostProductResponse lastPost = postProductInOrder.get(postProductInOrder.size() - 1);
+
                 if (
                         last.getPostProduct().getPostProductId() == lastPost.getPostProductId() &&
                                 last.getOrder().getOrderId() == currentOrderProductDTO.getOrder().getOrderId()
                                 && last.getVariationDetail().getVariationDetailId() == currentOrderProductDTO.getVariationDetail().getVariationDetailId()
                 ) {
-
                     orderResponse.add(
                             OrderDetailResponse.builder()
                                     .order(currentOrderProductDTO.getOrder())
@@ -318,6 +321,7 @@ public class SellerServiceImpl implements SellerService {
                             + currentOrderProductDTO.getVariationDetail().getDescription()
             );
             postProductResponse.setProductName(currentOrderProductDTO.getPostProduct().getProduct().getDetail().getProductName());
+            postProductResponse.setSellerId(currentOrderProductDTO.getPostProduct().getSellerId());
             postProductResponse.setPriceBought(currentOrderProductDTO.getPriceBought());
             postProductResponse.setQuantity(currentOrderProductDTO.getQuantity());
             postProductResponse.setImageUrlProduct(
@@ -337,6 +341,9 @@ public class SellerServiceImpl implements SellerService {
                 currentOrderProductDTO.getVariationDetail().getVariation().getVariationName() + ": "
                         + currentOrderProductDTO.getVariationDetail().getDescription()
         );
+        postProductResponse.setSellerId(currentOrderProductDTO.getPostProduct().getSellerId());
+        postProductResponse.setPriceBought(currentOrderProductDTO.getPriceBought());
+        postProductResponse.setProductName(currentOrderProductDTO.getPostProduct().getProduct().getDetail().getProductName());
         postProductResponse.setQuantity(currentOrderProductDTO.getQuantity());
         postProductResponse.setImageUrlProduct(
                 currentOrderProductDTO.getPostProduct().getProduct().getDetail().getProductImage().get(0).getImageUrl()
@@ -351,7 +358,10 @@ public class SellerServiceImpl implements SellerService {
         if (currentOrderPostProductDTO.getOrder().getOrderId() == previousOrderPostProductDTO.getOrder().getOrderId()
                 && currentOrderPostProductDTO.getPostProduct().getSellerId() == previousOrderPostProductDTO.getPostProduct().getSellerId()
         ) {
-            if (currentOrderPostProductDTO.getPostProduct().getPostProductId() == previousOrderPostProductDTO.getPostProduct().getPostProductId()) {
+            if (
+                    currentOrderPostProductDTO.getPostProduct().getPostProductId() == previousOrderPostProductDTO.getPostProduct().getPostProductId()
+                            && currentOrderPostProductDTO.getSttOrder() == previousOrderPostProductDTO.getSttOrder()
+            ) {
                 postProductInOrder.remove(postProductInOrder.size() - 1);
                 postProductInOrder.add(postProductResponse);
             } else {

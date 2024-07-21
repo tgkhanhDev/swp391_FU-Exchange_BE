@@ -78,7 +78,8 @@ public class PaymentServiceImpl implements PaymentService {
                 ordersRequest
         );
 
-        if (getPostProductInOrder(ordersRequest.getPostProductToBuyRequests()).size() >= 2) {
+
+        if (ordersRequest.getOrderMethod().equals("cart")) {
             removeAfterOrder(ordersRequest);
         }
 

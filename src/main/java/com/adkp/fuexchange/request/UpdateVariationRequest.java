@@ -3,6 +3,7 @@ package com.adkp.fuexchange.request;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.List;
@@ -14,6 +15,7 @@ public class UpdateVariationRequest {
     private int variationId;
 
     @NotEmpty(message = "Vui lòng nhập đầy đủ thông tin!")
+    @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
     private String variationName;
 
     private List<@Valid UpdateVariationDetailRequest> variationDetail;

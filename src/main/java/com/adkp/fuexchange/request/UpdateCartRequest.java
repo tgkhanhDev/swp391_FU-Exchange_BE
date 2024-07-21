@@ -8,7 +8,6 @@ import java.util.List;
 
 @Data
 public class UpdateCartRequest {
-
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin")
     private int cartId;
 

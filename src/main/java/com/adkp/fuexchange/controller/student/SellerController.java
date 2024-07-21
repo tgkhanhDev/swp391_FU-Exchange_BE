@@ -107,7 +107,9 @@ public class SellerController {
 
     @Operation(summary = "Update information of seller")
     @PutMapping("/update-information")
-    public ResponseObject<Object> updateInformationSeller(@RequestBody UpdateInformationSellerRequest updateInformationSellerRequest) {
+    public ResponseObject<Object> updateInformationSeller(
+            @Valid @RequestBody UpdateInformationSellerRequest updateInformationSellerRequest
+    ) {
 
         if (
                 updateInformationSellerRequest.getBankingName() != null
@@ -127,14 +129,14 @@ public class SellerController {
     @PutMapping("/update-status")
     public ResponseObject<Object> updateStatusSeller(@RequestBody @Valid UpdateStatusRequest updateStatusRequest) {
 
-            return sellerService.updateStatusSeller(updateStatusRequest);
+        return sellerService.updateStatusSeller(updateStatusRequest);
     }
 
     @Operation(summary = "delete of seller")
     @DeleteMapping("/{sellerId}")
-    public ResponseObject<Object>deleteSellerByID(
+    public ResponseObject<Object> deleteSellerByID(
             @PathVariable("sellerId") int sellerId
-    ){
+    ) {
         sellerService.deleteSellerByID(sellerId);
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())

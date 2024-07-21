@@ -16,18 +16,16 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "variation Detail")
 @Validated
 public class VariationDetailController {
-    private  final VariationDetailService variationDetailService;
+    private final VariationDetailService variationDetailService;
 
     public VariationDetailController(VariationDetailService variationDetailService) {
         this.variationDetailService = variationDetailService;
     }
 
-
     @DeleteMapping("/{variationDetailId}")
     public ResponseObject<Object> deleteVariationDetailByID(
             @PathVariable("variationDetailId") int variationDetailId
-
-    ){
+    ) {
         variationDetailService.deleteVariationDetailByID(variationDetailId);
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())

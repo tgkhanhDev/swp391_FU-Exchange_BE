@@ -3,9 +3,7 @@ package com.adkp.fuexchange.service;
 
 import com.adkp.fuexchange.dto.OrdersDTO;
 import com.adkp.fuexchange.mapper.OrdersMapper;
-import com.adkp.fuexchange.pojo.Orders;
-import com.adkp.fuexchange.pojo.Payment;
-import com.adkp.fuexchange.pojo.Transactions;
+import com.adkp.fuexchange.pojo.*;
 import com.adkp.fuexchange.repository.*;
 import com.adkp.fuexchange.request.OrderUpdateRequest;
 import jakarta.transaction.Transactional;
@@ -14,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -31,26 +30,29 @@ public class OrderServiceImpl implements OrderService {
 
     private final PaymentRepository paymentRepository;
 
+    private final OrderPostProductRepository orderPostProductRepository;
+
+    private final PostProductRepository postProductRepository;
+
     @Autowired
-    public OrderServiceImpl(OrdersRepository ordersRepository, OrdersMapper ordersMapper, OrdersStatusRepository ordersStatusRepository, TransactionsRepository transactionsRepository, TransactionsStatusRepository transactionsStatusRepository, PaymentRepository paymentRepository) {
+    public OrderServiceImpl(OrdersRepository ordersRepository, OrdersMapper ordersMapper, OrdersStatusRepository ordersStatusRepository, TransactionsRepository transactionsRepository, TransactionsStatusRepository transactionsStatusRepository, PaymentRepository paymentRepository, OrderPostProductRepository orderPostProductRepository, PostProductRepository postProductRepository) {
         this.ordersRepository = ordersRepository;
         this.ordersMapper = ordersMapper;
         this.ordersStatusRepository = ordersStatusRepository;
         this.transactionsRepository = transactionsRepository;
         this.transactionsStatusRepository = transactionsStatusRepository;
         this.paymentRepository = paymentRepository;
+        this.orderPostProductRepository = orderPostProductRepository;
+        this.postProductRepository = postProductRepository;
     }
 
     @Override
     @Transactional
     public OrdersDTO updateOrder(OrderUpdateRequest orderUpdateRequest) {
 
-        if (
-                !ordersRepository.existsById(orderUpdateRequest.getOrderId())
-        ) {
-            return null;
-        }
         Orders orders = ordersRepository.getReferenceById(orderUpdateRequest.getOrderId());
+
+        updateQuantityForCancelOrder(orderUpdateRequest);
 
         orders.setOrderStatusId(ordersStatusRepository.getReferenceById(orderUpdateRequest.getOrderStatusId()));
 
@@ -99,5 +101,16 @@ public class OrderServiceImpl implements OrderService {
         }
         ordersRepository.delete(orderDeleted);
         return ordersMapper.toOrdersDTO(orderDeleted);
+    }
+
+    private void updateQuantityForCancelOrder(OrderUpdateRequest orderUpdateRequest) {
+        List<OrderPostProduct> orderPostProducts = orderPostProductRepository.getOrderPostProductByOrderId(orderUpdateRequest.getOrderId());
+        System.out.println(orderPostProducts.size());
+        if (orderUpdateRequest.getOrderStatusId() == 4) {
+            for (OrderPostProduct orderPostProduct : orderPostProducts) {
+                PostProduct postProduct = postProductRepository.getReferenceById(orderPostProduct.getPostProductId().getPostProductId());
+                postProduct.setQuantity(postProduct.getQuantity() + orderPostProduct.getQuantity());
+            }
+        }
     }
 }

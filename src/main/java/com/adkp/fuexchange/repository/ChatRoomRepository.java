@@ -18,8 +18,7 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Integer> {
 
     @Query(value = "SELECT DISTINCT cr.* FROM ChatRoom cr " +
             "JOIN ChatMessage cms ON cr.chatRoomId = cms.chatRoomId " +
-            "WHERE (cms.studentSendId = :registeredStudentId AND cms.studentReceiveId = :sellerId) " +
-            "OR (cms.studentSendId = :sellerId AND cms.studentReceiveId = :registeredStudentId) " +
+            "WHERE cms.studentSendId = :registeredStudentId AND cms.studentReceiveId = :sellerId " +
             "AND cr.isActive = 1",
             nativeQuery = true)
     ChatRoom getChatRoomByRegisteredStudentIdAndSellerId(
@@ -27,4 +26,24 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Integer> {
             @Param("sellerId") Integer sellerId
     );
 
+    @Query(value = "SELECT DISTINCT cr.* FROM ChatRoom cr " +
+            "JOIN ChatMessage cms ON cr.chatRoomId = cms.chatRoomId " +
+            "WHERE cms.studentSendId = :sellerId AND cms.studentReceiveId = :registeredStudentId " +
+            "AND cr.isActive = 1",
+            nativeQuery = true)
+    ChatRoom getChatRoomBySellerIdAndRegisteredStudentId(
+            @Param("registeredStudentId") Integer registeredStudentId,
+            @Param("sellerId") Integer sellerId
+    );
+
+    @Query(value = "SELECT DISTINCT cr.* FROM ChatRoom cr " +
+            "JOIN ChatMessage cms ON cr.chatRoomId = cms.chatRoomId " +
+            "WHERE (cms.studentSendId = :studentSendId " +
+            "AND cms.studentReceiveId = :studentReceiveId) " +
+            "AND cr.isActive = 1",
+            nativeQuery = true)
+    ChatRoom getChatRoomByStudentToStudent(
+            @Param("studentSendId") Integer studentSendId,
+            @Param("studentReceiveId") Integer studentReceiveId
+    );
 }

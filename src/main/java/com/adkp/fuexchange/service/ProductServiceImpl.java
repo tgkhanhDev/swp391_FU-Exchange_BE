@@ -73,6 +73,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ResponseObject<Object> createProduct(RegisterProductRequest registerProductRequest) {
+        if (registerProductRequest.getProductImageRequestsList().size() > 4) {
+            return ResponseObject.builder()
+                    .status(HttpStatus.BAD_REQUEST.value())
+                    .message(HttpStatus.BAD_REQUEST.name())
+                    .content("Hình ảnh không được vượt quá 4 hình ảnh!")
+                    .build();
+        }
         ProductDetail productDetail = new ProductDetail(registerProductRequest.getProductName(), registerProductRequest.getProductDescription());
         productDetailRepository.save(productDetail);
 
