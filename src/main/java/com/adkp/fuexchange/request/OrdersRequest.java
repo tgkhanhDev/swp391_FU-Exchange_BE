@@ -2,6 +2,7 @@ package com.adkp.fuexchange.request;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.validation.annotation.Validated;
@@ -22,6 +23,10 @@ public class OrdersRequest {
 
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
     private int paymentMethodId;
+
+    @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
+    @NotEmpty(message = "Vui lòng nhập đầy đủ thông tin!")
+    private String orderMethod;
 
     private String description;
 }
