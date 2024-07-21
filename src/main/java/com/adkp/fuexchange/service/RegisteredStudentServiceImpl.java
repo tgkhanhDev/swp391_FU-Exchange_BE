@@ -150,14 +150,13 @@ public class RegisteredStudentServiceImpl implements RegisteredStudentService {
                 if (currentOrderProductDTO.getPostProduct().getSellerId() != previousOrderProductDTO.getPostProduct().getSellerId()
                         || currentOrderProductDTO.getOrder().getOrderId() != previousOrderProductDTO.getOrder().getOrderId()
                 ) {
-                    System.out.println(previousOrderProductDTO.getOrder());
                     orderResponse.add(
                             OrderDetailResponse.builder()
                                     .order(previousOrderProductDTO.getOrder())
                                     .postProductInOrder(previousPostProductInOrder)
                                     .build());
                 }
-                // add last
+
                 PostProductResponse lastPost = postProductInOrder.get(postProductInOrder.size() - 1);
 
                 if (
@@ -165,7 +164,6 @@ public class RegisteredStudentServiceImpl implements RegisteredStudentService {
                                 last.getOrder().getOrderId() == currentOrderProductDTO.getOrder().getOrderId()
                                 && last.getVariationDetail().getVariationDetailId() == currentOrderProductDTO.getVariationDetail().getVariationDetailId()
                 ) {
-                    System.out.println(previousOrderProductDTO.getOrder());
                     orderResponse.add(
                             OrderDetailResponse.builder()
                                     .order(currentOrderProductDTO.getOrder())
