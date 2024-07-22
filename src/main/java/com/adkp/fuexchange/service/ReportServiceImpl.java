@@ -170,7 +170,7 @@ public class ReportServiceImpl implements ReportService {
                         .getPostProductId();
 
         reportPostProductRepository.updateStatusPostProduct(
-                reportPostProduct.getReportPostProductId(), reportStatus.getReportStatusId()
+                reportPostProduct.getPostProductId().getPostProductId(), reportStatus.getReportStatusId()
         );
 
         List<ReportPostProduct> reportPostProductUpdated = reportPostProductRepository.getReportByPostId(postProduct.getPostProductId());
