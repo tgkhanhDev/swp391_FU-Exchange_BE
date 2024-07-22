@@ -14,6 +14,7 @@ import java.util.List;
 public interface PostProductMapper {
 
     @Mapping(source = "postProductId", target = "postProductId")
+    @Mapping(source = "productId.sellerId.sellerId", target = "sellerId")
     @Mapping(source = "productId", target = "product")
     @Mapping(source = "postTypeId", target = "postType")
     @Mapping(source = "campusId", target = "campus")

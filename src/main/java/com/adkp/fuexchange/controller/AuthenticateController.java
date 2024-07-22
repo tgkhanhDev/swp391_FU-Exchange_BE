@@ -29,7 +29,9 @@ public class AuthenticateController {
 
     @Operation(summary = "Login into website")
     @PostMapping("/login")
-    public ResponseObject<Object> loginStudent(@RequestBody LoginRequest loginRequest) {
+    public ResponseObject<Object> loginStudent(
+            @Valid @RequestBody LoginRequest loginRequest
+    ) {
         if (
                 loginRequest.getPassword() != null
                         && loginRequest.getUsername() != null

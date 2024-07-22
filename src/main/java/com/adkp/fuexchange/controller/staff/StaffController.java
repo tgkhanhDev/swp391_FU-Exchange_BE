@@ -22,13 +22,14 @@ public class StaffController {
     public StaffController(StaffService staffService) {
         this.staffService = staffService;
     }
+
     @Operation(summary = "Get all Moderator staff ")
     @GetMapping("/{current}")
-    public ResponseObject<Object>viewAllStaffs(
+    public ResponseObject<Object> viewAllStaffs(
             @PathVariable("current") int current,
             @RequestParam(value = "identityCard", required = false) String identityCard
-    ){
-        return  staffService.viewMoreStaffs(current,identityCard);
+    ) {
+        return staffService.viewMoreStaffs(current, identityCard);
     }
 
     @Operation(summary = "Get detail staff by staffID")
@@ -36,8 +37,9 @@ public class StaffController {
     public ResponseObject<Object> viewDetailProductByProductId(
             @PathVariable("staffId") Integer staffId
     ) {
-           return staffService.getStaffInforByStaffID(staffId);
+        return staffService.getStaffInforByStaffID(staffId);
     }
+
     @Operation(summary = "Update staff information")
     @PutMapping("/{staffId}/update-staff")
     public ResponseObject<Object> updateStudentById(
@@ -45,14 +47,16 @@ public class StaffController {
     ) {
         return staffService.updateStaffInforByStaffID(updateInformationStaffRequest);
     }
+
     @Operation(summary = "Update staff status")
     @PutMapping("/{staffId}/update-status")
     public ResponseObject<Object> updateActiveById(
             @PathVariable("staffId") int staffID,
-           @RequestParam("active") int active
+            @RequestParam("active") int active
     ) {
-        return staffService.updateStatusByStaffID(staffID,active);
+        return staffService.updateStatusByStaffID(staffID, active);
     }
+
     @Operation(summary = "Update password")
     @PutMapping("/update-password")
     public ResponseObject<Object> updatePassword(

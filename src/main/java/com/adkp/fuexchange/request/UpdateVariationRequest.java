@@ -1,23 +1,22 @@
 package com.adkp.fuexchange.request;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-public class UpdateInformationSellerRequest {
+public class UpdateVariationRequest {
 
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
-    @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
-    private Integer sellerId;
+    private int variationId;
 
-    @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
     @NotEmpty(message = "Vui lòng nhập đầy đủ thông tin!")
-    private String bankingNumber;
-
     @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
-    @NotEmpty(message = "Vui lòng nhập đầy đủ thông tin!")
-    private String bankingName;
+    private String variationName;
 
+    private List<@Valid UpdateVariationDetailRequest> variationDetail;
 }

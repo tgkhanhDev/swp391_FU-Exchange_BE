@@ -1,9 +1,9 @@
 package com.adkp.fuexchange.request;
 
-import com.adkp.fuexchange.pojo.ProductDetail;
-import com.adkp.fuexchange.pojo.Variation;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.adkp.fuexchange.dto.VariationDTO;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,25 +17,24 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
 public class UpdateInformationProductRequest {
+
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
-    private Integer productID;
+    private Integer productId;
 
-    private String productDetailIdProductName;
+    @NotEmpty(message = "Vui lòng nhập đầy đủ thông tin!")
+    @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
+    private String productName;
 
-    private String productDetailIdDescription;
+    @NotEmpty(message = "Vui lòng nhập đầy đủ thông tin!")
+    @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
+    private String productDescription;
 
+    @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
+    @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
     private Integer categoryId;
 
+    @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
     private double price;
 
-
-    private Integer variationId;
-
-    private String variationName;
-
-    private Integer variationDetailId;
-
-    private String variationDescription;
-
-
+    List<@Valid UpdateVariationRequest> variation;
 }

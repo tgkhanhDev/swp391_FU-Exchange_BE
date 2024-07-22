@@ -1,9 +1,9 @@
 package com.adkp.fuexchange.service;
 
-import com.adkp.fuexchange.response.ResponseObject;
+import com.adkp.fuexchange.response.DashBoardResponse;
+
+import java.util.List;
 
 public interface OrderPostProductService {
-
-    ResponseObject<Object>viewTotalPriceEachPostProductBySellerID(int sellerID);
-
+    List<DashBoardResponse> dashboardEachPost(Integer sellerId);
 }

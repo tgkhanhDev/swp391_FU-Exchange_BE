@@ -1,6 +1,5 @@
 package com.adkp.fuexchange.response;
 
-import com.adkp.fuexchange.pojo.PostProduct;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,11 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class OrderPostProductResponse {
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+public class DashBoardResponse {
 
-    private int postProductID;
+    private String postProductName;
 
-  private long totalpriceBought;
-    private PostProductResponse PostProductResponse;
+    private long totalPriceBought;
+
+    private long totalOrdered;
 }

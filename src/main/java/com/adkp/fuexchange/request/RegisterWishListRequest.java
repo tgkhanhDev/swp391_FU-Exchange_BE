@@ -1,14 +1,16 @@
 package com.adkp.fuexchange.request;
 
-import com.adkp.fuexchange.pojo.PostProduct;
-import com.adkp.fuexchange.pojo.RegisteredStudent;
+import jakarta.validation.constraints.Min;
 import lombok.Data;
-
-import java.time.LocalDateTime;
 
 @Data
 public class RegisterWishListRequest {
+    @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
     private int postProductId;
+
+    @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
     private int registeredStudentId;
+
+    @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
     private int quantity;
 }

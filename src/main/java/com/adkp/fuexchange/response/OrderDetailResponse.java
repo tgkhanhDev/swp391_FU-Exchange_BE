@@ -18,15 +18,9 @@ public class OrderDetailResponse {
 
     private PostProductDTO postProduct;
 
-    private List<OrderDetailResponse> postProductInOrder;
-
     private List<VariationDetailDTO> variationDetail;
 
-    private int quantity;
+    private List<PostProductResponse> postProductInOrder;
 
-    private double priceBought;
-
-    private String firstVariation;
-
-    private String secondVariation;
+    private double totalPrice;
 }

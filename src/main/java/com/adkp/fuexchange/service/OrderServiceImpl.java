@@ -2,18 +2,15 @@ package com.adkp.fuexchange.service;
 
 
 import com.adkp.fuexchange.dto.OrdersDTO;
-import com.adkp.fuexchange.mapper.OrderStatusMapper;
 import com.adkp.fuexchange.mapper.OrdersMapper;
-import com.adkp.fuexchange.pojo.Orders;
-import com.adkp.fuexchange.pojo.Payment;
-import com.adkp.fuexchange.pojo.Transactions;
+import com.adkp.fuexchange.pojo.*;
 import com.adkp.fuexchange.repository.*;
 import com.adkp.fuexchange.request.OrderUpdateRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,65 +30,33 @@ public class OrderServiceImpl implements OrderService {
 
     private final PaymentRepository paymentRepository;
 
-    private final OrderStatusMapper orderStatusMapper;
+    private final OrderPostProductRepository orderPostProductRepository;
+
+    private final PostProductRepository postProductRepository;
 
     @Autowired
-    public OrderServiceImpl(OrdersRepository ordersRepository, OrdersMapper ordersMapper, OrdersStatusRepository ordersStatusRepository, TransactionsRepository transactionsRepository, TransactionsStatusRepository transactionsStatusRepository, PaymentRepository paymentRepository, OrderStatusMapper orderStatusMapper) {
+    public OrderServiceImpl(OrdersRepository ordersRepository, OrdersMapper ordersMapper, OrdersStatusRepository ordersStatusRepository, TransactionsRepository transactionsRepository, TransactionsStatusRepository transactionsStatusRepository, PaymentRepository paymentRepository, OrderPostProductRepository orderPostProductRepository, PostProductRepository postProductRepository) {
         this.ordersRepository = ordersRepository;
         this.ordersMapper = ordersMapper;
         this.ordersStatusRepository = ordersStatusRepository;
         this.transactionsRepository = transactionsRepository;
         this.transactionsStatusRepository = transactionsStatusRepository;
         this.paymentRepository = paymentRepository;
-        this.orderStatusMapper = orderStatusMapper;
-    }
-
-    @Override
-    public List<OrdersDTO> getOrderByRegisterId(Integer registeredStudentId) {
-
-        List<Orders> ordersDTO = ordersRepository.getOrderByRegisterId(registeredStudentId);
-
-        List<OrdersDTO> ordersDTOS = new ArrayList<>();
-
-        if (ordersDTO == null) {
-            return null;
-        }
-
-        for (Orders orders : ordersDTO) {
-            ordersDTOS.add(
-                    OrdersDTO.builder()
-                            .orderId(orders.getOrderId())
-                            .registeredStudent(orders.getRegisteredStudentId().getRegisteredStudentId())
-                            .orderStatus(orderStatusMapper.toOrderStatusDTO(orders.getOrderStatusId()))
-                            .createDate(orders.getCreateDate())
-                            .completeDate(orders.getCompleteDate())
-                            .paymentId(orders.getPaymentId().getPaymentId())
-                            .totalPrice(orders.getPaymentId().getTransactionId().getTotalPrice() * 1000)
-                            .build()
-            );
-        }
-
-        return ordersDTOS;
+        this.orderPostProductRepository = orderPostProductRepository;
+        this.postProductRepository = postProductRepository;
     }
 
     @Override
     @Transactional
     public OrdersDTO updateOrder(OrderUpdateRequest orderUpdateRequest) {
 
-        if (
-                !ordersRepository.existsById(orderUpdateRequest.getOrderId())
-        ) {
-            return null;
-        }
         Orders orders = ordersRepository.getReferenceById(orderUpdateRequest.getOrderId());
+
+        updateQuantityForCancelOrder(orderUpdateRequest);
 
         orders.setOrderStatusId(ordersStatusRepository.getReferenceById(orderUpdateRequest.getOrderStatusId()));
 
-        if (orderUpdateRequest.getCompleteDate() != null && orderUpdateRequest.getOrderStatusId() == 1) {
-            orders.setCompleteDate(orderUpdateRequest.getCompleteDate());
-        }
-
-        orders.setDescription(orderUpdateRequest.getDescription());
+        orders.setCompleteDate(LocalDateTime.now());
 
         updatePaymentStatus(orderUpdateRequest.getOrderStatusId(), orderUpdateRequest.getOrderId());
 
@@ -136,5 +101,16 @@ public class OrderServiceImpl implements OrderService {
         }
         ordersRepository.delete(orderDeleted);
         return ordersMapper.toOrdersDTO(orderDeleted);
+    }
+
+    private void updateQuantityForCancelOrder(OrderUpdateRequest orderUpdateRequest) {
+        List<OrderPostProduct> orderPostProducts = orderPostProductRepository.getOrderPostProductByOrderId(orderUpdateRequest.getOrderId());
+        System.out.println(orderPostProducts.size());
+        if (orderUpdateRequest.getOrderStatusId() == 4) {
+            for (OrderPostProduct orderPostProduct : orderPostProducts) {
+                PostProduct postProduct = postProductRepository.getReferenceById(orderPostProduct.getPostProductId().getPostProductId());
+                postProduct.setQuantity(postProduct.getQuantity() + orderPostProduct.getQuantity());
+            }
+        }
     }
 }

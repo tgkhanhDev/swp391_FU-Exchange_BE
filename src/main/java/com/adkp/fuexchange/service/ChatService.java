@@ -18,4 +18,6 @@ public interface ChatService {
     ChatMessageDTO contactToSeller(ContactToRequest contactToRequest);
 
     ChatMessageDTO contactToStudent(ContactToRequest contactToRequest);
+
+    ChatRoomDTO deleteChatRoom(int chatRoomId);
 }

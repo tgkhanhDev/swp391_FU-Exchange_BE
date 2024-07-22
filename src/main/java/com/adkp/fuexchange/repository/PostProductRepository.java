@@ -40,11 +40,24 @@ public interface PostProductRepository extends JpaRepository<PostProduct, Intege
             @Param("name") String name, @Param("category") String categoryId
     );
 
+    @Query(
+            value = "SELECT COUNT(*) FROM PostProduct pprd " +
+                    "JOIN Product p ON pprd.productId = p.productId " +
+                    "JOIN ProductDetail pd ON p.productDetailId = pd.productDetailId " +
+                    "WHERE pprd.postStatusId = 4 " +
+                    "AND pprd.campusId LIKE CONCAT('%', :campus, '%') " +
+                    "AND pprd.postTypeId LIKE CONCAT('%', :postType, '%') " +
+                    "AND pd.productName LIKE CONCAT('%', :name, '%') " +
+                    "AND p.categoryId LIKE CONCAT('%', :category, '%')",
+            nativeQuery = true
+    )
+    long countFilter(
+            @Param("campus") String campus, @Param("postType") String postType,
+            @Param("name") String name, @Param("category") String categoryId
+    );
+
     @Query("Select pprd From PostProduct pprd Where pprd.postStatusId.postStatusId = 2")
     List<PostProduct> viewCreateOrderRequest();
-
-    @Query("Select pprd From PostProduct pprd Where pprd.productId.sellerId.sellerId = :sellerId")
-    List<PostProduct> getPostProductBySellerID(@Param("sellerId") int sellerId);
 
     @Query(
             "SELECT pprd FROM PostProduct pprd " +

@@ -137,7 +137,7 @@ public class ModeratorController {
         String message = HttpStatus.OK.name();
         String content = "Cập nhật thành công!";
 
-        ReportPostProductDTO updatedReport = reportService.updateStatusReportPostProduct(updatePostProductRequest);
+        List<ReportPostProductDTO> updatedReport = reportService.updateStatusReportPostProduct(updatePostProductRequest);
 
         if (updatedReport == null) {
             status = HttpStatus.BAD_REQUEST.value();
@@ -162,7 +162,7 @@ public class ModeratorController {
         String message = HttpStatus.OK.name();
         String content = "Cập nhật thành công!";
 
-        ReportSellerDTO updatedReport = reportService.updateStatusReportSeller(updateReportSellerRequest);
+        List<ReportSellerDTO> updatedReport = reportService.updateStatusReportSeller(updateReportSellerRequest);
 
         if (updatedReport == null) {
             status = HttpStatus.BAD_REQUEST.value();

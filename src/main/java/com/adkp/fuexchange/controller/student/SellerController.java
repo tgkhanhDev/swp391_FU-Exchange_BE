@@ -1,6 +1,7 @@
 package com.adkp.fuexchange.controller.student;
 
 import com.adkp.fuexchange.dto.PostProductDTO;
+import com.adkp.fuexchange.dto.SellerDTO;
 import com.adkp.fuexchange.request.RegisterToSellerRequest;
 import com.adkp.fuexchange.request.UpdateInformationSellerRequest;
 import com.adkp.fuexchange.request.UpdatePostStatus;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/seller")
@@ -39,6 +42,20 @@ public class SellerController {
                 .status(HttpStatus.OK.value())
                 .message(HttpStatus.OK.name())
                 .data(sellerService.getOrderBySellerId(sellerId))
+                .content("Xem thành công!")
+                .build();
+    }
+
+    @Operation(summary = "view all by seller")
+    @GetMapping("/get-all")
+    public ResponseObject<Object> getAllSeller() {
+
+        List<SellerDTO> sellerDTOS = sellerService.getAllSeller();
+
+        return ResponseObject.builder()
+                .status(HttpStatus.OK.value())
+                .message(HttpStatus.OK.name())
+                .data(sellerDTOS)
                 .content("Xem thành công!")
                 .build();
     }
@@ -90,7 +107,9 @@ public class SellerController {
 
     @Operation(summary = "Update information of seller")
     @PutMapping("/update-information")
-    public ResponseObject<Object> updateInformationSeller(@RequestBody UpdateInformationSellerRequest updateInformationSellerRequest) {
+    public ResponseObject<Object> updateInformationSeller(
+            @Valid @RequestBody UpdateInformationSellerRequest updateInformationSellerRequest
+    ) {
 
         if (
                 updateInformationSellerRequest.getBankingName() != null
@@ -110,14 +129,14 @@ public class SellerController {
     @PutMapping("/update-status")
     public ResponseObject<Object> updateStatusSeller(@RequestBody @Valid UpdateStatusRequest updateStatusRequest) {
 
-            return sellerService.updateStatusSeller(updateStatusRequest);
+        return sellerService.updateStatusSeller(updateStatusRequest);
     }
 
     @Operation(summary = "delete of seller")
     @DeleteMapping("/{sellerId}")
-    public ResponseObject<Object>deleteSellerByID(
+    public ResponseObject<Object> deleteSellerByID(
             @PathVariable("sellerId") int sellerId
-    ){
+    ) {
         sellerService.deleteSellerByID(sellerId);
         return ResponseObject.builder()
                 .status(HttpStatus.OK.value())

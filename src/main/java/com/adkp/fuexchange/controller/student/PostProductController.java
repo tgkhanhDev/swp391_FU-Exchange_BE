@@ -67,12 +67,14 @@ public class PostProductController {
         if (postProduct == null) {
             status = HttpStatus.BAD_REQUEST.value();
             message = HttpStatus.BAD_REQUEST.name();
-            content = "Cập nhật thông tin thất bại!";
+            content = "Bài post đang có đơn hàng chưa được xử lý. Vui lòng xử lý đơn hàng trước khi xóa!";
         }
+
         return ResponseObject.builder()
                 .status(status)
                 .message(message)
                 .content(content)
+                .data(postProduct)
                 .build();
     }
 

@@ -154,7 +154,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     @Transactional
-    public ReportPostProductDTO updateStatusReportPostProduct(UpdateReportPostRequest updatePostProductRequest) {
+    public List<ReportPostProductDTO> updateStatusReportPostProduct(UpdateReportPostRequest updatePostProductRequest) {
 
         ReportPostProduct reportPostProduct = reportPostProductRepository.getReferenceById(
                 updatePostProductRequest.getReportPostProductId()
@@ -164,13 +164,20 @@ public class ReportServiceImpl implements ReportService {
                 updatePostProductRequest.getReportStatusId()
         );
 
-        reportPostProduct.setReportStatusId(reportStatus);
+        PostProduct postProduct =
+                reportPostProductRepository.
+                        getReferenceById(updatePostProductRequest.getReportPostProductId())
+                        .getPostProductId();
 
-        ReportPostProduct reportPostProductUpdated = reportPostProductRepository.save(reportPostProduct);
+        reportPostProductRepository.updateStatusPostProduct(
+                reportPostProduct.getPostProductId().getPostProductId(), reportStatus.getReportStatusId()
+        );
 
-        updatePostProductAfterUpdateReport(updatePostProductRequest, reportPostProductUpdated);
+        List<ReportPostProduct> reportPostProductUpdated = reportPostProductRepository.getReportByPostId(postProduct.getPostProductId());
 
-        return reportPostProductMapper.toReportPostProductDTO(reportPostProductUpdated);
+        updatePostProductAfterUpdateReport(updatePostProductRequest, postProduct);
+
+        return reportPostProductMapper.toReportPostProductDTOList(reportPostProductUpdated);
     }
 
     @Override
@@ -185,7 +192,7 @@ public class ReportServiceImpl implements ReportService {
 
         ReportStatus reportStatus = reportStatusRepository.getReferenceById(1);
 
-        if (checkReportedInReportPost(registeredStudentSend.getRegisteredStudentId(), sellerReport.getSellerId())) {
+        if (checkReportedInReportSeller(registeredStudentSend.getRegisteredStudentId(), sellerReport.getSellerId())) {
             return null;
         }
 
@@ -205,7 +212,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     @Transactional
-    public ReportSellerDTO updateStatusReportSeller(UpdateReportSellerRequest updateReportSellerRequest) {
+    public List<ReportSellerDTO> updateStatusReportSeller(UpdateReportSellerRequest updateReportSellerRequest) {
 
         ReportSeller reportSeller = reportSellerRepository.getReferenceById(
                 updateReportSellerRequest.getReportSellerId()
@@ -215,13 +222,18 @@ public class ReportServiceImpl implements ReportService {
                 updateReportSellerRequest.getReportStatusId()
         );
 
-        reportSeller.setReportStatusId(reportStatus);
+        Seller seller = reportSeller.getSellerId();
 
-        ReportSeller reportSellerUpdated = reportSellerRepository.save(reportSeller);
+        reportSellerRepository.updateStatusSeller(
+                reportSeller.getSellerId().getSellerId(),
+                reportStatus.getReportStatusId()
+        );
 
-        updateSellerAfterUpdateReport(updateReportSellerRequest, reportSellerUpdated);
+        List<ReportSeller> reportSellerUpdated = reportSellerRepository.getReportBySellerId(seller.getSellerId());
 
-        return reportSellerMapper.toReportSellerDTO(reportSellerUpdated);
+        updateSellerAfterUpdateReport(updateReportSellerRequest, seller);
+
+        return reportSellerMapper.toReportSellerDTOList(reportSellerUpdated);
     }
 
     private boolean checkReportedInReportPost(Integer buyerId, Integer postProductId) {
@@ -232,10 +244,8 @@ public class ReportServiceImpl implements ReportService {
 
     private void updatePostProductAfterUpdateReport(
             UpdateReportPostRequest updatePostProductRequest,
-            ReportPostProduct reportPostProduct
+            PostProduct postProduct
     ) {
-
-        PostProduct postProduct = reportPostProduct.getPostProductId();
 
         PostStatus postStatus;
         if (updatePostProductRequest.getReportStatusId() == 2) {
@@ -251,10 +261,8 @@ public class ReportServiceImpl implements ReportService {
 
     private void updateSellerAfterUpdateReport(
             UpdateReportSellerRequest updateReportSellerRequest,
-            ReportSeller reportSeller
+            Seller seller
     ) {
-
-        Seller seller = reportSeller.getSellerId();
 
         int isActive;
         if (updateReportSellerRequest.getReportStatusId() == 2) {

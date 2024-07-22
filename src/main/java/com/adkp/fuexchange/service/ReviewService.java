@@ -13,8 +13,11 @@ public interface ReviewService {
     List<ReviewDTO> getReviewByOrderId(Integer orderId);
 
     ReviewResponse getReviewByPostProduct(Integer postProductId);
-    ResponseObject<Object>createReview (RegisterReviewRequest registerReviewRequest );
 
-    ResponseObject<Object>updateReview(int reviewID,UpdateInformationReviewRequest updateInformationReviewRequest);
+    ReviewDTO createReview(RegisterReviewRequest registerReviewRequest);
+
+    ResponseObject<Object> updateReview(int reviewID, UpdateInformationReviewRequest updateInformationReviewRequest);
+
     void deleteReview(int reviewID);
+
 }

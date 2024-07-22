@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
         return ResponseObject.builder()
                 .status(HttpStatus.NOT_FOUND.value())
                 .message(HttpStatus.NOT_FOUND.name())
-                .content("Mã số sinh viên không tồn tại hoặc chưa được đăng ký!")
+                .content("Tài khoản không tồn tại hoặc chưa đăng ký!")
                 .build();
     }
 

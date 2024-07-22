@@ -6,18 +6,12 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class UpdateInformationSellerRequest {
+public class UpdateVariationDetailRequest {
 
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
-    @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
-    private Integer sellerId;
+    private int variationDetailId;
 
-    @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
     @NotEmpty(message = "Vui lòng nhập đầy đủ thông tin!")
-    private String bankingNumber;
-
     @NotNull(message = "Vui lòng nhập đầy đủ thông tin!")
-    @NotEmpty(message = "Vui lòng nhập đầy đủ thông tin!")
-    private String bankingName;
-
+    private String description;
 }

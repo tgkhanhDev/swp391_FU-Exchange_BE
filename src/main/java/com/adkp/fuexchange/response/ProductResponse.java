@@ -27,7 +27,6 @@ public class ProductResponse {
 
     private List<VariationResponse> variation;
 
-
     private Category categoryId;
 
     private double price;

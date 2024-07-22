@@ -3,11 +3,9 @@ package com.adkp.fuexchange.service;
 import com.adkp.fuexchange.dto.CartPostDTO;
 import com.adkp.fuexchange.mapper.CartPostMapper;
 import com.adkp.fuexchange.pojo.*;
-import com.adkp.fuexchange.repository.CartPostRepository;
-import com.adkp.fuexchange.repository.PostProductRepository;
-import com.adkp.fuexchange.repository.RegisteredStudentRepository;
-import com.adkp.fuexchange.repository.VariationDetailRepository;
+import com.adkp.fuexchange.repository.*;
 import com.adkp.fuexchange.request.CartRequest;
+import com.adkp.fuexchange.request.UpdateCartRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +17,7 @@ import java.util.Map;
 
 @Service
 public class CartPostServiceImpl implements CartPostService {
+
     private final CartPostRepository cartPostRepository;
 
     private final PostProductRepository postProductRepository;
@@ -29,13 +28,16 @@ public class CartPostServiceImpl implements CartPostService {
 
     private final VariationDetailRepository variationDetailRepository;
 
+    private final CartRepository cartRepository;
+
     @Autowired
-    public CartPostServiceImpl(CartPostRepository cartPostRepository, PostProductRepository postProductRepository, RegisteredStudentRepository registeredStudentRepository, CartPostMapper cartPostMapper, VariationDetailRepository variationDetailRepository) {
+    public CartPostServiceImpl(CartPostRepository cartPostRepository, PostProductRepository postProductRepository, RegisteredStudentRepository registeredStudentRepository, CartPostMapper cartPostMapper, VariationDetailRepository variationDetailRepository, CartRepository cartRepository) {
         this.cartPostRepository = cartPostRepository;
         this.postProductRepository = postProductRepository;
         this.registeredStudentRepository = registeredStudentRepository;
         this.cartPostMapper = cartPostMapper;
         this.variationDetailRepository = variationDetailRepository;
+        this.cartRepository = cartRepository;
     }
 
 
@@ -49,7 +51,7 @@ public class CartPostServiceImpl implements CartPostService {
 
     @Override
     @Transactional
-    public List<CartPost> addToCart(CartRequest cartRequest) {
+    public List<CartPostDTO> addToCart(CartRequest cartRequest) {
 
         RegisteredStudent registeredStudent = registeredStudentRepository.getReferenceById(cartRequest.getRegisteredStudentId());
 
@@ -70,12 +72,75 @@ public class CartPostServiceImpl implements CartPostService {
         if (validate) {
             cartPosts = saveAlreadyExistPostInCart(cartRequest, cartPostsSaved);
 
-            return cartPostRepository.saveAll(cartPosts);
+            return cartPostMapper.toCartPostDTOList(cartPostRepository.saveAll(cartPosts));
         }
 
         cartPosts = saveNewPostInCart(cartRequest, cart, postProduct);
 
-        return cartPostRepository.saveAll(cartPosts);
+        return cartPostMapper.toCartPostDTOList(cartPostRepository.saveAll(cartPosts));
+    }
+
+    @Override
+    public List<CartPostDTO> updateCart(UpdateCartRequest updateCartRequest) {
+
+        Cart cart = cartRepository.getReferenceById(updateCartRequest.getCartId());
+
+        PostProduct postProduct = postProductRepository.getReferenceById(updateCartRequest.getPostProductId());
+
+        List<VariationDetail> variationDetails = variationDetailRepository.findAllById(updateCartRequest.getVariationDetailId());
+
+        List<Integer> variationDetailIds = getVariationDetailId(variationDetails);
+
+        List<CartPost> cartPosts =
+                cartPostRepository.getCartPostByAllId(
+                        cart.getCartId(), postProduct.getPostProductId(), variationDetailIds
+                );
+
+        if (cartPosts.isEmpty()) {
+            return null;
+        }
+
+        List<CartPost> cartPost = updateCartPost(cartPosts, updateCartRequest);
+
+        cartPostRepository.deleteAll(cartPosts);
+
+        return cartPostMapper.toCartPostDTOList(cartPost);
+    }
+
+    private List<CartPost> updateCartPost(
+            List<CartPost> cartPosts, UpdateCartRequest updateCartRequest
+    ) {
+
+        List<CartPost> cartPostsToSave = new ArrayList<>();
+
+        for (CartPost cartPost : cartPosts) {
+
+            CartPost cartPostSave = new CartPost();
+
+            cartPostSave.setSttPostInCart(cartPost.getSttPostInCart());
+
+            cartPostSave.setCartId(cartPost.getCartId());
+
+            cartPostSave.setPostProductId(cartPost.getPostProductId());
+
+            cartPostSave.setVariationDetailId(cartPost.getVariationDetailId());
+
+            cartPostSave.setQuantity(updateCartRequest.getQuantity());
+
+            cartPostsToSave.add(cartPostSave);
+        }
+
+        return cartPostRepository.saveAll(cartPostsToSave);
+    }
+
+    private List<Integer> getVariationDetailId(List<VariationDetail> variationDetails) {
+        List<Integer> variationDetailId = new ArrayList<>();
+
+        for (VariationDetail variationDetail : variationDetails) {
+            variationDetailId.add(variationDetail.getVariationDetailId());
+        }
+
+        return variationDetailId;
     }
 
     private List<CartPost> saveAlreadyExistPostInCart(CartRequest cartRequest, List<CartPost> cartPostsSaved) {
@@ -133,7 +198,13 @@ public class CartPostServiceImpl implements CartPostService {
 
         List<CartPost> cartPosts = new ArrayList<>();
 
-        int sttPostInCart = cartPostRepository.getSttLastCart(cart.getCartId()) + 1;
+        Integer sttPostInCart = cartPostRepository.getSttLastCart(cart.getCartId());
+
+        if(sttPostInCart == null){
+            sttPostInCart = 1;
+        } else {
+            sttPostInCart += 1;
+        }
 
         List<VariationDetail> variationDetails =
                 variationDetailRepository.findAllById(cartRequest.getVariationDetailId());

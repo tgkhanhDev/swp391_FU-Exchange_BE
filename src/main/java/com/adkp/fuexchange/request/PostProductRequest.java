@@ -13,6 +13,9 @@ public class PostProductRequest {
     private int postProductId;
 
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
+    private int sellerId;
+
+    @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")
     private int variationId;
 
     @Min(value = 1, message = "Vui lòng nhập đầy đủ thông tin!")

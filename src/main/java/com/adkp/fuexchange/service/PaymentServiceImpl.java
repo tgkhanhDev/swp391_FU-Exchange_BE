@@ -13,10 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -81,7 +78,8 @@ public class PaymentServiceImpl implements PaymentService {
                 ordersRequest
         );
 
-        if (getPostProductInOrder(ordersRequest.getPostProductToBuyRequests()).size() >= 2) {
+
+        if (ordersRequest.getOrderMethod().equals("cart")) {
             removeAfterOrder(ordersRequest);
         }
 
@@ -104,11 +102,14 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private void saveTransactions(Payment paymentSaved, double totalPrice) {
+        String formatted = new DecimalFormat("#.###").format(totalPrice / 1000);
+        double parsedValue = Double.parseDouble(formatted.replace(",", "."));
+        long longValue = (long) parsedValue;
         transactionsRepository.save(
                 new Transactions(
                         paymentSaved,
                         transactionsStatusRepository.getReferenceById(1),
-                        Long.parseLong(new DecimalFormat("#.###").format(totalPrice / 1000)),
+                        longValue,
                         LocalDateTime.now(),
                         LocalDateTime.now().plusDays(3)
                 )
@@ -193,6 +194,9 @@ public class PaymentServiceImpl implements PaymentService {
 
         List<OrderPostProduct> orderPostProducts = new ArrayList<>();
         Orders orders = null;
+
+        postProductRequests = sort(postProductRequests);
+
         for (PostProductRequest postProductRequest : postProductRequests) {
             PostProduct curentPostProduct = postProductRepository.getReferenceById(postProductRequest.getPostProductId());
 
@@ -275,29 +279,24 @@ public class PaymentServiceImpl implements PaymentService {
 
     private void removeAlgorithm(List<CartPost> cartPostsSaved) {
 
-
         if (cartPostsSaved.isEmpty()) {
             return;
         }
 
-        CartPost previousCartPost = null;
-
         for (CartPost currentCartPost : cartPostsSaved) {
 
-            if (previousCartPost != null
-            ) {
-                if (
-                        currentCartPost.getSttPostInCart() == previousCartPost.getSttPostInCart() &&
-                                currentCartPost.getVariationDetailId().getVariationDetailId() != previousCartPost.getVariationDetailId().getVariationDetailId()
-                ) {
-                    cartPostRepository.delete(previousCartPost);
-                    cartPostRepository.delete(currentCartPost);
-                }
-            } else {
-                cartPostRepository.delete(currentCartPost);
-            }
+            cartPostRepository.delete(currentCartPost);
 
-            previousCartPost = currentCartPost;
         }
+    }
+
+    private List<PostProductRequest> sort(List<PostProductRequest> postProductRequests) {
+        postProductRequests.sort(new Comparator<PostProductRequest>() {
+            @Override
+            public int compare(PostProductRequest p1, PostProductRequest p2) {
+                return Integer.compare(p1.getSellerId(), p2.getSellerId());
+            }
+        });
+        return postProductRequests;
     }
 }
