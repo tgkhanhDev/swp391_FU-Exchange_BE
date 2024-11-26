@@ -16,7 +16,8 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3005")
+//                        .allowedOrigins("http://localhost:3005")
+                        .allowedOrigins("https://swp391-fu-exchange-fe.vercel.app")
                         .allowedMethods(HttpMethod.GET.name(),
                                 HttpMethod.POST.name(),HttpMethod.PUT.name(),
                                 HttpMethod.DELETE.name() )
